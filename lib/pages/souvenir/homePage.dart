@@ -1,78 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class SouvenirAdd extends StatefulWidget {
-  const SouvenirAdd({super.key});
+class SouvenirHomePage extends StatefulWidget {
+  const SouvenirHomePage({super.key});
 
   @override
-  State<SouvenirAdd> createState() => _SouvenirAddState();
+  State<SouvenirHomePage> createState() => _SouvenirHomePageState();
 }
 
-class _SouvenirAddState extends State<SouvenirAdd> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-
+class _SouvenirHomePageState extends State<SouvenirHomePage> {
   final CollectionReference _souvenir =
       FirebaseFirestore.instance.collection('Souvenir');
-
-  Future<void> _create() async {
-    await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                ),
-                TextField(
-                  controller: _addressController,
-                  decoration: const InputDecoration(labelText: 'Address'),
-                ),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  child: const Text('Create'),
-                  onPressed: () async {
-                    final String name = _nameController.text;
-                    final String address = _addressController.text;
-                    final String description = _addressController.text;
-                    if (name.isNotEmpty &&
-                        address.isNotEmpty &&
-                        description.isNotEmpty) {
-                      await _souvenir.add({
-                        "shopName": name,
-                        "address": address,
-                        "description": description
-                      });
-
-                      _nameController.text = '';
-                      _addressController.text = '';
-                      _descriptionController.text = '';
-                      Navigator.of(context).pop();
-                    }
-                  },
-                )
-              ],
-            ),
-          );
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
