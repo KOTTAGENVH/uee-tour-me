@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tour_me/widgets/bottom_nav2.dart';
+
+
 
 class LoginPage extends StatelessWidget {
   static const String routeName = '/loginPage';
@@ -6,6 +9,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const BottomNav2();
   }
 }
