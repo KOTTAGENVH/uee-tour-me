@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tour_me/pages/login_page.dart';
+import 'package:flutter/material.dart';
+import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/pages/test_page.dart';
 import 'package:tour_me/pages/welcome_page.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -38,11 +39,11 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      initialRoute: WelcomePage.routeName,
+      initialRoute: RegisterPage.routeName,
       routes: {
         WelcomePage.routeName: (context) => const WelcomePage(),
-        LoginPage.routeName: (context) => LoginPage(),
         Test.routeName: (context) => const Test(),
+        RegisterPage.routeName: (context) => const RegisterPage(),
       },
     );
   }

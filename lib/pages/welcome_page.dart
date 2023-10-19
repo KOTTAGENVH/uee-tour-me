@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
-import 'package:tour_me/pages/login_page.dart';
+import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -26,7 +26,7 @@ class WelcomePage extends StatelessWidget {
                   PinkButton(
                     onPress: () => Navigator.pushReplacementNamed(
                       context,
-                      LoginPage.routeName,
+                      RegisterPage.routeName,
                     ),
                     text: 'Get Started',
                   ),

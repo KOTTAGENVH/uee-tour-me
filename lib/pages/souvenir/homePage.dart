@@ -9,8 +9,7 @@ class SouvenirHomePage extends StatefulWidget {
 }
 
 class _SouvenirHomePageState extends State<SouvenirHomePage> {
-  final CollectionReference _souvenir =
-      FirebaseFirestore.instance.collection('Souvenir');
+  final CollectionReference _souvenir = FirebaseFirestore.instance.collection('Souvenir');
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +20,12 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
               //streamSnapshot contains the data
               if (streamSnapshot.hasData) {
                 return ListView.builder(
-                    itemCount:
-                        streamSnapshot.data!.docs.length, //number of rows
+                    itemCount: streamSnapshot.data!.docs.length, //number of rows
                     itemBuilder: (context, index) {
-                      final DocumentSnapshot documentSnapshot =
-                          streamSnapshot.data!.docs[index];
+                      final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
                       return InkWell(
                           onTap: () {
-                            print(
-                                'Card Clicked: ${documentSnapshot['shopName']}');
+                            print('Card Clicked: ${documentSnapshot['shopName']}');
                           },
                           child: Card(
                               margin: const EdgeInsets.all(10),
@@ -52,12 +48,8 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
         Text(
           documentSnapshot['isActive'] == true ? 'Active' : 'Inactive',
           style: TextStyle(
-            color: documentSnapshot['isActive'] == true
-                ? Colors.green
-                : Colors.red,
-            fontWeight: documentSnapshot['isActive'] == true
-                ? FontWeight.bold
-                : FontWeight.normal,
+            color: documentSnapshot['isActive'] == true ? Colors.green : Colors.red,
+            fontWeight: documentSnapshot['isActive'] == true ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ],
