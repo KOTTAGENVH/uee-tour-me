@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       initialRoute: WelcomePage.routeName,
       routes: {
         WelcomePage.routeName: (context) => const WelcomePage(),
-        LoginPage.routeName: (context) => const LoginPage(),
+        LoginPage.routeName: (context) => LoginPage(),
       },
     );
   }

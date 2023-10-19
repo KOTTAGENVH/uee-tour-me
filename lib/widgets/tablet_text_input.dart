@@ -6,6 +6,7 @@ class TabletTextField extends StatelessWidget {
   final double? width;
   final String? hintText;
   final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
 
   const TabletTextField({
     Key? key,
@@ -13,6 +14,7 @@ class TabletTextField extends StatelessWidget {
     this.width,
     this.hintText,
     this.keyboardType,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -25,13 +27,13 @@ class TabletTextField extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: TextField(
+        child: TextFormField(
           maxLines: 1,
           controller: controller,
           keyboardType: keyboardType,
           obscureText: keyboardType == TextInputType.visiblePassword,
           decoration: InputDecoration(
-            label: hintText != null ? Text(hintText!) : null,
+            labelText:  hintText, 
             border: InputBorder.none,
             contentPadding: const EdgeInsets.only(bottom: 16),
             floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -39,6 +41,7 @@ class TabletTextField extends StatelessWidget {
               color: Colors.white,
               fontWeight: FontWeight.w200,
             ),
+            errorText: validator != null ? validator!(controller?.text) : null,
           ),
           style: const TextStyle(color: Colors.white),
         ),
