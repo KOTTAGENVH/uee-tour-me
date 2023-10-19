@@ -11,6 +11,7 @@ class TopNav extends StatelessWidget {
       child: Row(
         children: [
           Image.asset(MyImages.iconLogo, scale: 30),
+
           Expanded(child: Container()),
           Container(
             margin: const EdgeInsets.only(right: 20),

@@ -21,34 +21,46 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
               //streamSnapshot contains the data
               if (streamSnapshot.hasData) {
                 return ListView.builder(
-                  itemCount: streamSnapshot.data!.docs.length, //number of rows
-                  itemBuilder: (context, index) {
-                    final DocumentSnapshot documentSnapshot =
-                        streamSnapshot.data!.docs[index];
-                    return Card(
-                      margin: const EdgeInsets.all(10),
-                      child: ListTile(
-                        title: Text(documentSnapshot['shopName']),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(documentSnapshot['address']),
-                            Text(documentSnapshot['description']),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
+                    itemCount:
+                        streamSnapshot.data!.docs.length, //number of rows
+                    itemBuilder: (context, index) {
+                      final DocumentSnapshot documentSnapshot =
+                          streamSnapshot.data!.docs[index];
+                      return InkWell(
+                          onTap: () {
+                            print(
+                                'Card Clicked: ${documentSnapshot['shopName']}');
+                          },
+                          child: Card(
+                              margin: const EdgeInsets.all(10),
+                              child: ListTile(
+                                title: buildRow(documentSnapshot),
+                              )));
+                    });
               }
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            }),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _create(),
-          child: const Icon(Icons.add),
+            }));
+  }
+
+  Widget buildRow(DocumentSnapshot documentSnapshot) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(documentSnapshot['shopName']),
+        Text(
+          documentSnapshot['isActive'] == true ? 'Active' : 'Inactive',
+          style: TextStyle(
+            color: documentSnapshot['isActive'] == true
+                ? Colors.green
+                : Colors.red,
+            fontWeight: documentSnapshot['isActive'] == true
+                ? FontWeight.bold
+                : FontWeight.normal,
+          ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
+      ],
+    );
   }
 }

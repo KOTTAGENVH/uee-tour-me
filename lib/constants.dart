@@ -9,4 +9,5 @@ class MyImages{
 class MyColors{
   static const Color pink = Color(0xFFFF5A6E);
   static const Color ash = Color(0xFF444452);
+
 }
