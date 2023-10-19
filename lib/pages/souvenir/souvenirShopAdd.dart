@@ -18,64 +18,71 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
 
   Future<void> _create() async {
     await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                ),
-                TextField(
-                  controller: _addressController,
-                  decoration: const InputDecoration(labelText: 'Address'),
-                ),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: 'Description'),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  child: const Text('Create'),
-                  onPressed: () async {
-                    final String name = _nameController.text;
-                    final String address = _addressController.text;
-                    final String description = _addressController.text;
-                    if (name.isNotEmpty &&
-                        address.isNotEmpty &&
-                        description.isNotEmpty) {
-                      await _souvenir.add({
-                        "shopName": name,
-                        "address": address,
-                        "description": description
-                      });
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext ctx) {
+        return Padding(
+          padding: EdgeInsets.only(
+            top: 20,
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+              ),
+              TextField(
+                controller: _addressController,
+                decoration: const InputDecoration(labelText: 'Address'),
+              ),
+              TextField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: 'Description'),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                child: const Text('Create'),
+                onPressed: () async {
+                  final String name = _nameController.text;
+                  final String address = _addressController.text;
+                  final String description = _descriptionController.text;
+                  if (name.isNotEmpty &&
+                      address.isNotEmpty &&
+                      description.isNotEmpty) {
+                    await _souvenir.add({
+                      "shopName": name,
+                      "address": address,
+                      "description": description,
+                    });
 
-                      _nameController.text = '';
-                      _addressController.text = '';
-                      _descriptionController.text = '';
-                      Navigator.of(context).pop();
-                    }
-                  },
-                )
-              ],
-            ),
-          );
-        });
+                    _nameController.text = '';
+                    _addressController.text = '';
+                    _descriptionController.text = '';
+                    Navigator.of(context).pop();
+                  }
+                },
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _create(),
+          child: const Icon(Icons.add),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
 }
