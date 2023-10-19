@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tour_me/constants.dart';
 
 class PinkButton extends StatelessWidget {
   final VoidCallback onPress;
@@ -18,7 +19,7 @@ class PinkButton extends StatelessWidget {
       onPressed: onPress,
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(
-          const Color(0xFFFF5A6E),
+          MyColors.pink,
         ),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(

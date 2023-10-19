@@ -20,11 +20,14 @@ class WelcomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(Images.logo),
-                  Image.asset(Images.slogan),
+                  Image.asset(MyImages.logo),
+                  Image.asset(MyImages.slogan),
                   const SizedBox(height: 25),
                   PinkButton(
-                    onPress: () => Navigator.pushReplacementNamed(context, LoginPage.routeName),
+                    onPress: () => Navigator.pushReplacementNamed(
+                      context,
+                      LoginPage.routeName,
+                    ),
                     text: 'Get Started',
                   ),
                 ],
