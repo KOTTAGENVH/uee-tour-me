@@ -10,7 +10,8 @@ class TopNav extends StatelessWidget {
       padding: const EdgeInsets.only(top: 70, left: 20),
       child: Row(
         children: [
-          Image.asset(Images.iconLogo, scale: 30),
+          Image.asset(MyImages.iconLogo, scale: 30),
+
           Expanded(child: Container()),
           Container(
             margin: const EdgeInsets.only(right: 20),
