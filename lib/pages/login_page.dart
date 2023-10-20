@@ -46,7 +46,7 @@ class LoginPageState extends State<LoginPage> {
   String? _validateEmail(String email) {
     if (email.isEmpty) {
       return 'Email is required';
-    } else if (Valdiators.email.hasMatch(email)) {
+    } else if (MyRegExps.email.hasMatch(email)) {
       return 'Invalid email format';
     }
     return null;

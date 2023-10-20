@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:secure_shared_preferences/secure_shared_preferences.dart';
+import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
+import 'package:tour_me/widgets/message_popup.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -43,10 +46,24 @@ class RegisterPageState extends State<RegisterPage> {
         LoadingPopup().remove();
 
         // Registration successful, you can access the user information with userCredential.user
-        print('User registered: ${userCredential.user?.uid}');
+        print('User registered: ${userCredential.user!.uid}');
+
+        if (context.mounted) {
+          MessagePopUp.display(
+            context,
+            title: 'Success',
+            message: 'Your operation was successful.',
+            icon: const Icon(Icons.check),
+          );
+        }
+
+        SecureSharedPref pref = await SecureSharedPref.getInstance();
+        pref.putString("uid", userCredential.user!.uid, isEncrypted: true);
       } catch (e) {
+         LoadingPopup().remove();
         print('Error registering user: $e');
-        // Handle registration errors here
+
+        if (context.mounted) MessagePopUp.display(context);
       }
     }
   }
@@ -82,9 +99,7 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   bool isValidEmail(String email) {
-    // You can use a regex or any other email validation logic
-    // This is a basic example; you may want to use a more robust solution.
-    return email.contains('@');
+    return MyRegExps.email.hasMatch(email);
   }
 
   @override
@@ -125,10 +140,6 @@ class RegisterPageState extends State<RegisterPage> {
                 obscureText: true,
               ),
               const SizedBox(height: 20),
-              // ElevatedButton(
-              //   onPressed: _register,
-              //   child: const Text('Register'),
-              // ),
               PinkButton(
                 onPress: _register,
                 text: "Register",
