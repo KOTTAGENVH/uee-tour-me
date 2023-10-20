@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/pages/destination/addDestination.dart';
-import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/pages/souvenir/souvenirShopAdd.dart';
 import 'package:tour_me/pages/test_page.dart';
@@ -18,6 +18,7 @@ void main() async {
   );
 
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {

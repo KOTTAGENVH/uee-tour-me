@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/destination/addDestination2.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
@@ -11,7 +12,7 @@ class DestinationAddPage extends StatefulWidget {
   const DestinationAddPage({super.key});
 
   @override
-  State<DestinationAddPage> createState() => _DestinationAddPageState();
+  _DestinationAddPageState createState() => _DestinationAddPageState();
 }
 
 // ignore: camel_case_types
@@ -414,49 +415,35 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
                       final String weekendendTime =
                           _weekendendTimeController.text;
                       final String description = _description.text;
-                      if (locationName.isNotEmpty &&
-                          streetNo.isNotEmpty &&
-                          streetName.isNotEmpty &&
-                          city.isNotEmpty &&
-                          weekstartTime.isNotEmpty &&
-                          weekendTime.isNotEmpty &&
-                          weekendstartTime.isNotEmpty &&
-                          weekendendTime.isNotEmpty &&
-                          description.isNotEmpty) {
-                        await _destination.add({
-                          "locationName": locationName,
-                          "streetNo": streetNo,
-                          "streetName": streetName,
-                          "city": city,
-                          "weekstartTime": weekstartTime,
-                          "weekendTime": weekendTime,
-                          "weekendstartTime": weekendstartTime,
-                          "weekendendTime": weekendendTime,
-                          "description": description,
-                        });
-
-                        _locationNameController.text = '';
-                        _streetNoController.text = '';
-                        _streetNameController.text = '';
-                        _cityController.text = '';
-                        _weekstartTimeController.text = '';
-                        _weekendTimeController.text = '';
-                        _weekendstartTimeController.text = '';
-                        _weekendendTimeController.text = '';
-                        _description.text = '';
-                        // Navigator.of(context).pop();
-                      }
-                    },
-                    text: 'Next',
-                  )
-                ],
-              ),
+             
+       Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DestinationAddPage2(
+                      locationName: locationName,
+                      streetNo: streetNo,
+                      streetName: streetName,
+                      city: city,
+                      weekstartTime: weekstartTime,
+                      weekendTime: weekendTime,
+                      weekendstartTime: weekendstartTime,
+                      weekendendTime: weekendendTime,
+                      description: description,
+                    ),
+                  ),
+                );
+              },
+              text: 'Next',
             ),
           ],
         ),
       ),
-      backgroundColor: Colors.black,
+     
+          ]
+        ),
+      ),
+            backgroundColor: Colors.black,
       bottomNavigationBar: const DestinationBottomNav(),
-    );
+      );
   }
 }
