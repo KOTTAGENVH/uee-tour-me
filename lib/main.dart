@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/pages/test_page.dart';
 import 'package:tour_me/pages/welcome_page.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         WelcomePage.routeName: (context) => const WelcomePage(),
         Test.routeName: (context) => const Test(),
         RegisterPage.routeName: (context) => const RegisterPage(),
+        LoginPage.routeName: (context) => const LoginPage(),
       },
     );
   }
