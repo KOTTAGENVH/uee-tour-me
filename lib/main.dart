@@ -1,11 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tour_me/pages/category_page.dart';
+import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/register_page.dart';
-import 'package:tour_me/pages/destination/addDestination.dart';
-import 'package:tour_me/pages/souvenir/homePage.dart';
-import 'package:tour_me/pages/souvenir/souvenirShopAdd.dart';
 import 'package:tour_me/pages/test_page.dart';
 import 'package:tour_me/pages/welcome_page.dart';
 
@@ -47,12 +45,12 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: WelcomePage.routeName,
       routes: {
-
-        WelcomePage.routeName: (context) => const DestinationAddPage(),
-        LoginPage.routeName: (context) => const LoginPage(),
         Test.routeName: (context) => const Test(),
-        RegisterPage.routeName: (context) => const RegisterPage(),
+        WelcomePage.routeName: (context) => const WelcomePage(),
         LoginPage.routeName: (context) => const LoginPage(),
+        RegisterPage.routeName: (context) => const RegisterPage(),
+        CategoryPage.routeName: (context) => const CategoryPage(),
+        DetailsPage.routeName: (context) => const DetailsPage(),
       },
     );
   }

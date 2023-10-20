@@ -2,38 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/destination/addDestination2.dart';
-import 'package:tour_me/widgets/bottom_nav.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/next_back_button.dart';
-import 'package:tour_me/widgets/pink_button.dart';
 
 class DestinationAddPage extends StatefulWidget {
   const DestinationAddPage({super.key});
 
   @override
-  _DestinationAddPageState createState() => _DestinationAddPageState();
+  State<DestinationAddPage> createState() => _DestinationAddPageState();
 }
 
-// ignore: camel_case_types
 class _DestinationAddPageState extends State<DestinationAddPage> {
   final TextEditingController _locationNameController = TextEditingController();
   final TextEditingController _streetNoController = TextEditingController();
   final TextEditingController _streetNameController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _weekstartTimeController =
-      TextEditingController();
+  final TextEditingController _weekstartTimeController = TextEditingController();
   final TextEditingController _weekendTimeController = TextEditingController();
-  final TextEditingController _weekendstartTimeController =
-      TextEditingController();
-  final TextEditingController _weekendendTimeController =
-      TextEditingController();
+  final TextEditingController _weekendstartTimeController = TextEditingController();
+  final TextEditingController _weekendendTimeController = TextEditingController();
   final TextEditingController _description = TextEditingController();
 
-  final CollectionReference _destination =
-      FirebaseFirestore.instance.collection('Destination');
+  final CollectionReference _destination = FirebaseFirestore.instance.collection('Destination');
 
-  // ignore: unused_element
   Future<void> _createDestination() async {
     await showModalBottomSheet(
       isScrollControlled: true,
@@ -76,13 +68,11 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
               ),
               TextField(
                 controller: _weekendstartTimeController,
-                decoration:
-                    const InputDecoration(labelText: 'Weekend Start Time'),
+                decoration: const InputDecoration(labelText: 'Weekend Start Time'),
               ),
               TextField(
                 controller: _weekendendTimeController,
-                decoration:
-                    const InputDecoration(labelText: 'Weekend End Time'),
+                decoration: const InputDecoration(labelText: 'Weekend End Time'),
               ),
               TextField(
                 controller: _description,
@@ -100,8 +90,7 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
                   final String city = _cityController.text;
                   final String weekstartTime = _weekstartTimeController.text;
                   final String weekendTime = _weekendTimeController.text;
-                  final String weekendstartTime =
-                      _weekendstartTimeController.text;
+                  final String weekendstartTime = _weekendstartTimeController.text;
                   final String weekendendTime = _weekendendTimeController.text;
                   final String description = _description.text;
                   if (locationName.isNotEmpty &&
@@ -169,281 +158,275 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 40),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _locationNameController,
-                    decoration: InputDecoration(
-                      labelText: 'Location Name',
-                      labelStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
-                        Icons.add_location_rounded,
-                        color: Colors.white,
-                      ),
-                      filled: true,
-                      fillColor: Color(0xFF454452),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
+        child: Column(children: [
+          const SizedBox(height: 40),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _locationNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Location Name',
+                    labelStyle: const TextStyle(color: Colors.white),
+                    prefixIcon: const Icon(
+                      Icons.add_location_rounded,
+                      color: Colors.white,
                     ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 20),
-                  const LabeledDivider(label: 'Address'),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _streetNoController,
-                          decoration: InputDecoration(
-                            labelText: 'Street No',
-                            labelStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Icon(
-                              Icons.location_on,
-                              color: Colors.white,
-                            ),
-                            filled: true,
-                            fillColor: Color(0xFF454452),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _streetNameController,
-                          decoration: InputDecoration(
-                            labelText: 'Street Name',
-                            labelStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Icon(
-                              Icons.location_on,
-                              color: Colors.white,
-                            ),
-                            filled: true,
-                            fillColor: Color(0xFF454452),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _cityController,
-                    decoration: InputDecoration(
-                      labelText: 'City',
-                      labelStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
-                        Icons.location_on,
-                        color: Colors.white,
-                      ),
-                      filled: true,
-                      fillColor: Color(0xFF454452),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
+                    filled: true,
+                    fillColor: const Color(0xFF454452),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(50.0),
                     ),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 20),
-                  const LabeledDivider(label: 'Weekday Time'),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _weekstartTimeController,
-                          decoration: InputDecoration(
-                            labelText: 'Start Time',
-                            labelStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Icon(
-                              Icons.access_time,
-                              color: Colors.white,
-                            ),
-                            filled: true,
-                            fillColor: Color(0xFF454452),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _weekendTimeController,
-                          decoration: InputDecoration(
-                            labelText: 'End Time',
-                            labelStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Icon(
-                              Icons.access_time,
-                              color: Colors.white,
-                            ),
-                            filled: true,
-                            fillColor: Color(0xFF454452),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const LabeledDivider(label: 'Weekend Time'),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _weekendstartTimeController,
-                          decoration: InputDecoration(
-                            labelText: 'Start Time',
-                            labelStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Icon(
-                              Icons.access_time,
-                              color: Colors.white,
-                            ),
-                            filled: true,
-                            fillColor: Color(0xFF454452),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _weekendendTimeController,
-                          decoration: InputDecoration(
-                            labelText: 'End Time',
-                            labelStyle: TextStyle(color: Colors.white),
-                            prefixIcon: Icon(
-                              Icons.access_time,
-                              color: Colors.white,
-                            ),
-                            filled: true,
-                            fillColor: Color(0xFF454452),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0),
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _description,
-                    decoration: InputDecoration(
-                      labelText: 'Description',
-                      labelStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(
-                        Icons.description,
-                        color: Colors.white,
-                      ),
-                      filled: true,
-                      fillColor: Color(0xFF454452),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                    maxLines: 4,
-                  ),
-                  const SizedBox(height: 30),
-                  NextButton(
-                    onPress: () async {
-                      final String locationName = _locationNameController.text;
-                      final String streetNo = _streetNoController.text;
-                      final String streetName = _streetNameController.text;
-                      final String city = _cityController.text;
-                      final String weekstartTime =
-                          _weekstartTimeController.text;
-                      final String weekendTime = _weekendTimeController.text;
-                      final String weekendstartTime =
-                          _weekendstartTimeController.text;
-                      final String weekendendTime =
-                          _weekendendTimeController.text;
-                      final String description = _description.text;
-             
-       Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DestinationAddPage2(
-                      locationName: locationName,
-                      streetNo: streetNo,
-                      streetName: streetName,
-                      city: city,
-                      weekstartTime: weekstartTime,
-                      weekendTime: weekendTime,
-                      weekendstartTime: weekendstartTime,
-                      weekendendTime: weekendendTime,
-                      description: description,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
                     ),
                   ),
-                );
-              },
-              text: 'Next',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 20),
+                const LabeledDivider(label: 'Address'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _streetNoController,
+                        decoration: InputDecoration(
+                          labelText: 'Street No',
+                          labelStyle: const TextStyle(color: Colors.white),
+                          prefixIcon: const Icon(
+                            Icons.location_on,
+                            color: Colors.white,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFF454452),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _streetNameController,
+                        decoration: InputDecoration(
+                          labelText: 'Street Name',
+                          labelStyle: const TextStyle(color: Colors.white),
+                          prefixIcon: const Icon(
+                            Icons.location_on,
+                            color: Colors.white,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFF454452),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _cityController,
+                  decoration: InputDecoration(
+                    labelText: 'City',
+                    labelStyle: const TextStyle(color: Colors.white),
+                    prefixIcon: const Icon(
+                      Icons.location_on,
+                      color: Colors.white,
+                    ),
+                    filled: true,
+                    fillColor: const Color(0xFF454452),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 20),
+                const LabeledDivider(label: 'Weekday Time'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _weekstartTimeController,
+                        decoration: InputDecoration(
+                          labelText: 'Start Time',
+                          labelStyle: const TextStyle(color: Colors.white),
+                          prefixIcon: const Icon(
+                            Icons.access_time,
+                            color: Colors.white,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFF454452),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _weekendTimeController,
+                        decoration: InputDecoration(
+                          labelText: 'End Time',
+                          labelStyle: const TextStyle(color: Colors.white),
+                          prefixIcon: const Icon(
+                            Icons.access_time,
+                            color: Colors.white,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFF454452),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                const LabeledDivider(label: 'Weekend Time'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _weekendstartTimeController,
+                        decoration: InputDecoration(
+                          labelText: 'Start Time',
+                          labelStyle: const TextStyle(color: Colors.white),
+                          prefixIcon: const Icon(
+                            Icons.access_time,
+                            color: Colors.white,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFF454452),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _weekendendTimeController,
+                        decoration: InputDecoration(
+                          labelText: 'End Time',
+                          labelStyle: const TextStyle(color: Colors.white),
+                          prefixIcon: const Icon(
+                            Icons.access_time,
+                            color: Colors.white,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFF454452),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50.0),
+                          ),
+                        ),
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _description,
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                    labelStyle: const TextStyle(color: Colors.white),
+                    prefixIcon: const Icon(
+                      Icons.description,
+                      color: Colors.white,
+                    ),
+                    filled: true,
+                    fillColor: const Color(0xFF454452),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                  maxLines: 4,
+                ),
+                const SizedBox(height: 30),
+                NextButton(
+                  onPress: () async {
+                    final String locationName = _locationNameController.text;
+                    final String streetNo = _streetNoController.text;
+                    final String streetName = _streetNameController.text;
+                    final String city = _cityController.text;
+                    final String weekstartTime = _weekstartTimeController.text;
+                    final String weekendTime = _weekendTimeController.text;
+                    final String weekendstartTime = _weekendstartTimeController.text;
+                    final String weekendendTime = _weekendendTimeController.text;
+                    final String description = _description.text;
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DestinationAddPage2(
+                          locationName: locationName,
+                          streetNo: streetNo,
+                          streetName: streetName,
+                          city: city,
+                          weekstartTime: weekstartTime,
+                          weekendTime: weekendTime,
+                          weekendstartTime: weekendstartTime,
+                          weekendendTime: weekendendTime,
+                          description: description,
+                        ),
+                      ),
+                    );
+                  },
+                  text: 'Next',
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
-     
-          ]
-        ),
-      ),
-            backgroundColor: Colors.black,
+      backgroundColor: Colors.black,
       bottomNavigationBar: const DestinationBottomNav(),
-      );
+    );
   }
 }
