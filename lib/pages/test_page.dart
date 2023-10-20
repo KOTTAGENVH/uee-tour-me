@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
 import 'package:tour_me/widgets/pink_button.dart';
-
 
 class Test extends StatelessWidget {
   const Test({super.key});
@@ -16,11 +14,10 @@ class Test extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
-          leading: Image.asset(Images.iconLogo),
-          title: const Text('Form',
-          style: TextStyle(fontSize: 25)),
+          leading: Image.asset(MyImages.iconLogo),
+          title: const Text('Form', style: TextStyle(fontSize: 25)),
           centerTitle: true,
-          backgroundColor:Colors.black,
+          backgroundColor: Colors.black,
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 10),
@@ -141,4 +138,3 @@ class Test extends StatelessWidget {
     );
   }
 }
-
