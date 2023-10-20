@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/register_page.dart';
+import 'package:tour_me/widgets/labeled_divider.dart';
+import 'package:tour_me/widgets/loading_popup.dart';
+import 'package:tour_me/widgets/message_popup.dart';
+import 'package:tour_me/widgets/pink_button.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
@@ -28,15 +33,20 @@ class LoginPageState extends State<LoginPage> {
     });
 
     if (_emailError == null && _passwordError == null) {
+      LoadingPopup().display(context, message: 'Logging');
       try {
         final UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
+        LoadingPopup().remove();
+
+        if(context.mounted) MessagePopUp.display(context, );
 
         // Login successful, you can access the user information with userCredential.user
         print('User logged in: ${userCredential.user?.uid}');
       } catch (e) {
+        LoadingPopup().remove();
         print('Error logging in: $e');
         // Handle login errors here
       }
@@ -46,7 +56,7 @@ class LoginPageState extends State<LoginPage> {
   String? _validateEmail(String email) {
     if (email.isEmpty) {
       return 'Email is required';
-    } else if (Valdiators.email.hasMatch(email)) {
+    } else if (!MyRegExps.email.hasMatch(email)) {
       return 'Invalid email format';
     }
     return null;
@@ -59,43 +69,63 @@ class LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  bool isValidEmail(String email) {
-    return email.contains('@');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        automaticallyImplyLeading: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                errorText: _emailError,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  errorText: _emailError,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                errorText: _passwordError,
+              const SizedBox(height: 20),
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  errorText: _passwordError,
+                ),
+                obscureText: true,
               ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _login,
-              child: const Text('Login'),
-            ),
-          ],
+              const SizedBox(height: 20),
+              PinkButton(
+                onPress: _login,
+                text: 'Login',
+              ),
+              const SizedBox(height: 20),
+              const LabeledDivider(label: 'OR'),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () => Navigator.pushReplacementNamed(context, RegisterPage.routeName),
+                child: RichText(
+                  text: const TextSpan(
+                    style: TextStyle(color: Colors.black),
+                    text: 'Don\'t have an account yet?  ',
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '  Register',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.pink,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

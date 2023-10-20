@@ -11,6 +11,6 @@ class MyColors {
   static const Color ash = Color(0xFF444452);
 }
 
-class Valdiators {
+class MyRegExps {
   static final RegExp email = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
 }

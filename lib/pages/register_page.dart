@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:secure_shared_preferences/secure_shared_preferences.dart';
+import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/login_page.dart';
+import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
+import 'package:tour_me/widgets/message_popup.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -35,7 +40,7 @@ class RegisterPageState extends State<RegisterPage> {
 
     if (_emailError == null && _passwordError == null && _confirmPasswordError == null) {
       try {
-        LoadingPopup().display(context);
+        LoadingPopup().display(context, message: 'Creating Account');
         final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
           password: password,
@@ -43,10 +48,24 @@ class RegisterPageState extends State<RegisterPage> {
         LoadingPopup().remove();
 
         // Registration successful, you can access the user information with userCredential.user
-        print('User registered: ${userCredential.user?.uid}');
+        print('User registered: ${userCredential.user!.uid}');
+
+        if (context.mounted) {
+          MessagePopUp.display(
+            context,
+            title: 'Success',
+            message: 'Your operation was successful.',
+            icon: const Icon(Icons.check),
+          );
+        }
+
+        SecureSharedPref pref = await SecureSharedPref.getInstance();
+        pref.putString("uid", userCredential.user!.uid, isEncrypted: true);
       } catch (e) {
+        LoadingPopup().remove();
         print('Error registering user: $e');
-        // Handle registration errors here
+
+        if (context.mounted) MessagePopUp.display(context);
       }
     }
   }
@@ -55,7 +74,7 @@ class RegisterPageState extends State<RegisterPage> {
     // Add your email validation logic here
     if (email.isEmpty) {
       return 'Email is required';
-    } else if (!isValidEmail(email)) {
+    } else if (!MyRegExps.email.hasMatch(email)) {
       return 'Invalid email format';
     }
     return null;
@@ -81,17 +100,13 @@ class RegisterPageState extends State<RegisterPage> {
     return null;
   }
 
-  bool isValidEmail(String email) {
-    // You can use a regex or any other email validation logic
-    // This is a basic example; you may want to use a more robust solution.
-    return email.contains('@');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text('Register'),
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -125,13 +140,30 @@ class RegisterPageState extends State<RegisterPage> {
                 obscureText: true,
               ),
               const SizedBox(height: 20),
-              // ElevatedButton(
-              //   onPressed: _register,
-              //   child: const Text('Register'),
-              // ),
               PinkButton(
                 onPress: _register,
                 text: "Register",
+              ),
+              const SizedBox(height: 20),
+              const LabeledDivider(label: 'OR'),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () => Navigator.pushReplacementNamed(context, LoginPage.routeName),
+                child: RichText(
+                  text: const TextSpan(
+                    style: TextStyle(color: Colors.black),
+                    text: 'Already Signed In?  ',
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '  Login',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: MyColors.pink,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               )
             ],
           ),
