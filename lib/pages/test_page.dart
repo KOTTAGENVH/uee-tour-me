@@ -15,7 +15,8 @@ class Test extends StatelessWidget {
         preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
           leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
+          title: const Text('Form',
+          style: TextStyle(fontSize: 25)),
           centerTitle: true,
           backgroundColor: Colors.black,
           actions: [
@@ -118,7 +119,7 @@ class Test extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    style: const TextStyle(color: Colors.white),
+     style: const TextStyle(color: Colors.white),
                     maxLines: 4,
                   ),
                   const SizedBox(height: 30),
