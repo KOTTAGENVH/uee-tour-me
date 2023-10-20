@@ -91,7 +91,8 @@ class _ShopAddPayState extends State<ShopAddPay> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const CreditCardPay()),
+                        builder: (context) =>
+                            CreditCardPay(totalPay: totalPay)),
                   );
                 },
                 text: 'PAY',
