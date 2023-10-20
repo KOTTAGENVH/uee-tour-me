@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
@@ -40,15 +41,30 @@ class LoginPageState extends State<LoginPage> {
           password: password,
         );
         LoadingPopup().remove();
-
-        if(context.mounted) MessagePopUp.display(context, );
-
-        // Login successful, you can access the user information with userCredential.user
+        // TODO: move to next page
         print('User logged in: ${userCredential.user?.uid}');
+
+        SecureSharedPref pref = await SecureSharedPref.getInstance();
+        pref.putString(MyPrefTags.userId, userCredential.user!.uid, isEncrypted: true);
       } catch (e) {
+        String msg = '';
+
         LoadingPopup().remove();
+        if(e is FirebaseAuthException){
+          if(e.code == MyErrorCodes.firebaseInvalidLoginCredentials){
+            msg = 'Invalid Login Credentials';
+          }
+        }
+
+        
+        if (context.mounted) {
+          MessagePopUp.display(
+            context,
+            message: 'Couldn\'t Log In\n$msg',
+          );
+        }
         print('Error logging in: $e');
-        // Handle login errors here
+        // Hand
       }
     }
   }

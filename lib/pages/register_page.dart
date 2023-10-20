@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:secure_shared_preferences/secure_shared_preferences.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/category_page.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
@@ -48,24 +49,34 @@ class RegisterPageState extends State<RegisterPage> {
         LoadingPopup().remove();
 
         // Registration successful, you can access the user information with userCredential.user
-        print('User registered: ${userCredential.user!.uid}');
+        String? uid = userCredential.user?.uid;
+        if (uid == null) {
+          throw 'Couldn\'t get User Id';
+        }
+        print('User registered: $uid');
 
         if (context.mounted) {
-          MessagePopUp.display(
+          Navigator.pushNamedAndRemoveUntil(
             context,
-            title: 'Success',
-            message: 'Your operation was successful.',
-            icon: const Icon(Icons.check),
+            CategoryPage.routeName,
+            (route) => false,
           );
+        }else{
+          throw 'context error';
         }
 
         SecureSharedPref pref = await SecureSharedPref.getInstance();
-        pref.putString("uid", userCredential.user!.uid, isEncrypted: true);
+        pref.putString(MyPrefTags.userId, uid, isEncrypted: true);
       } catch (e) {
         LoadingPopup().remove();
         print('Error registering user: $e');
 
-        if (context.mounted) MessagePopUp.display(context);
+        if (context.mounted) {
+          MessagePopUp.display(
+            context,
+            message: "Couldn't create Account!\n$e",
+          );
+        }
       }
     }
   }
