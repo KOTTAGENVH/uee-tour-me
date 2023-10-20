@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
@@ -16,7 +15,7 @@ class Test extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
-          leading: Image.asset(Images.iconLogo),
+          leading: Image.asset(MyImages.iconLogo),
           title: const Text('Form',
           style: TextStyle(fontSize: 25)),
           centerTitle: true,
@@ -141,4 +140,3 @@ class Test extends StatelessWidget {
     );
   }
 }
-

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tour_me/pages/destination/addDestination.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/souvenir/homePage.dart';
+import 'package:tour_me/pages/souvenir/souvenirShopAdd.dart';
 import 'package:tour_me/pages/test_page.dart';
 import 'package:tour_me/pages/welcome_page.dart';
 import 'firebase_options.dart';
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: WelcomePage.routeName,
       routes: {
-        WelcomePage.routeName: (context) => const SouvenirHomePage(),
+        WelcomePage.routeName: (context) => const DestinationAddPage(),
         LoginPage.routeName: (context) => const LoginPage(),
         Test.routeName: (context) => const Test(),
       },
