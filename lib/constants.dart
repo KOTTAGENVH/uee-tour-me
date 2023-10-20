@@ -20,7 +20,9 @@ class MyRegExps {
 
 class MyPrefTags {
   static const String userId = 'uid';
-  static const String userType = 'userType';
+  static const String userType = 'userRole';
+  static const String firstName = 'firstName';
+  static const String lastName = 'lastName';
 }
 
 class MyStrings{

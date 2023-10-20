@@ -27,15 +27,15 @@ class CategoryPage extends StatelessWidget {
       ),
       body: Column(children: [
         // Traveller
-        GestureDetector(
-          onTap: () => _onSelect(context, MyStrings.traveler),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () => _onSelect(context, MyStrings.traveler),
             child: ListTile(
               leading: Image.asset(MyImages.traveler),
               title: const Text(
                 'Traveler',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -54,10 +54,10 @@ class CategoryPage extends StatelessWidget {
           ),
         ),
         // Location Host
-        GestureDetector(
-          onTap: () => _onSelect(context, MyStrings.host),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () => _onSelect(context, MyStrings.host),
             child: ListTile(
               leading: Image.asset(MyImages.location),
               title: const Text(
@@ -81,10 +81,10 @@ class CategoryPage extends StatelessWidget {
           ),
         ),
         // Merchants
-        GestureDetector(
-          onTap: () => _onSelect(context, MyStrings.merchant),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () => _onSelect(context, MyStrings.merchant),
             child: ListTile(
               leading: Image.asset(MyImages.merchant),
               title: const Text(

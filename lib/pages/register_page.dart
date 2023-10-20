@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:secure_shared_preferences/secure_shared_preferences.dart';
 import 'package:tour_me/constants.dart';
-import 'package:tour_me/pages/category_page.dart';
+import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
@@ -58,7 +58,7 @@ class RegisterPageState extends State<RegisterPage> {
         if (context.mounted) {
           Navigator.pushNamedAndRemoveUntil(
             context,
-            CategoryPage.routeName,
+            DetailsPage.routeName,
             (route) => false,
           );
         }else{
