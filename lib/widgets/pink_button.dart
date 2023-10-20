@@ -7,10 +7,10 @@ class PinkButton extends StatelessWidget {
   final Icon? icon; // Accept an optional Icon
 
   const PinkButton({
-    Key? key, // Use Key? to fix the error
+    Key? key,
     required this.onPress,
     required this.text,
-    this.icon, // Icon parameter is now optional
+    this.icon,
   }) : super(key: key);
 
   @override
@@ -31,7 +31,7 @@ class PinkButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           if (icon != null) icon!,
-          const SizedBox(width: 10),
+          if (icon != null) const SizedBox(width: 10),
           // Show the icon if it's provided
           Text(text),
         ],
@@ -39,4 +39,3 @@ class PinkButton extends StatelessWidget {
     );
   }
 }
-

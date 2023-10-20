@@ -6,7 +6,7 @@ class TopNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
       padding: const EdgeInsets.only(top: 70, left: 20),
       child: Row(
         children: [
