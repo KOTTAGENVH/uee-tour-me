@@ -45,7 +45,7 @@ class LoginPageState extends State<LoginPage> {
         print('User logged in: ${userCredential.user?.uid}');
 
         SecureSharedPref pref = await SecureSharedPref.getInstance();
-        pref.putString(MyStrings.userId, userCredential.user!.uid, isEncrypted: true);
+        pref.putString(MyPrefTags.userId, userCredential.user!.uid, isEncrypted: true);
       } catch (e) {
         String msg = '';
 

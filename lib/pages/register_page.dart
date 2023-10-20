@@ -66,7 +66,7 @@ class RegisterPageState extends State<RegisterPage> {
         }
 
         SecureSharedPref pref = await SecureSharedPref.getInstance();
-        pref.putString(MyStrings.userId, uid, isEncrypted: true);
+        pref.putString(MyPrefTags.userId, uid, isEncrypted: true);
       } catch (e) {
         LoadingPopup().remove();
         print('Error registering user: $e');

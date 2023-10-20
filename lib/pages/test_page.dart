@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 

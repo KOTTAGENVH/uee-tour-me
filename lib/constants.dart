@@ -18,10 +18,17 @@ class MyRegExps {
   static final RegExp email = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
 }
 
-class MyStrings {
+class MyPrefTags {
   static const String userId = 'uid';
+  static const String userType = 'userType';
 }
 
-class MyErrorCodes{
+class MyStrings{
+  static const String traveler = 'traveler';
+  static const String merchant = 'merchant';
+  static const String host = 'host';
+}
+
+class MyErrorCodes {
   static const String firebaseInvalidLoginCredentials = "INVALID_LOGIN_CREDENTIALS";
 }
