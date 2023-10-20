@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tour_me/widgets/loading_popup.dart';
+import 'package:tour_me/widgets/pink_button.dart';
 
 class RegisterPage extends StatefulWidget {
   static const routeName = '/register';
@@ -7,10 +9,10 @@ class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  RegisterPageState createState() => RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
@@ -19,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _passwordError;
   String? _confirmPasswordError;
 
-  void _register() async{
+  void _register() async {
     final email = _emailController.text;
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
@@ -33,17 +35,19 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (_emailError == null && _passwordError == null && _confirmPasswordError == null) {
       try {
-      final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+        LoadingPopup().display(context);
+        final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        LoadingPopup().remove();
 
-      // Registration successful, you can access the user information with userCredential.user
-      print('User registered: ${userCredential.user?.uid}');
-    } catch (e) {
-      print('Error registering user: $e');
-      // Handle registration errors here
-    }
+        // Registration successful, you can access the user information with userCredential.user
+        print('User registered: ${userCredential.user?.uid}');
+      } catch (e) {
+        print('Error registering user: $e');
+        // Handle registration errors here
+      }
     }
   }
 
@@ -83,8 +87,6 @@ class _RegisterPageState extends State<RegisterPage> {
     return email.contains('@');
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,10 +125,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 obscureText: true,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _register,
-                child: const Text('Register'),
-              ),
+              // ElevatedButton(
+              //   onPressed: _register,
+              //   child: const Text('Register'),
+              // ),
+              PinkButton(
+                onPress: _register,
+                text: "Register",
+              )
             ],
           ),
         ),
