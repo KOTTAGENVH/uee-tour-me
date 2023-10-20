@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/widgets/upload_destination_images.dart';
 
 class CategoryPage extends StatelessWidget {
   static const String routeName = '/category';
@@ -11,6 +12,7 @@ class CategoryPage extends StatelessWidget {
     pref.putString(MyPrefTags.userType, type, isEncrypted: true);
 
     if (context.mounted) {
+      String? url = await ImageUpload.save(context);
       //TODO:
       // if (type == MyStrings.traveler) Navigator.pushNamed(context, routeName);
       // if (type == MyStrings.merchant) Navigator.pushNamed(context, routeName);

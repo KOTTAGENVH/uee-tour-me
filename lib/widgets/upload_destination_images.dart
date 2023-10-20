@@ -1,58 +1,64 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:tour_me/widgets/loading_popup.dart';
+import 'package:tour_me/widgets/message_popup.dart';
 
-Future<String?> uploadImageToFirebase() async {
-  final _picker = ImagePicker();
-  final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+class ImageUpload {
+  static Future<String?> _uploadImageToFirebase() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
 
-  if (pickedFile != null) {
-    File imageFile = File(pickedFile.path);
-    FirebaseStorage storage = FirebaseStorage.instance;
-
-    try {
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString(); // Unique file name
-      Reference storageReference = storage.ref().child('images/$fileName');
-print('storageReference: $storageReference');
-      UploadTask uploadTask = storageReference.putFile(imageFile);
-
-      await uploadTask.whenComplete(() async {
-        // Get the download URL for the uploaded image
-        String imageUrl = await storageReference.getDownloadURL();
-print('imageUrl: $imageUrl'); 
-        // Store the URL in Firestore
-        CollectionReference _imagesCollection =
-            FirebaseFirestore.instance.collection('images');
-        DocumentReference docRef =
-            await _imagesCollection.add({'url': imageUrl});
-        String documentId = docRef.id;
-
-        // Return the document ID where the URL is stored
-        return documentId;
-      });
-
-      // Show a success toast message
-      Fluttertoast.showToast(
-        msg: 'Successfully uploaded image',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-      );
-    } catch (e) {
-      // Handle the error and show an error toast message
-      print('Error uploading image: $e');
-      Fluttertoast.showToast(
-        msg: 'Error uploading image: $e',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-      );
+    if (pickedImage == null) {
+      // Image not selected
       return null;
     }
-  } else {
-    return null; // No image selected
+
+    FirebaseStorage storage = FirebaseStorage.instance;
+    File imageFile = File(pickedImage.path);
+
+    try {
+      String originalFileName = path.basename(imageFile.path);
+      String time = DateTime.now().millisecondsSinceEpoch.toString(); // Unique file name
+      String fileName = "$time-$originalFileName";
+
+      String? imageUrl;
+      Reference storageReference = storage.ref().child('images/$fileName');
+      UploadTask uploadTask = storageReference.putFile(imageFile);
+      await uploadTask.whenComplete(() async {
+        imageUrl = await storageReference.getDownloadURL();
+      });
+
+      return imageUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> save(BuildContext context) async {
+    LoadingPopup().display(context);
+    String? url = await _uploadImageToFirebase();
+    LoadingPopup().remove();
+    if (url == null) {
+      // Failed to upload
+      if (context.mounted) MessagePopUp.display(context);
+    } else {
+      // Success
+      if (context.mounted) {
+        MessagePopUp.display(
+          context,
+          title: "Success",
+          icon: const Icon(
+            Icons.check_circle_outline,
+            color: Colors.green,
+          ),
+          message: 'Image has been Uploaded',
+        );
+      }
+    }
+    return url;
   }
 }
