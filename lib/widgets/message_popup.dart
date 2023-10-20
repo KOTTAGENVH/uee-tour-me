@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+
+class MessagePopUp {
+  static void display(
+    BuildContext context, {
+    String title = 'Error',
+    String message = 'An error occurred.',
+    Icon icon = const Icon(Icons.error),
+    VoidCallback? onDismiss,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: <Widget>[
+              icon,
+              const SizedBox(width: 8),
+              Text(title),
+            ],
+          ),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                onDismiss;
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
