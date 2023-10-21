@@ -7,6 +7,7 @@ class MyImages {
   static const String traveler = 'assets/images/traveler.png';
   static const String merchant = 'assets/images/merchant.png';
   static const String location = 'assets/images/location.png';
+  static const String profile = 'assets/images/profile.png';
 }
 
 class MyColors {
@@ -20,7 +21,10 @@ class MyRegExps {
 
 class MyPrefTags {
   static const String userId = 'uid';
-  static const String userType = 'userType';
+  static const String userRole = 'userRole';
+  static const String firstName = 'firstName';
+  static const String lastName = 'lastName';
+  static const String profileImage = 'profileImage';
 }
 
 class MyStrings{
