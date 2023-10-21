@@ -1,22 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
-import 'package:tour_me/widgets/upload_destination_images.dart';
+import 'package:tour_me/pages/details_page.dart';
+import 'package:tour_me/pages/palceholder.dart';
+import 'package:tour_me/utils/upload_user_details.dart';
+import 'package:tour_me/widgets/loading_popup.dart';
+import 'package:tour_me/widgets/message_popup.dart';
 
 class CategoryPage extends StatelessWidget {
   static const String routeName = '/category';
   const CategoryPage({super.key});
 
-  void _onSelect(BuildContext context, String type) async {
+  void _onSelect(BuildContext context, String userRole) async {
     SecureSharedPref pref = await SecureSharedPref.getInstance();
-    pref.putString(MyPrefTags.userType, type, isEncrypted: true);
+    pref.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
 
-    if (context.mounted) {
-      String? url = await ImageUpload.save(context);
-      //TODO:
-      // if (type == MyStrings.traveler) Navigator.pushNamed(context, routeName);
-      // if (type == MyStrings.merchant) Navigator.pushNamed(context, routeName);
-      // if (type == MyStrings.host) Navigator.pushNamed(context, routeName);
+    if (userRole == MyStrings.traveler) {
+      //TODO: navigate to traveller preferecnes page
+      if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          PlaceholderPage.routeName,
+          (route) => false,
+        );
+      }
+    } else if (context.mounted) {
+      LoadingPopup().display(context, message: 'Please Wait...');
+
+      bool success = false;
+      try {
+        success = await uploadUserDetails(context);
+      } catch (e, trace) {
+        print("Error: $e");
+        print("StackTrace: $trace");
+      }
+      LoadingPopup().remove();
+
+      if (!success) {
+        if (context.mounted) MessagePopUp.display(context);
+      }
+    }
+
+    if (userRole == MyStrings.host) {
+      //TODO: navigate to host dashboard
+      if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          PlaceholderPage.routeName,
+          (route) => false,
+        );
+      }
+    } else if (userRole == MyStrings.merchant) {
+      //TODO: navigate to merchant dashboard
+      if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          PlaceholderPage.routeName,
+          (route) => false,
+        );
+      }
+    } else {
+      if (context.mounted) {
+        MessagePopUp.display(
+          context,
+          onDismiss: () {
+            pref.clearAll();
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              DetailsPage.routeName,
+              (route) => false,
+            );
+          },
+        );
+      }
     }
   }
 

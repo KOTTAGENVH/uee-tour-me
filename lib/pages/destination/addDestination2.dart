@@ -127,8 +127,8 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
                   const SizedBox(height: 20),
                     UploadImageButton(
   onPress: () async {
-    String? imageUrl = await uploadImageToFirebase();
-    showImageUploadToast(imageUrl, imageUrl != null);
+    // String? imageUrl = await uploadImageToFirebase();
+    // showImageUploadToast(imageUrl, imageUrl != null);
   },
   text: 'Upload Destination Image',
 ),

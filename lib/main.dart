@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tour_me/pages/category_page.dart';
 import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/login_page.dart';
+import 'package:tour_me/pages/palceholder.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/pages/test_page.dart';
 import 'package:tour_me/pages/welcome_page.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         RegisterPage.routeName: (context) => const RegisterPage(),
         CategoryPage.routeName: (context) => const CategoryPage(),
         DetailsPage.routeName: (context) => const DetailsPage(),
+        PlaceholderPage.routeName: (context) => const PlaceholderPage(),
       },
     );
   }

@@ -48,12 +48,10 @@ class RegisterPageState extends State<RegisterPage> {
         );
         LoadingPopup().remove();
 
-        // Registration successful, you can access the user information with userCredential.user
         String? uid = userCredential.user?.uid;
         if (uid == null) {
           throw 'Couldn\'t get User Id';
         }
-        print('User registered: $uid');
 
         if (context.mounted) {
           Navigator.pushNamedAndRemoveUntil(
