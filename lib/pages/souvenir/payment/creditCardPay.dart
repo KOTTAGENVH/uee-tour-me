@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/souvenir/homePage.dart';
@@ -7,8 +8,10 @@ import 'package:tour_me/widgets/pink_button.dart';
 
 class CreditCardPay extends StatefulWidget {
   final double totalPay;
-
-  const CreditCardPay({Key? key, required this.totalPay}) : super(key: key);
+  final List<String> selectedIds;
+  const CreditCardPay(
+      {Key? key, required this.totalPay, required this.selectedIds})
+      : super(key: key);
 
   @override
   _CreditCardPayState createState() => _CreditCardPayState();
@@ -16,6 +19,22 @@ class CreditCardPay extends StatefulWidget {
 
 class _CreditCardPayState extends State<CreditCardPay> {
   DateTime? selectedDate;
+
+  final CollectionReference _souvenir =
+      FirebaseFirestore.instance.collection('Souvenir');
+
+  Future<void> updateLastMonthlyPayDate(List<String> selectedIds) async {
+    try {
+      for (String id in selectedIds) {
+        await _souvenir.doc(id).update({
+          "lastMonthlyPayDate": DateTime.now(),
+        });
+        print('Updated lastMonthlyPayDate for shop with id: $id');
+      }
+    } catch (e) {
+      print('Error updating lastMonthlyPayDate: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +211,8 @@ class _CreditCardPayState extends State<CreditCardPay> {
                               builder: (context) => const SouvenirHomePage(),
                             ),
                           );
+
+                          await updateLastMonthlyPayDate(widget.selectedIds);
                         },
                         text: 'PAY',
                         icon: const Icon(Icons.payment, color: Colors.white),

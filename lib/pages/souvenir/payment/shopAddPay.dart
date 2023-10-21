@@ -12,28 +12,33 @@ class ShopAddPay extends StatefulWidget {
 }
 
 class _ShopAddPayState extends State<ShopAddPay> {
-  List<String> shopNames = [];
+  List<Map<String, String>> shopDetail = [];
+  List<String> selectedShopIds = [];
 
+  int shopNameLength = 0;
   static const double payment = 499.00;
 
   final CollectionReference _souvenir =
       FirebaseFirestore.instance.collection('Souvenir');
 
+  late QuerySnapshot querySnapshot;
   @override
   void initState() {
     super.initState();
-    _loadShopNames();
+    _loadshopDetail();
+    shopNameLength = selectedShopIds.length;
   }
 
-  Future<void> _loadShopNames() async {
+  Future<void> _loadshopDetail() async {
     try {
-      QuerySnapshot querySnapshot = await _souvenir.get();
-      List<String> names = [];
+      querySnapshot = await _souvenir.get();
+      List<Map<String, String>> names = [];
 
       DateTime currentDate = DateTime.now();
 
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-        // Assuming 'lastMonthlyPayDate' is a Timestamp field
+        String docId = doc.reference.id;
+        print('$selectedShopIds');
         Timestamp lastPayDateTimestamp = doc['lastMonthlyPayDate'];
         DateTime lastPayDate = lastPayDateTimestamp.toDate();
 
@@ -45,12 +50,12 @@ class _ShopAddPayState extends State<ShopAddPay> {
         if (daysDifference > 30) {
           // Assuming 'shopName' is the field in the document
           String shopName = doc['shopName'];
-          names.add(shopName);
+          names.add({'docId': docId, 'shopName': shopName});
         }
       }
 
       setState(() {
-        shopNames = names;
+        shopDetail = names;
       });
     } catch (e) {
       print('Error loading shop names: $e');
@@ -59,7 +64,7 @@ class _ShopAddPayState extends State<ShopAddPay> {
 
   @override
   Widget build(BuildContext context) {
-    int shopNameLength = shopNames.length;
+    print('$shopNameLength');
 
     double totalPay = shopNameLength * payment;
 
@@ -75,8 +80,12 @@ class _ShopAddPayState extends State<ShopAddPay> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8.0),
-              for (String shopName in shopNames)
-                _buildCheckboxListTile(shopName),
+              Column(
+                children: [
+                  for (Map<String, String> shop in shopDetail)
+                    _buildCheckboxListTile(shop['shopName']!, shop['docId']!),
+                ],
+              ),
               const SizedBox(height: 16.0),
               Text(
                 '$payment * ${shopNameLength ?? 0}',
@@ -89,11 +98,12 @@ class _ShopAddPayState extends State<ShopAddPay> {
               PinkButton(
                 onPress: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            CreditCardPay(totalPay: totalPay)),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreditCardPay(
+                                totalPay: totalPay,
+                                selectedIds: selectedShopIds,
+                              )));
                 },
                 text: 'PAY',
                 icon: const Icon(Icons.payment, color: Colors.white),
@@ -102,22 +112,34 @@ class _ShopAddPayState extends State<ShopAddPay> {
           ),
         ),
       ),
-      backgroundColor: Colors.pink,
+      backgroundColor: Colors.black,
       bottomNavigationBar: const BottomNav2(),
     );
   }
 
-  Widget _buildCheckboxListTile(String shopName) {
+  Widget _buildCheckboxListTile(String shopName, String docId) {
     return ListTile(
       title: Text(
         shopName,
         style: const TextStyle(color: Colors.white),
       ),
       leading: Checkbox(
-        value: false, // You can set the initial value as needed
-        activeColor: Colors.white,
+        value: selectedShopIds.contains(docId),
+        activeColor: Colors.pink,
+        side: MaterialStateBorderSide.resolveWith(
+          (states) => const BorderSide(width: 1.0, color: Colors.red),
+        ),
         onChanged: (value) {
-          // Handle checkbox state changes
+          setState(() {
+            if (value != null) {
+              if (value) {
+                selectedShopIds.add(docId);
+              } else {
+                selectedShopIds.remove(docId);
+              }
+            }
+            shopNameLength = selectedShopIds.length;
+          });
         },
       ),
     );
