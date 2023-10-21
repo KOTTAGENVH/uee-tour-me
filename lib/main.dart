@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/pages/category_page.dart';
+import 'package:tour_me/pages/destination/addDestination.dart';
+import 'package:tour_me/pages/destination/destinationowner_dashboard.dart';
 import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/register_page.dart';
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
       initialRoute: WelcomePage.routeName,
       routes: {
         Test.routeName: (context) => const Test(),
-        WelcomePage.routeName: (context) => const WelcomePage(),
+        WelcomePage.routeName: (context) => const DestinationHome(),
         LoginPage.routeName: (context) => const LoginPage(),
         RegisterPage.routeName: (context) => const RegisterPage(),
         CategoryPage.routeName: (context) => const CategoryPage(),
