@@ -114,31 +114,82 @@ class RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Register'),
-        automaticallyImplyLeading: false,
-      ),
+    backgroundColor: Colors.black,
+     appBar: AppBar(
+      automaticallyImplyLeading: false,
+       centerTitle: true,
+       backgroundColor:Colors.black,         
+     ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
+          
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            
             children: <Widget>[
+              Image.asset(MyImages.logo
+              ,width: 200, 
+              height: 200),
+              const SizedBox(height: 20),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
+                   labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(
+                        Icons.email,
+                        color: Colors.white,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFF454452),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(50.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      ),
                   errorText: _emailError,
+                  errorBorder: OutlineInputBorder(                 
+                      borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  focusedErrorBorder:OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(50.0),
+                  ) 
                 ),
+                style: const TextStyle(color: Colors.white),
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
+                   labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(
+                        Icons.security,
+                        color: Colors.white,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFF454452),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(50.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      ),
                   errorText: _passwordError,
+                  errorBorder: OutlineInputBorder(                 
+                      borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  focusedErrorBorder:OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(50.0),
+                  ) 
                 ),
+                style: const TextStyle(color: Colors.white),
                 obscureText: true,
               ),
               const SizedBox(height: 20),
@@ -146,8 +197,30 @@ class RegisterPageState extends State<RegisterPage> {
                 controller: _confirmPasswordController,
                 decoration: InputDecoration(
                   labelText: 'Confirm Password',
+                  labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(
+                        Icons.security,
+                        color: Colors.white,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFF454452),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(50.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      ),
                   errorText: _confirmPasswordError,
+                   errorBorder: OutlineInputBorder(                 
+                      borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  focusedErrorBorder:OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(50.0),
+                  ) 
                 ),
+                style: const TextStyle(color: Colors.white),
                 obscureText: true,
               ),
               const SizedBox(height: 20),
@@ -162,7 +235,7 @@ class RegisterPageState extends State<RegisterPage> {
                 onTap: () => Navigator.pushReplacementNamed(context, LoginPage.routeName),
                 child: RichText(
                   text: const TextSpan(
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                     text: 'Already Signed In?  ',
                     children: <TextSpan>[
                       TextSpan(
