@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class MyImages {
   static const String logo = 'assets/images/logo.png';
@@ -27,7 +29,7 @@ class MyPrefTags {
   static const String profileImage = 'profileImage';
 }
 
-class MyStrings{
+class MyStrings {
   static const String traveler = 'traveler';
   static const String merchant = 'merchant';
   static const String host = 'host';
@@ -35,4 +37,19 @@ class MyStrings{
 
 class MyErrorCodes {
   static const String firebaseInvalidLoginCredentials = "INVALID_LOGIN_CREDENTIALS";
+}
+
+class MyMap {
+  static TileLayer tileLayer = TileLayer(
+    urlTemplate:
+        'https://api.mapbox.com/styles/v1/it21021534/clnzz2bdm00bk01qvfm5532ai/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaXQyMTAyMTUzNCIsImEiOiJjbG56eXd4djMwd2VqMmpxaDYwOHZjdzhmIn0.e4Ec6xvIyMbxcumHe9MDzg',
+    additionalOptions: const {
+      'accessToken': 'pk.eyJ1IjoiaXQyMTAyMTUzNCIsImEiOiJjbG56eXd4djMwd2VqMmpxaDYwOHZjdzhmIn0.e4Ec6xvIyMbxcumHe9MDzg',
+      'id': 'mapbox.mapbox-streets-v8',
+    },
+  );
+  static MapOptions intialLanka = const MapOptions(
+    initialCenter: LatLng(7.903092, 80.670837),
+    initialZoom: 7.7,
+  );
 }
