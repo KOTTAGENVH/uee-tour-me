@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tour_me/pages/souvenir/shopProfile.dart';
 import 'package:tour_me/pages/souvenir/payment/shopAddPay.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
@@ -51,10 +52,14 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
                     itemBuilder: (context, index) {
                       final DocumentSnapshot documentSnapshot =
                           streamSnapshot.data!.docs[index];
-                      return InkWell(
+                      String shopId = documentSnapshot.reference.id;
+                      return GestureDetector(
                         onTap: () {
-                          print(
-                              'Card Clicked: ${documentSnapshot['shopName']}');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ShopProfile(shopId: shopId)));
                         },
                         child: SizedBox(
                           height: 100,
