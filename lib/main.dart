@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/pages/category_page.dart';
 import 'package:tour_me/pages/create_trip_1.dart';
-import 'package:tour_me/pages/destination/destinationowner_dashboard.dart';
+import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/palceholder.dart';
@@ -19,7 +19,6 @@ void main() async {
   );
 
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -49,13 +48,14 @@ class MyApp extends StatelessWidget {
       initialRoute: WelcomePage.routeName,
       routes: {
         Test.routeName: (context) => const Test(),
-        WelcomePage.routeName: (context) => const DestinationHome(),
+        WelcomePage.routeName: (context) => const WelcomePage(),
         LoginPage.routeName: (context) => const LoginPage(),
         RegisterPage.routeName: (context) => const RegisterPage(),
         CategoryPage.routeName: (context) => const CategoryPage(),
         DetailsPage.routeName: (context) => const DetailsPage(),
         PlaceholderPage.routeName: (context) => const PlaceholderPage(),
-        CreateTrip1.routeName:(context) => const CreateTrip1(),
+        CreateTrip1.routeName: (context) => const CreateTrip1(),
+        DestinationHome.routeName: (context) => const DestinationHome(),
       },
     );
   }

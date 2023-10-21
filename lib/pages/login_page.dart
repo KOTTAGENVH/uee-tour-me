@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/models/app_user.dart';
+import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
@@ -35,19 +38,52 @@ class LoginPageState extends State<LoginPage> {
 
     if (_emailError == null && _passwordError == null) {
       LoadingPopup().display(context, message: 'Logging');
+
       try {
+        // Log In with firestore
         final UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
-        LoadingPopup().remove();
-        // TODO: move to next page
-        print('User logged in: ${userCredential.user?.uid}');
+        String uid = userCredential.user!.uid;
 
-        SecureSharedPref pref = await SecureSharedPref.getInstance();
-        pref.putString(MyPrefTags.userId, userCredential.user!.uid, isEncrypted: true);
+        //Get User Role from Firestore
+        String? userRole;
+        final FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
+        DocumentReference documentReference = firestoreInstance.collection(MyFirestore.usersCollection).doc(uid);
+        await documentReference.get().then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+            userRole = data[AppUser.USER_ROLE];
+          }
+        });
+
+        //Store id and role in prefs
+        if (userRole != null) {
+          SecureSharedPref prefs = await SecureSharedPref.getInstance();
+          await prefs.clearAll();
+          await prefs.putString(MyPrefTags.userId, uid, isEncrypted: true);
+          await prefs.putString(MyPrefTags.userRole, userRole!, isEncrypted: true);
+        } else {
+          throw 'userRole is null';
+        }
+
+        LoadingPopup().remove();
+
+        //Navigate to respective dashboards
+        if (userRole == MyStrings.host) {
+          if (context.mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              DestinationHome.routeName,
+              (route) => false,
+            );
+          }
+        }
+
+        // TODO: move to next page
       } catch (e) {
-        String msg = '';
+        String msg = e.toString();
 
         LoadingPopup().remove();
         if (e is FirebaseAuthException) {
@@ -62,8 +98,6 @@ class LoginPageState extends State<LoginPage> {
             message: 'Couldn\'t Log In\n$msg',
           );
         }
-        print('Error logging in: $e');
-        // Hand
       }
     }
   }

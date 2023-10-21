@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
+import 'package:tour_me/widgets/message_popup.dart';
+import 'package:tour_me/widgets/pink_button.dart';
 
 class DestinationHome extends StatefulWidget {
+  static const String routeName = '/destinationHome';
   const DestinationHome({super.key});
 
   @override
@@ -39,28 +43,35 @@ class _DestinationHomeState extends State<DestinationHome> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              // REmove this pink button
+              PinkButton(
+                  onPress: () async {
+                    SecureSharedPref pref = await SecureSharedPref.getInstance();
+                    String? id = await pref.getString(MyPrefTags.userId, isEncrypted: true);
+                    String? role = await pref.getString(MyPrefTags.userRole, isEncrypted: true);
+
+                    if (context.mounted) MessagePopUp.display(context, message: "Id: $id\nRole: $role");
+                  },
+                  text: 'test'),
               Container(
-                margin: EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.only(top: 20),
                 width: 360, // Adjust width as needed
                 height: 320, // Adjust height as needed
                 decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.circular(20), // Adjust the border radius
+                  borderRadius: BorderRadius.circular(20), // Adjust the border radius
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                      20), // Same border radius as the container
+                  borderRadius: BorderRadius.circular(20), // Same border radius as the container
                   child: Image.asset(
                     'assets/images/destinationhome.jpg', // Replace with your image path
-                    fit: BoxFit
-                        .cover, // You can use a different BoxFit to control image scaling
+                    fit: BoxFit.cover, // You can use a different BoxFit to control image scaling
                   ),
                 ),
               ),
               // Add your text below the image
               Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Text(
+                margin: const EdgeInsets.only(top: 20),
+                child: const Text(
                   'Welcome',
                   style: TextStyle(
                     fontSize: 20,
@@ -73,8 +84,8 @@ class _DestinationHomeState extends State<DestinationHome> {
               Container(
                 width: 360, // Adjust width as needed
                 height: 320, // Set marginTop as needed
-                margin: EdgeInsets.only(top: 20), // Set marginTop as needed
-                child: Text(
+                margin: const EdgeInsets.only(top: 20), // Set marginTop as needed
+                child: const Text(
                   'Your Posted destinations would be displayed here',
                   style: TextStyle(
                     fontSize: 20,

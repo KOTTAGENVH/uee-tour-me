@@ -37,6 +37,7 @@ class MyStrings {
 
 class MyErrorCodes {
   static const String firebaseInvalidLoginCredentials = "INVALID_LOGIN_CREDENTIALS";
+  static const String firebaseInvalidEmail = "invalid-email";
 }
 
 class MyMap {
@@ -52,4 +53,9 @@ class MyMap {
     initialCenter: LatLng(7.903092, 80.670837),
     initialZoom: 7.7,
   );
+}
+
+
+class MyFirestore{
+  static const String usersCollection = 'users';
 }
