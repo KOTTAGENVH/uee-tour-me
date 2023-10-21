@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      initialRoute: WelcomePage.routeName,
+      initialRoute: CategoryPage.routeName,
       routes: {
         Test.routeName: (context) => const Test(),
         WelcomePage.routeName: (context) => const WelcomePage(),
