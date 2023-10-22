@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/destination/addDestination.dart';
+import 'package:tour_me/pages/destination/paymentDestination.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
 import 'package:tour_me/widgets/next_back_button.dart';
 import 'package:tour_me/widgets/upload_multiple_images.dart';
@@ -10,7 +11,7 @@ import 'package:tour_me/widgets/upload_image_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class DestinationAddPage2 extends StatefulWidget {
-  final String locationName;
+  final String destinationName;
   final String streetNo;
   final String streetName;
   final String city;
@@ -22,7 +23,7 @@ class DestinationAddPage2 extends StatefulWidget {
 
   const DestinationAddPage2({
     super.key,
-    required this.locationName,
+    required this.destinationName,
     required this.streetNo,
     required this.streetName,
     required this.city,
@@ -85,7 +86,7 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
         preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
           leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
+          title: const Text('Add Destination', style: TextStyle(fontSize: 25)),
           centerTitle: true,
           backgroundColor: Colors.black,
           actions: [
@@ -109,9 +110,9 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(children: [
                 TextFormField(
-                  controller: _locationNameController,
+                  controller: _locationController,
                   decoration: InputDecoration(
-                    labelText: 'Location Name',
+                    labelText: 'Location',
                     labelStyle: TextStyle(color: Colors.white),
                     prefixIcon: Icon(
                       Icons.add_location_rounded,
@@ -135,10 +136,8 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
                     List<String> urls = await MultipleImageUpload.save(context);
 
                     if (urls.isNotEmpty) {
-                      _locationImage1.text =
-                          urls[0]; 
-                      _locationImage2.text = 
-                          urls[1];
+                      _locationImage1.text = urls[0];
+                      _locationImage2.text = urls[1];
                       setState(() {
                         imageUploaded = true;
                       });
@@ -155,7 +154,7 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
                   },
                   text: imageUploaded
                       ? 'Destination Image! uploaded \u2713'
-                      : 'Destination Image Not Uploaded Yet',
+                      : 'Upload Destination Image',
                 ),
                 NextButton(
                   onPress: () async {
@@ -170,7 +169,7 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
                 ),
                 NextButton(
                   onPress: () async {
-                    final String locationName = widget.locationName;
+                    final String destinationName = widget.destinationName;
                     final String streetNo = widget.streetNo;
                     final String streetName = widget.streetName;
                     final String city = widget.city;
@@ -180,29 +179,27 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
                     final String weekendendTime = widget.weekendendTime;
                     final String description = widget.description;
                     final String location = _locationController.text;
-                    if (locationName.isNotEmpty &&
-                        streetNo.isNotEmpty &&
-                        streetName.isNotEmpty &&
-                        city.isNotEmpty &&
-                        weekstartTime.isNotEmpty &&
-                        weekendTime.isNotEmpty &&
-                        weekendstartTime.isNotEmpty &&
-                        weekendendTime.isNotEmpty &&
-                        description.isNotEmpty &&
-                        location.isNotEmpty) {
-                      await _destination.add({
-                        "locationName": locationName,
-                        "streetNo": streetNo,
-                        "streetName": streetName,
-                        "city": city,
-                        "weekstartTime": weekstartTime,
-                        "weekendTime": weekendTime,
-                        "weekendstartTime": weekendstartTime,
-                        "weekendendTime": weekendendTime,
-                        "description": description,
-                        "location": location,
-                      });
-                    }
+                    final String destinationImage1 = _locationImage1.text;
+                    final String destinationImage2 = _locationImage2.text;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DestinationPayment(
+                          destinationName: destinationName,
+                          streetNo: streetNo,
+                          streetName: streetName,
+                          city: city,
+                          weekstartTime: weekstartTime,
+                          weekendTime: weekendTime,
+                          weekendstartTime: weekendstartTime,
+                          weekendendTime: weekendendTime,
+                          description: description,
+                          location: location,
+                          destinationImage1: destinationImage1,
+                          destinationImage2: destinationImage2,
+                        ),
+                      ),
+                    );
                   },
                   text: 'Pay',
                 ),

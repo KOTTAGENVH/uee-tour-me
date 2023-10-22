@@ -43,18 +43,34 @@ class _DestinationHomeState extends State<DestinationHome> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              // REmove this pink button
-              PinkButton(
-                  onPress: () async {
-                    SecureSharedPref pref = await SecureSharedPref.getInstance();
-                    String? id = await pref.getString(MyPrefTags.userId, isEncrypted: true);
-                    String? role = await pref.getString(MyPrefTags.userRole, isEncrypted: true);
-
-                    if (context.mounted) MessagePopUp.display(context, message: "Id: $id\nRole: $role");
-                  },
-                  text: 'test'),
+                 // Add your text below the image
               Container(
                 margin: const EdgeInsets.only(top: 20),
+                child: const Text(
+                  'Welcome',
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold, // Make the text bold
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Container(
+                width: 360, // Adjust width as needed
+                height: 150, // Set marginTop as needed
+                margin: const EdgeInsets.only(top: 20), // Set marginTop as needed
+                child: const Text(
+                  'Your Posted destinations would be displayed here',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center, // Align the text to the center
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 4),
                 width: 360, // Adjust width as needed
                 height: 320, // Adjust height as needed
                 decoration: BoxDecoration(
@@ -66,32 +82,6 @@ class _DestinationHomeState extends State<DestinationHome> {
                     'assets/images/destinationhome.jpg', // Replace with your image path
                     fit: BoxFit.cover, // You can use a different BoxFit to control image scaling
                   ),
-                ),
-              ),
-              // Add your text below the image
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                child: const Text(
-                  'Welcome',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold, // Make the text bold
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Container(
-                width: 360, // Adjust width as needed
-                height: 320, // Set marginTop as needed
-                margin: const EdgeInsets.only(top: 20), // Set marginTop as needed
-                child: const Text(
-                  'Your Posted destinations would be displayed here',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center, // Align the text to the center
                 ),
               ),
             ],
