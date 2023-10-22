@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/pages/category_page.dart';
-import 'package:tour_me/pages/create_trip_1.dart';
+import 'package:tour_me/pages/maps/create_trip_1.dart';
 import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/login_page.dart';
+import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/pages/palceholder.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/pages/test_page.dart';
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      initialRoute: WelcomePage.routeName,
+      initialRoute: Test.routeName,
       routes: {
         Test.routeName: (context) => const Test(),
         WelcomePage.routeName: (context) => const WelcomePage(),
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
         DetailsPage.routeName: (context) => const DetailsPage(),
         PlaceholderPage.routeName: (context) => const PlaceholderPage(),
         CreateTrip1.routeName:(context) => const CreateTrip1(),
+        GetMapLocation.routeName:(context) => const GetMapLocation(),
       },
     );
   }

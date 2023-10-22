@@ -48,8 +48,6 @@ class MyMap {
       'id': 'mapbox.mapbox-streets-v8',
     },
   );
-  static MapOptions intialLanka = const MapOptions(
-    initialCenter: LatLng(7.903092, 80.670837),
-    initialZoom: 7.7,
-  );
+  static LatLng initialCenter = const LatLng(7.903092, 80.670837);
+  static double initialZoom = 7.7;
 }
