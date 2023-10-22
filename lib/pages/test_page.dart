@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
+import 'package:tour_me/widgets/message_popup.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 
 class Test extends StatelessWidget {
@@ -15,8 +18,7 @@ class Test extends StatelessWidget {
         preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
           leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form',
-          style: TextStyle(fontSize: 25)),
+          title: const Text('Form', style: TextStyle(fontSize: 25)),
           centerTitle: true,
           backgroundColor: Colors.black,
           actions: [
@@ -40,6 +42,14 @@ class Test extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 children: [
+                  PinkButton(
+                    onPress: () async {
+                      LatLng? location = await GetMapLocation.getLocation(context);
+
+                      if (location != null) MessagePopUp.display(context, message: location.toString());
+                    },
+                    text: 'Get Map Location',
+                  ),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Shop name',
@@ -65,18 +75,14 @@ class Test extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       PinkButton(
-                          onPress: () => Navigator.pushReplacementNamed(
-                              context, Test.routeName),
+                          onPress: () => Navigator.pushReplacementNamed(context, Test.routeName),
                           text: 'Add Image',
-                          icon: const Icon(Icons.add_a_photo,
-                              color: Colors.white)),
+                          icon: const Icon(Icons.add_a_photo, color: Colors.white)),
                       const SizedBox(width: 10),
                       PinkButton(
-                          onPress: () => Navigator.pushReplacementNamed(
-                              context, Test.routeName),
+                          onPress: () => Navigator.pushReplacementNamed(context, Test.routeName),
                           text: 'Add Location',
-                          icon: const Icon(Icons.location_on,
-                              color: Colors.white)),
+                          icon: const Icon(Icons.location_on, color: Colors.white)),
                     ], // Add some spacing
                   ),
                   const SizedBox(height: 20), // Add some spacing
@@ -119,13 +125,12 @@ class Test extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-     style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     maxLines: 4,
                   ),
                   const SizedBox(height: 30),
                   PinkButton(
-                      onPress: () => Navigator.pushReplacementNamed(
-                          context, Test.routeName),
+                      onPress: () => Navigator.pushReplacementNamed(context, Test.routeName),
                       text: 'Add Image',
                       icon: const Icon(Icons.add, color: Colors.white)),
                 ],
