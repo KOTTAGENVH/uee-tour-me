@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/pages/category_page.dart';
 import 'package:tour_me/pages/maps/create_trip_1.dart';
+import 'package:tour_me/pages/destination/addDestination.dart';
+import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/maps/get_map_location.dart';
@@ -9,17 +11,18 @@ import 'package:tour_me/pages/palceholder.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/pages/test_page.dart';
 import 'package:tour_me/pages/welcome_page.dart';
-
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  Stripe.publishableKey =
+      "pk_test_51O3klFGCqmIXB6lwCavfJNjkN4DaZdy33Q3rraNo1vvvOTvYuuIozLoyMWhIlzhOwxh4K4Fnsj86Q8USrvcHlu5T006AKoawWI";
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -55,8 +58,10 @@ class MyApp extends StatelessWidget {
         CategoryPage.routeName: (context) => const CategoryPage(),
         DetailsPage.routeName: (context) => const DetailsPage(),
         PlaceholderPage.routeName: (context) => const PlaceholderPage(),
-        CreateTrip1.routeName:(context) => const CreateTrip1(),
-        GetMapLocation.routeName:(context) => const GetMapLocation(),
+        CreateTrip1.routeName: (context) => const CreateTrip1(),
+        GetMapLocation.routeName: (context) => const GetMapLocation(),
+        DestinationHome.routeName: (context) => const DestinationHome(),
+        DestinationAddPage.routeName: (context) => const DestinationAddPage(),
       },
     );
   }

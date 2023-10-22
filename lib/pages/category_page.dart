@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/palceholder.dart';
 import 'package:tour_me/utils/upload_user_details.dart';
@@ -12,9 +13,11 @@ class CategoryPage extends StatelessWidget {
   const CategoryPage({super.key});
 
   void _onSelect(BuildContext context, String userRole) async {
-    SecureSharedPref pref = await SecureSharedPref.getInstance();
-    pref.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
+    SecureSharedPref prefs = await SecureSharedPref.getInstance();
+    String? id = await prefs.getString(MyPrefTags.userId, isEncrypted: true);
+    prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
 
+    bool success = false;
     if (userRole == MyStrings.traveler) {
       //TODO: navigate to traveller preferecnes page
       if (context.mounted) {
@@ -27,7 +30,6 @@ class CategoryPage extends StatelessWidget {
     } else if (context.mounted) {
       LoadingPopup().display(context, message: 'Please Wait...');
 
-      bool success = false;
       try {
         success = await uploadUserDetails(context);
       } catch (e, trace) {
@@ -41,12 +43,15 @@ class CategoryPage extends StatelessWidget {
       }
     }
 
-    if (userRole == MyStrings.host) {
-      //TODO: navigate to host dashboard
+    if (success && userRole == MyStrings.host && id != null) {
+      prefs.clearAll();
+      prefs.putString(MyPrefTags.userId, id, isEncrypted: true);
+      prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
+
       if (context.mounted) {
         Navigator.pushNamedAndRemoveUntil(
           context,
-          PlaceholderPage.routeName,
+          DestinationHome.routeName,
           (route) => false,
         );
       }
@@ -64,7 +69,7 @@ class CategoryPage extends StatelessWidget {
         MessagePopUp.display(
           context,
           onDismiss: () {
-            pref.clearAll();
+            prefs.clearAll();
             Navigator.pushNamedAndRemoveUntil(
               context,
               DetailsPage.routeName,
@@ -82,119 +87,121 @@ class CategoryPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.asset(
-                MyImages.logo,
-                width: imageDimensions,
-                height: imageDimensions,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Image.asset(
+                  MyImages.logo,
+                  width: imageDimensions,
+                  height: imageDimensions,
+                ),
               ),
-            ),
-            const SizedBox(height: 15),
-            const Text(
-              'Pick Your Category',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+              const SizedBox(height: 15),
+              const Text(
+                'Pick Your Category',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            // Traveller
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: GestureDetector(
-                onTap: () => _onSelect(context, MyStrings.traveler),
-                child: ListTile(
-                  leading: SizedBox(
-                    width: 100,
-                    child: Image.asset(MyImages.traveler),
-                  ),
-                  title: const Text(
-                    'Traveler',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: MyColors.pink,
+              const SizedBox(height: 20),
+              // Traveller
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: GestureDetector(
+                  onTap: () => _onSelect(context, MyStrings.traveler),
+                  child: ListTile(
+                    leading: SizedBox(
+                      width: 100,
+                      child: Image.asset(MyImages.traveler),
                     ),
-                  ),
-                  contentPadding: const EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: MyColors.pink,
-                      width: 2.5,
+                    title: const Text(
+                      'Traveler',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: MyColors.pink,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: const BorderSide(
+                        color: MyColors.pink,
+                        width: 2.5,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            // Location Host
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: GestureDetector(
-                onTap: () => _onSelect(context, MyStrings.host),
-                child: ListTile(
-                  leading: SizedBox(
-                    width: 100,
-                    child: Image.asset(MyImages.location),
-                  ),
-                  title: const Text(
-                    'Location Hosts',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: MyColors.pink,
+              // Location Host
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: GestureDetector(
+                  onTap: () => _onSelect(context, MyStrings.host),
+                  child: ListTile(
+                    leading: SizedBox(
+                      width: 100,
+                      child: Image.asset(MyImages.location),
                     ),
-                  ),
-                  contentPadding: const EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: MyColors.pink,
-                      width: 2.5,
+                    title: const Text(
+                      'Location Hosts',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: MyColors.pink,
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-            // Merchants
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: GestureDetector(
-                onTap: () => _onSelect(context, MyStrings.merchant),
-                child: ListTile(
-                  leading: SizedBox(
-                    width: 100,
-                    child: Image.asset(MyImages.merchant),
-                  ),
-                  title: const Text(
-                    'Merchants',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: MyColors.pink,
-                    ),
-                  ),
-                  contentPadding: const EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(
-                      color: MyColors.pink,
-                      width: 2.5,
+                    contentPadding: const EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: const BorderSide(
+                        color: MyColors.pink,
+                        width: 2.5,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+              // Merchants
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: GestureDetector(
+                  onTap: () => _onSelect(context, MyStrings.merchant),
+                  child: ListTile(
+                    leading: SizedBox(
+                      width: 100,
+                      child: Image.asset(MyImages.merchant),
+                    ),
+                    title: const Text(
+                      'Merchants',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: MyColors.pink,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: const BorderSide(
+                        color: MyColors.pink,
+                        width: 2.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

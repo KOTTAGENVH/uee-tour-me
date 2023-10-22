@@ -24,11 +24,10 @@ Future<bool> uploadUserDetails(BuildContext context) async {
   if (user.profileImage != null && context.mounted) {
     final File file = File(user.profileImage!);
     user.profileImage = await uploadFileToFirebaseStorage(file: file, storagePath: 'profilePics');
-    print(user.profileImage);
   }
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final CollectionReference usersCollection = firestore.collection('users');
+  final CollectionReference usersCollection = firestore.collection(MyFirestore.usersCollection);
 
   final Map<String, dynamic> userDetails = user.toMap();
   await usersCollection.doc(user.uid).set(userDetails);

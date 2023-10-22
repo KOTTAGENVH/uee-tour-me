@@ -66,13 +66,21 @@ class RegisterPageState extends State<RegisterPage> {
         SecureSharedPref pref = await SecureSharedPref.getInstance();
         pref.putString(MyPrefTags.userId, uid, isEncrypted: true);
       } catch (e) {
+        String msg = e.toString();
+
         LoadingPopup().remove();
-        print('Error registering user: $e');
+        if (e is FirebaseAuthException) {
+          if (e.code == MyErrorCodes.firebaseInvalidLoginCredentials) {
+            msg = 'Invalid Login Credentials';
+          } else if (e.code == MyErrorCodes.firebaseInvalidEmail) {
+            msg = 'Invalid Email';
+          }
+        }
 
         if (context.mounted) {
           MessagePopUp.display(
             context,
-            message: "Couldn't create Account!\n$e",
+            message: "Couldn't create Account!\n$msg",
           );
         }
       }

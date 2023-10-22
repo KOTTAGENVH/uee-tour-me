@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:tour_me/pages/destination/addDestination.dart';
+import 'package:tour_me/pages/destination/addDestination2.dart';
+import 'package:tour_me/pages/destination/destination_home.dart';
 
 class DestinationBottomNav extends StatelessWidget {
   const DestinationBottomNav({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return  const GNav(rippleColor: Color(0xFFFF5A6E), // tab button ripple color when pressed
+    return    GNav(rippleColor: Color(0xFFFF5A6E), // tab button ripple color when pressed
   hoverColor: Color(0xFFFF5A6E), // tab button hover color
   haptic: true, // haptic feedback
   tabBorderRadius: 15, 
@@ -27,13 +30,17 @@ class DestinationBottomNav extends StatelessWidget {
       margin: EdgeInsets.all(20),
       padding:EdgeInsets.all(10),
       text: 'Home',
+        onPressed: () => Navigator.pushNamed(context, DestinationHome.routeName),
     ),
-    GButton(
-      icon: Icons.add_circle,
-      margin: EdgeInsets.all(20),
-      padding:EdgeInsets.all(10),
-      text: 'Add',
-    ),
+GButton(
+  icon: Icons.add_circle,
+  margin: EdgeInsets.all(20),
+  padding: EdgeInsets.all(10),
+  text: 'Add',
+  onPressed: () => Navigator.pushNamed(context, DestinationAddPage.routeName),
+),
+
+
      GButton(
       icon: Icons.payment,
       margin: EdgeInsets.all(20),

@@ -7,6 +7,7 @@ import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/next_back_button.dart';
 
 class DestinationAddPage extends StatefulWidget {
+    static const String routeName = '/addDestination';
   const DestinationAddPage({super.key});
 
   @override
@@ -44,7 +45,7 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
             children: [
               TextField(
                 controller: _locationNameController,
-                decoration: const InputDecoration(labelText: 'Location Name'),
+                decoration: const InputDecoration(labelText: 'Destination Name'),
               ),
               TextField(
                 controller: _streetNoController,
@@ -103,7 +104,7 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
                       weekendendTime.isNotEmpty &&
                       description.isNotEmpty) {
                     await _destination.add({
-                      "locationName": locationName,
+                      "destinationName": locationName,
                       "streetNo": streetNo,
                       "streetName": streetName,
                       "city": city,
@@ -141,7 +142,7 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
         preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
           leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
+          title: const Text('Add Destination', style: TextStyle(fontSize: 25)),
           centerTitle: true,
           backgroundColor: Colors.black,
           actions: [
@@ -391,7 +392,7 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
                 const SizedBox(height: 30),
                 NextButton(
                   onPress: () async {
-                    final String locationName = _locationNameController.text;
+                    final String destinationName = _locationNameController.text;
                     final String streetNo = _streetNoController.text;
                     final String streetName = _streetNameController.text;
                     final String city = _cityController.text;
@@ -405,7 +406,7 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => DestinationAddPage2(
-                          locationName: locationName,
+                          destinationName: destinationName,
                           streetNo: streetNo,
                           streetName: streetName,
                           city: city,
