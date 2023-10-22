@@ -7,6 +7,7 @@ class MessagePopUp {
     String message = 'An error occurred.',
     Icon icon = const Icon(Icons.error),
     VoidCallback? onDismiss,
+    bool showCancel = false,
   }) {
     showDialog(
       context: context,
@@ -28,6 +29,13 @@ class MessagePopUp {
               },
               child: const Text('OK'),
             ),
+            if (showCancel)
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
           ],
         );
       },
