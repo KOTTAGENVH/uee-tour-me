@@ -1,73 +1,130 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
-import 'package:tour_me/pages/souvenir/Items/itemList.dart';
-import 'package:tour_me/pages/souvenir/Items/itemsAdd.dart';
-import 'package:tour_me/pages/souvenir/souvenirShopAdd.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 
-class ShopProfile extends StatefulWidget {
+class ItemProfile extends StatefulWidget {
+  final String productIndex;
   final String shopId;
-
-  const ShopProfile({super.key, required this.shopId});
+  const ItemProfile(
+      {super.key, required this.productIndex, required this.shopId});
 
   @override
-  State<ShopProfile> createState() => _ShopProfileState();
+  State<ItemProfile> createState() => _ItemProfileState();
 }
 
-final TextEditingController _nameController = TextEditingController();
-final TextEditingController _addressController = TextEditingController();
-final TextEditingController _descriptionController = TextEditingController();
+late TextEditingController _nameController;
+late TextEditingController _priceController;
+late TextEditingController _descriptionController;
 
-final CollectionReference _souvenir =
-    FirebaseFirestore.instance.collection('Souvenir');
-
-class _ShopProfileState extends State<ShopProfile> {
-  String shopName = '';
-  String shopDescription = '';
-  String shopAddress = '';
+class _ItemProfileState extends State<ItemProfile> {
+  String productName = '';
+  String productPrice = '';
+  String productDescription = '';
   bool isSaveEnabled = false;
+
+  late String productId = widget.productIndex;
+
+  late CollectionReference _souvenir;
 
   @override
   void initState() {
     super.initState();
-    // Fetch shop details when the widget is initialized
-    fetchShopDetails();
+    _nameController = TextEditingController();
+    _priceController = TextEditingController();
+    _descriptionController = TextEditingController();
+
+    // Initialize _souvenir with the specific collection reference based on shopId
+    _souvenir = FirebaseFirestore.instance.collection('Souvenir');
+
+    // Fetch product details when the widget is initialized
+    fetchProductDetails();
   }
 
-  Future<void> fetchShopDetails() async {
+  Future<void> fetchProductDetails() async {
     try {
       DocumentSnapshot shopSnapshot = await _souvenir.doc(widget.shopId).get();
 
+      // Check if the document exists and has data
       if (shopSnapshot.exists) {
-        setState(() {
-          // Update the state with the shop details
-          shopName = shopSnapshot['shopName'];
-          shopDescription = shopSnapshot['description'];
-          shopAddress = shopSnapshot['address'];
+        // Access the data as a Map
+        Map<String, dynamic>? data =
+            shopSnapshot.data() as Map<String, dynamic>?;
 
-          // Set the initial values for the text controllers
-          _nameController.text = shopName;
-          _addressController.text = shopAddress;
-          _descriptionController.text = shopDescription;
-        });
+        // Check if data is not null and if the array field exists
+        if (data != null && data.containsKey('products')) {
+          // Access the products data
+          dynamic productsData = data['products'];
+
+          if (productsData is List<dynamic>) {
+            // Handle it as a List
+            if (productsData.isNotEmpty) {
+              // You might want to handle the case when the list is not empty
+              // For now, let's take the first item
+              var desiredObject = productsData[int.parse(productId)];
+              setState(() {
+                // Update the state with the product details
+                productName = desiredObject['productName'];
+                productDescription = desiredObject['description'];
+                productPrice = desiredObject['price'];
+
+                // Set the initial values for the text controllers
+                _nameController.text = productName;
+                _priceController.text = productPrice;
+                _descriptionController.text = productDescription;
+              });
+            } else {
+              print('Products list is empty');
+            }
+          } else if (productsData is Map<String, dynamic>) {
+            // Handle it as a Map
+            Map<String, dynamic> productsMap = productsData;
+            if (productsMap.isNotEmpty) {
+              var desiredObject = productsMap[productId];
+              print('asfdas $productId');
+              print(productId);
+              setState(() {
+                // Update the state with the product details
+                productName = desiredObject['productName'];
+                productDescription = desiredObject['description'];
+                productPrice = desiredObject['price'];
+
+                // Set the initial values for the text controllers
+                _nameController.text = productName;
+                _priceController.text = productPrice;
+                _descriptionController.text = productDescription;
+              });
+            } else {
+              print('Products map is empty');
+            }
+          }
+        } else {
+          print('Products field not found in document or data is null');
+        }
       } else {
-        // Handle the case where the shop document doesn't exist
+        print('Document does not exist');
       }
     } catch (e) {
       // Handle any errors that might occur during fetching
-      print('Error fetching shop details: $e');
+      print('Error fetching product details: $e');
     }
   }
 
   Future<void> saveChanges() async {
     try {
-      await _souvenir.doc(widget.shopId).update({
-        'shopName': _nameController.text,
+      var updatedProduct = {
+        'productName': _nameController.text,
         'description': _descriptionController.text,
-        'address': _addressController.text,
-      });
+        'price': _priceController.text,
+      };
+
+      // Construct the update using FieldValue
+      var update = {
+        'products.$productId': updatedProduct,
+      };
+
+      await _souvenir.doc(widget.shopId).update(update);
     } catch (e) {
       // Handle errors during saving
       print('Error saving changes: $e');
@@ -108,7 +165,7 @@ class _ShopProfileState extends State<ShopProfile> {
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
-                      labelText: 'Shop name',
+                      labelText: 'Product name',
                       labelStyle: const TextStyle(color: Colors.white),
                       prefixIcon: const Icon(
                         Icons.store,
@@ -132,28 +189,11 @@ class _ShopProfileState extends State<ShopProfile> {
                     style: const TextStyle(color: Colors.white),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: PinkButton(
-                          onPress: () {
-                            // Handle Add Image
-                          },
-                          text: 'Change Location on map',
-                          icon: const Icon(Icons.location_pin,
-                              color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
                   const SizedBox(height: 20),
                   TextFormField(
-                    controller: _addressController,
+                    controller: _priceController,
                     decoration: InputDecoration(
-                      labelText: 'Address',
+                      labelText: 'Price',
                       labelStyle: const TextStyle(color: Colors.white),
                       prefixIcon: const Icon(
                         Icons.location_on,
@@ -232,37 +272,6 @@ class _ShopProfileState extends State<ShopProfile> {
                         ],
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      PinkButton(
-                        onPress: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ItemList(shopId: widget.shopId),
-                            ),
-                          );
-                        },
-                        text: 'Product List',
-                        icon: const Icon(Icons.list, color: Colors.white),
-                      ),
-                      const SizedBox(width: 10),
-                      PinkButton(
-                        onPress: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ItemAdd(shopId: widget.shopId)));
-                        },
-                        text: 'Add Product',
-                        icon: const Icon(Icons.production_quantity_limits,
-                            color: Colors.white),
-                      ),
-                    ],
                   ),
                 ],
               ),
