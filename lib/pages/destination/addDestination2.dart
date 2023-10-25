@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/destination/addDestination.dart';
 import 'package:tour_me/pages/destination/paymentDestination.dart';
+import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
+import 'package:tour_me/widgets/message_popup.dart';
 import 'package:tour_me/widgets/next_back_button.dart';
+import 'package:tour_me/widgets/pink_button.dart';
 import 'package:tour_me/widgets/upload_multiple_images.dart';
 import 'package:tour_me/widgets/upload_single_images.dart';
 import 'package:tour_me/widgets/upload_image_button.dart';
@@ -109,27 +113,14 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(children: [
-                TextFormField(
-                  controller: _locationController,
-                  decoration: InputDecoration(
-                    labelText: 'Location',
-                    labelStyle: TextStyle(color: Colors.white),
-                    prefixIcon: Icon(
-                      Icons.add_location_rounded,
-                      color: Colors.white,
-                    ),
-                    filled: true,
-                    fillColor: Color(0xFF454452),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
+               PinkButton(
+                    onPress: () async {
+                      LatLng? location = await GetMapLocation.getLocation(context);
+
+                      if (location != null) MessagePopUp.display(context, message: location.toString());
+                    },
+                    text: 'Get Map Location',
                   ),
-                  style: const TextStyle(color: Colors.white),
-                ),
                 const SizedBox(height: 20),
                 UploadImageButton(
                   onPress: () async {

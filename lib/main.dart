@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      initialRoute: Test.routeName,
+      initialRoute: WelcomePage.routeName,
       routes: {
         Test.routeName: (context) => const Test(),
         WelcomePage.routeName: (context) => const WelcomePage(),
