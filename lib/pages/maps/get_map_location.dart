@@ -72,7 +72,10 @@ class _GetMapLocationState extends State<GetMapLocation> {
               },
             ),
             children: [
-              MyMap.tileLayer,
+              TileLayer(
+                urlTemplate: MyMap.tileUrl,
+                additionalOptions: MyMap.accessOptions,
+              ),
             ],
           ),
           Positioned(
