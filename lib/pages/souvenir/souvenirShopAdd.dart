@@ -158,6 +158,9 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
                           "address": address,
                           "description": description,
                           "isActive": isActive,
+                          "lastMonthlyPayDate":
+                              DateTime.now().subtract(const Duration(days: 40)),
+                          "products": []
                         });
 
                         _nameController.text = '';

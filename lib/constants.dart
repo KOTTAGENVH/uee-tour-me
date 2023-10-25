@@ -7,6 +7,8 @@ class MyImages {
   static const String traveler = 'assets/images/traveler.png';
   static const String merchant = 'assets/images/merchant.png';
   static const String location = 'assets/images/location.png';
+  static const String creditCard = 'assets/images/creditCard.png';
+  static const String itemlList = 'assets/images/itemList.png';
 }
 
 class MyColors {
@@ -23,12 +25,13 @@ class MyPrefTags {
   static const String userType = 'userType';
 }
 
-class MyStrings{
+class MyStrings {
   static const String traveler = 'traveler';
   static const String merchant = 'merchant';
   static const String host = 'host';
 }
 
 class MyErrorCodes {
-  static const String firebaseInvalidLoginCredentials = "INVALID_LOGIN_CREDENTIALS";
+  static const String firebaseInvalidLoginCredentials =
+      "INVALID_LOGIN_CREDENTIALS";
 }

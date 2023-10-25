@@ -53,34 +53,33 @@ class _ItemListState extends State<ItemList> {
             ),
           ),
           Expanded(
-              child: FutureBuilder<DocumentSnapshot>(
-            future: _souvenir.doc(widget.shopId).get(),
-            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-                  Map<String, dynamic>? data =
-                      snapshot.data!.data() as Map<String, dynamic>?;
+            child: FutureBuilder<DocumentSnapshot>(
+              future: _souvenir.doc(widget.shopId).get(),
+              builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    Map<String, dynamic>? data =
+                        snapshot.data!.data() as Map<String, dynamic>?;
 
-                  if (data != null && data.containsKey('products')) {
-                    final List<dynamic> productsList = data['products'];
-                    print(productsList);
-                    return buildProductCard(
-                        productsList as Map<String, dynamic>?);
+                    if (data != null && data.containsKey('products')) {
+                      final List<dynamic>? productsList = data['products'];
+                      return buildProductCard(productsList as List<dynamic>);
+                    } else {
+                      return const SizedBox.shrink(); // or some default UI
+                    }
                   } else {
-                    return const SizedBox.shrink(); // or some default UI
+                    return const Center(
+                      child: Text('Document does not exist.'),
+                    );
                   }
                 } else {
                   return const Center(
-                    child: Text('Document does not exist.'),
+                    child: CircularProgressIndicator(),
                   );
                 }
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          )),
+              },
+            ),
+          ),
         ],
       ),
       backgroundColor: Colors.black,
@@ -88,45 +87,35 @@ class _ItemListState extends State<ItemList> {
     );
   }
 
-  Widget buildProductCard(Map<String, dynamic>? productsMap) {
-    if (productsMap != null && productsMap.containsKey('products')) {
-      dynamic productsData = productsMap['products'];
-
-      if (productsData is List<dynamic>) {
-        return ListView.builder(
-          padding: const EdgeInsets.all(4),
-          itemCount: productsData.length,
-          itemBuilder: (context, index) {
-            final Map<String, dynamic> product = productsData[index];
-            return buildProductTile(product, index);
-          },
-        );
-      } else if (productsData is Map<String, dynamic>) {
-        return ListView.builder(
-          padding: const EdgeInsets.all(4),
-          itemCount: productsData.length,
-          itemBuilder: (context, index) {
-            final String productId = productsData.keys.elementAt(index);
-            final Map<String, dynamic> product = productsData[productId];
-            return buildProductTile(product, productId);
-          },
-        );
-      }
+  Widget buildProductCard(List<dynamic>? productsList) {
+    if (productsList != null && productsList.isNotEmpty) {
+      return ListView.builder(
+        padding: const EdgeInsets.all(4),
+        itemCount: productsList.length,
+        itemBuilder: (context, index) {
+          final Map<String, dynamic> product = productsList[index];
+          return buildProductTile(product, index);
+        },
+      );
     }
 
-    // Handle the case where productsMap is null or does not contain 'products' field
+    // Handle the case where productsList is null or empty
     return const SizedBox.shrink();
   }
 
-  Widget buildProductTile(Map<String, dynamic> product, index) {
+  Widget buildProductTile(Map<String, dynamic> product, int index) {
     print(index);
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ItemProfile(
-                    productIndex: index.toString(), shopId: shopId)));
+          context,
+          MaterialPageRoute(
+            builder: (context) => ItemProfile(
+              productIndex: index.toString(),
+              shopId: shopId,
+            ),
+          ),
+        );
       },
       child: SizedBox(
         height: 80,
@@ -146,7 +135,10 @@ class _ItemListState extends State<ItemList> {
               const Spacer(),
               Text(
                 'Rs. ${product['price']}    ',
-                style: const TextStyle(color: Colors.greenAccent, fontSize: 25),
+                style: const TextStyle(
+                  color: Colors.greenAccent,
+                  fontSize: 25,
+                ),
               ),
             ],
           ),

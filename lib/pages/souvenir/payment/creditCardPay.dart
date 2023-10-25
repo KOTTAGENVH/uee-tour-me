@@ -62,6 +62,11 @@ class _CreditCardPayState extends State<CreditCardPay> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Image.asset(
+              MyImages.creditCard,
+              height: 120, // Set the desired height
+              width: 120, // Set the desired width
+            ),
             const SizedBox(height: 40),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),

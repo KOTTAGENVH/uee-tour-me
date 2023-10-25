@@ -94,6 +94,12 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
   }
 
   Widget buildRow(DocumentSnapshot documentSnapshot) {
+    DateTime prevDate = documentSnapshot['lastMonthlyPayDate'].toDate();
+    DateTime currentDate = DateTime.now();
+
+    // Calculate the difference in days
+    int daysDifference = currentDate.difference(prevDate).inDays;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -102,14 +108,11 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
           style: const TextStyle(color: Colors.white, fontSize: 25),
         ),
         Text(
-          documentSnapshot['isActive'] == true ? 'Active' : 'Inactive',
+          daysDifference < 30 ? 'Active' : 'Inactive',
           style: TextStyle(
-            color: documentSnapshot['isActive'] == true
-                ? Colors.green
-                : Colors.red,
-            fontWeight: documentSnapshot['isActive'] == true
-                ? FontWeight.bold
-                : FontWeight.normal,
+            color: daysDifference < 30 ? Colors.green : Colors.red,
+            fontWeight:
+                daysDifference < 30 ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ],
