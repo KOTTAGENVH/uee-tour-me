@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tour_me/pages/souvenir/shopProfile.dart';
+import 'package:tour_me/pages/souvenir/payment/shopAddPay.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
+import 'package:tour_me/widgets/pink_button.dart';
 
 class SouvenirHomePage extends StatefulWidget {
   const SouvenirHomePage({super.key});
@@ -16,41 +19,75 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-          stream: _souvenir.snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            //streamSnapshot contains the data
-            if (streamSnapshot.hasData) {
-              return ListView.builder(
-                  itemCount: streamSnapshot.data!.docs.length, //number of rows
-                  itemBuilder: (context, index) {
-                    final DocumentSnapshot documentSnapshot =
-                        streamSnapshot.data!.docs[index];
-                    return InkWell(
+      body: Column(
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 10, top: 24, right: 10, bottom: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                PinkButton(
+                  onPress: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ShopAddPay()),
+                    );
+                  },
+                  text: 'PAY',
+                  icon: const Icon(Icons.payment, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder(
+              stream: _souvenir.snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                if (streamSnapshot.hasData) {
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(4), // Reduce padding here
+                    itemCount: streamSnapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      final DocumentSnapshot documentSnapshot =
+                          streamSnapshot.data!.docs[index];
+                      String shopId = documentSnapshot.reference.id;
+                      return GestureDetector(
                         onTap: () {
-                          print(
-                              'Card Clicked: ${documentSnapshot['shopName']}');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ShopProfile(shopId: shopId)));
                         },
                         child: SizedBox(
-                            height: 100,
-                            child: Card(
-                                color: Colors
-                                    .black, // Set card background color to black
-                                shape: RoundedRectangleBorder(
-                                  // Set card border to white
-                                  side: const BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                margin: const EdgeInsets.all(10),
-                                child: ListTile(
-                                  title: buildRow(documentSnapshot),
-                                ))));
-                  });
-            }
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
+                          height: 100,
+                          child: Card(
+                            color: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin:
+                                const EdgeInsets.all(4), // Reduce margin here
+                            child: ListTile(
+                              title: buildRow(documentSnapshot),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       backgroundColor: Colors.black,
       bottomNavigationBar: const BottomNav2(),
     );
