@@ -57,7 +57,7 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
   final TextEditingController _weekendendTimeController =
       TextEditingController();
   final TextEditingController _description = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
+  // final TextEditingController _locationController = TextEditingController();
   final TextEditingController _locationImage1 = TextEditingController();
   final TextEditingController _locationImage2 = TextEditingController();
 
@@ -85,6 +85,7 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
   @override
   Widget build(BuildContext context) {
     bool imageUploaded = false;
+    String retirevedlocation = '';
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
@@ -113,14 +114,18 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(children: [
-               PinkButton(
-                    onPress: () async {
-                      LatLng? location = await GetMapLocation.getLocation(context);
+                PinkButton(
+                  onPress: () async {
+                    LatLng? location =
+                        await GetMapLocation.getLocation(context);
 
-                      if (location != null) MessagePopUp.display(context, message: location.toString());
-                    },
-                    text: 'Get Map Location',
-                  ),
+                    if (location != null) {
+                      retirevedlocation =
+                          "${location.longitude},${location.latitude}";
+                    }
+                  },
+                  text: 'Set location through Map',
+                ),
                 const SizedBox(height: 20),
                 UploadImageButton(
                   onPress: () async {
@@ -169,7 +174,7 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
                     final String weekendstartTime = widget.weekendstartTime;
                     final String weekendendTime = widget.weekendendTime;
                     final String description = widget.description;
-                    final String location = _locationController.text;
+                    final String location = retirevedlocation;
                     final String destinationImage1 = _locationImage1.text;
                     final String destinationImage2 = _locationImage2.text;
                     Navigator.push(
@@ -185,7 +190,7 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
                           weekendstartTime: weekendstartTime,
                           weekendendTime: weekendendTime,
                           description: description,
-                          location: location,
+                          location: retirevedlocation,
                           destinationImage1: destinationImage1,
                           destinationImage2: destinationImage2,
                         ),

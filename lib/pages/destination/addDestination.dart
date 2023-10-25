@@ -168,7 +168,7 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
                 TextFormField(
                   controller: _locationNameController,
                   decoration: InputDecoration(
-                    labelText: 'Location Name',
+                    labelText: 'Destination Name',
                     labelStyle: const TextStyle(color: Colors.white),
                     prefixIcon: const Icon(
                       Icons.add_location_rounded,
@@ -243,7 +243,7 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
                 TextFormField(
                   controller: _cityController,
                   decoration: InputDecoration(
-                    labelText: 'City',
+                    labelText: 'City & Province',
                     labelStyle: const TextStyle(color: Colors.white),
                     prefixIcon: const Icon(
                       Icons.location_on,
