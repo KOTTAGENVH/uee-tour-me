@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/maps/display_map_location.dart';
 import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
-import 'package:tour_me/widgets/message_popup.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 
 class Test extends StatelessWidget {
@@ -43,12 +43,46 @@ class Test extends StatelessWidget {
               child: Column(
                 children: [
                   PinkButton(
+                    onPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DisplayMapLocation(
+                            locations: [
+                              MapMarker(
+                                location: MyMap.initialCenter,
+                                icon: const Icon(
+                                  Icons.star,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              MapMarker(
+                                location: const LatLng(7.4777, 80.4050),
+                                icon: const Icon(
+                                  Icons.star,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              MapMarker(
+                                location: const LatLng(9.66115090, 80.02510188),
+                                icon: const Icon(
+                                  Icons.star,
+                                  color: Colors.black,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    text: 'View Location',
+                  ),
+                  PinkButton(
                     onPress: () async {
                       LatLng? location = await GetMapLocation.getLocation(context);
-
-                      if (location != null) MessagePopUp.display(context, message: location.toString());
+                      if (location != null) print("Longitude: ${location.longitude}, Latitude: ${location.latitude}");
                     },
-                    text: 'Get Map Location',
+                    text: 'get Location',
                   ),
                   TextFormField(
                     decoration: InputDecoration(
