@@ -28,8 +28,8 @@ class _ItemAddState extends State<ItemAdd> {
     print(shopId);
   }
 
-  final CollectionReference _souvenir =
-      FirebaseFirestore.instance.collection('Souvenir');
+  final CollectionReference _items =
+      FirebaseFirestore.instance.collection('SouvenirItems');
 
   @override
   Widget build(BuildContext context) {
@@ -154,14 +154,11 @@ class _ItemAddState extends State<ItemAdd> {
                           description.isNotEmpty) {
                         try {
                           // Update the shop's document with the new product
-                          await _souvenir.doc(widget.shopId).update({
-                            'products': FieldValue.arrayUnion([
-                              {
-                                'productName': name,
-                                'price': price,
-                                'description': description,
-                              }
-                            ]),
+                          await _items.add({
+                            'shopId': widget.shopId,
+                            'productName': name,
+                            'price': price,
+                            'description': description,
                           });
 
                           _nameController.text = '';
