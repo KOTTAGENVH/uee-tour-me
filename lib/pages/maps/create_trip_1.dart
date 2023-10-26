@@ -31,7 +31,10 @@ class _CreateTrip1State extends State<CreateTrip1> {
                 initialZoom: MyMap.initialZoom,
               ),
               children: [
-                MyMap.tileLayer,
+                TileLayer(
+                  urlTemplate: MyMap.tileUrl,
+                  additionalOptions: MyMap.accessOptions,
+                ),
                 const MarkerLayer(
                   markers: [
                     Marker(

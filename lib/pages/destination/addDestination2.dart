@@ -45,6 +45,7 @@ class DestinationAddPage2 extends StatefulWidget {
 }
 
 class _DestinationAddPage2State extends State<DestinationAddPage2> {
+  String retirevedlocation = '';
   final TextEditingController _locationNameController = TextEditingController();
   final TextEditingController _streetNoController = TextEditingController();
   final TextEditingController _streetNameController = TextEditingController();
@@ -85,7 +86,7 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
   @override
   Widget build(BuildContext context) {
     bool imageUploaded = false;
-    String retirevedlocation = '';
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
@@ -122,6 +123,7 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
                     if (location != null) {
                       retirevedlocation =
                           "${location.longitude},${location.latitude}";
+                      print('location: $retirevedlocation');
                     }
                   },
                   text: 'Set location through Map',
@@ -174,7 +176,6 @@ class _DestinationAddPage2State extends State<DestinationAddPage2> {
                     final String weekendstartTime = widget.weekendstartTime;
                     final String weekendendTime = widget.weekendendTime;
                     final String description = widget.description;
-                    final String location = retirevedlocation;
                     final String destinationImage1 = _locationImage1.text;
                     final String destinationImage2 = _locationImage2.text;
                     Navigator.push(

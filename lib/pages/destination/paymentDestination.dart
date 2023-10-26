@@ -77,7 +77,6 @@ class _DestinationPaymentState extends State<DestinationPayment> {
   final TextEditingController _weekendendTimeController =
       TextEditingController();
   final TextEditingController _description = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _locationImage1 = TextEditingController();
   final TextEditingController _locationImage2 = TextEditingController();
   final TextEditingController _cardNumberController = TextEditingController();
