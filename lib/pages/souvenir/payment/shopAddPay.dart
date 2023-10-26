@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:secure_shared_preferences/secure_shared_pref.dart';
+import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/souvenir/payment/creditCardPay.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/labeledEmptyDivider.dart';
@@ -24,11 +26,22 @@ class _ShopAddPayState extends State<ShopAddPay> {
       FirebaseFirestore.instance.collection('Souvenir');
 
   late QuerySnapshot querySnapshot;
+
+  late SecureSharedPref pref;
+  late String? uId = '';
+
   @override
   void initState() {
     super.initState();
+    _initUser();
     _loadshopDetail();
     shopNameLength = selectedShopIds.length;
+  }
+
+  Future<void> _initUser() async {
+    pref = await SecureSharedPref.getInstance();
+    uId = await pref.getString(MyPrefTags.userId, isEncrypted: true);
+    print('uid $uId');
   }
 
   Future<void> _loadshopDetail() async {
@@ -143,6 +156,7 @@ class _ShopAddPayState extends State<ShopAddPay> {
                           builder: (context) => CreditCardPay(
                                 totalPay: totalPay,
                                 selectedIds: selectedShopIds,
+                                userId: uId ?? '',
                               )));
                 },
                 text: 'PAY',

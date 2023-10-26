@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:secure_shared_preferences/secure_shared_preferences.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
@@ -20,6 +21,19 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
   final TextEditingController _descriptionController = TextEditingController();
 
   final bool isActive = false;
+  late SecureSharedPref pref;
+  late String? uId = '';
+  @override
+  void initState() {
+    super.initState();
+    _initUser();
+  }
+
+  Future<void> _initUser() async {
+    pref = await SecureSharedPref.getInstance();
+    uId = await pref.getString(MyPrefTags.userId, isEncrypted: true);
+    print('uid $uId');
+  }
 
   final CollectionReference _souvenir =
       FirebaseFirestore.instance.collection('Souvenir');
@@ -154,6 +168,7 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
                           address.isNotEmpty &&
                           description.isNotEmpty) {
                         await _souvenir.add({
+                          "userId": uId,
                           "shopName": name,
                           "address": address,
                           "description": description,

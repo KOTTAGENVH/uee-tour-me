@@ -4,6 +4,7 @@ import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/palceholder.dart';
+import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/utils/upload_user_details.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
 import 'package:tour_me/widgets/message_popup.dart';
@@ -60,7 +61,7 @@ class CategoryPage extends StatelessWidget {
       if (context.mounted) {
         Navigator.pushNamedAndRemoveUntil(
           context,
-          PlaceholderPage.routeName,
+          SouvenirHomePage.routeName,
           (route) => false,
         );
       }
