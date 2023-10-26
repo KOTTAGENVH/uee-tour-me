@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/models/app_user.dart';
+import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
@@ -35,36 +38,66 @@ class LoginPageState extends State<LoginPage> {
 
     if (_emailError == null && _passwordError == null) {
       LoadingPopup().display(context, message: 'Logging');
+
       try {
+        // Log In with firestore
         final UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
+        String uid = userCredential.user!.uid;
+
+        //Get User Role from Firestore
+        String? userRole;
+        final FirebaseFirestore firestoreInstance = FirebaseFirestore.instance;
+        DocumentReference documentReference = firestoreInstance.collection(MyFirestore.usersCollection).doc(uid);
+        await documentReference.get().then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+            userRole = data[AppUser.USER_ROLE];
+          }
+        });
+
+        //Store id and role in prefs
+        if (userRole != null) {
+          SecureSharedPref prefs = await SecureSharedPref.getInstance();
+          await prefs.clearAll();
+          await prefs.putString(MyPrefTags.userId, uid, isEncrypted: true);
+          await prefs.putString(MyPrefTags.userRole, userRole!, isEncrypted: true);
+        } else {
+          throw 'userRole is null';
+        }
+
         LoadingPopup().remove();
+
+        //Navigate to respective dashboards
+        if (userRole == MyStrings.host) {
+          if (context.mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              DestinationHome.routeName,
+              (route) => false,
+            );
+          }
+        }
+
         // TODO: move to next page
-        print('User logged in: ${userCredential.user?.uid}');
-
-        SecureSharedPref pref = await SecureSharedPref.getInstance();
-        pref.putString(MyPrefTags.userId, userCredential.user!.uid, isEncrypted: true);
       } catch (e) {
-        String msg = '';
+        String msg = e.toString();
 
         LoadingPopup().remove();
-        if(e is FirebaseAuthException){
-          if(e.code == MyErrorCodes.firebaseInvalidLoginCredentials){
+        if (e is FirebaseAuthException) {
+          if (e.code == MyErrorCodes.firebaseInvalidLoginCredentials) {
             msg = 'Invalid Login Credentials';
           }
         }
 
-        
         if (context.mounted) {
           MessagePopUp.display(
             context,
             message: 'Couldn\'t Log In\n$msg',
           );
         }
-        print('Error logging in: $e');
-        // Hand
       }
     }
   }
@@ -87,31 +120,80 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    double imageDimensions = MediaQuery.of(context).size.width / 2 + 30;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-        automaticallyImplyLeading: false,
-      ),
+      backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Image.asset(
+                MyImages.logo,
+                width: imageDimensions,
+                height: imageDimensions,
+              ),
+              const SizedBox(height: 20),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
+                  labelStyle: const TextStyle(color: Colors.white),
+                  prefixIcon: const Icon(
+                    Icons.email,
+                    color: Colors.white,
+                  ),
+                  filled: true,
+                  fillColor: const Color(0xFF454452),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
                   errorText: _emailError,
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
                 ),
+                style: const TextStyle(color: Colors.white),
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
+                  labelStyle: const TextStyle(color: Colors.white),
+                  prefixIcon: const Icon(
+                    Icons.security,
+                    color: Colors.white,
+                  ),
+                  filled: true,
+                  fillColor: const Color(0xFF454452),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
                   errorText: _passwordError,
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
                 ),
+                style: const TextStyle(color: Colors.white),
                 obscureText: true,
               ),
               const SizedBox(height: 20),
@@ -126,7 +208,7 @@ class LoginPageState extends State<LoginPage> {
                 onTap: () => Navigator.pushReplacementNamed(context, RegisterPage.routeName),
                 child: RichText(
                   text: const TextSpan(
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                     text: 'Don\'t have an account yet?  ',
                     children: <TextSpan>[
                       TextSpan(
