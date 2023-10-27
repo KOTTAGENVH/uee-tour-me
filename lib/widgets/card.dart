@@ -28,7 +28,7 @@ class CustomCardWithImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(bottom: 30),
       height: cardHeight,
       width: 5,
       decoration: BoxDecoration(

@@ -128,104 +128,109 @@ class _DestinationHomeState extends State<DestinationHome> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: destinationList.length,
-                  itemBuilder: (context, index) {
-                    final destination = destinationList[index];
-                    // print("Destination Data:, ${destination.data()}");
-                    final String imagePath = destination['destinationImage1'];
-                    final heading = destination['destinationName'];
-                    final subtitle = destination['streetName'];
-                    return CustomCardWithImage(
-                      imagePath: imagePath,
-                      imageWidth: 100,
-                      imageHeight: 150,
-                      cardHeight: 200,
-                      heading: heading,
-                      subtitle: subtitle,
-                      onPress1: () {},
-                      onPress2: () {
-                        final String destinationName =
-                            destination['destinationName'];
-                        final String streetNo = destination['streetNo'];
-                        final String streetName = destination['streetName'];
-                        final String city = destination['city'];
-                        final String weekstartTime =
-                            destination['weekstartTime'];
-                        final String weekendTime = destination['weekendTime'];
-                        final String weekendstartTime =
-                            destination['weekendstartTime'];
-                        final String weekendendTime =
-                            destination['weekendendTime'];
-                        final String description = destination['description'];
-                        final String location = destination['location'];
-                        final String destinationImage1 =
+                Container(
+                    height: 650,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: destinationList.length,
+                      itemBuilder: (context, index) {
+                        final destination = destinationList[index];
+                        // print("Destination Data:, ${destination.data()}");
+                        final String imagePath =
                             destination['destinationImage1'];
-                        final String destinationImage2 =
-                            destination['destinationImage2'];
-                        final String cardNo = destination['cardNo'];
-                        final String expiryDate = destination['expiryDate'];
-                        final String csv = destination['csv'];
-                        final String token = destination['token'];
-                        final String userId = destination['userId'];
+                        final heading = destination['destinationName'];
+                        final subtitle = destination['streetName'];
+                        return CustomCardWithImage(
+                          imagePath: imagePath,
+                          imageWidth: 100,
+                          imageHeight: 150,
+                          cardHeight: 200,
+                          heading: heading,
+                          subtitle: subtitle,
+                          onPress1: () {},
+                          onPress2: () {
+                            final String destinationName =
+                                destination['destinationName'];
+                            final String streetNo = destination['streetNo'];
+                            final String streetName = destination['streetName'];
+                            final String city = destination['city'];
+                            final String weekstartTime =
+                                destination['weekstartTime'];
+                            final String weekendTime =
+                                destination['weekendTime'];
+                            final String weekendstartTime =
+                                destination['weekendstartTime'];
+                            final String weekendendTime =
+                                destination['weekendendTime'];
+                            final String description =
+                                destination['description'];
+                            final String location = destination['location'];
+                            final String destinationImage1 =
+                                destination['destinationImage1'];
+                            final String destinationImage2 =
+                                destination['destinationImage2'];
+                            final String cardNo = destination['cardNo'];
+                            final String expiryDate = destination['expiryDate'];
+                            final String csv = destination['csv'];
+                            final String token = destination['token'];
+                            final String userId = destination['userId'];
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => UpdateDestination(
-                              destinationName: destinationName,
-                              streetNo: streetNo,
-                              streetName: streetName,
-                              city: city,
-                              weekstartTime: weekstartTime,
-                              weekendTime: weekendTime,
-                              weekendstartTime: weekendstartTime,
-                              weekendendTime: weekendendTime,
-                              description: description,
-                              location: location,
-                              destinationImage1: destinationImage1,
-                              destinationImage2: destinationImage2,
-                              cardNo: cardNo,
-                              expiryDate: expiryDate,
-                              csv: csv,
-                              token: token,
-                              userId: userId,
-                              documentId: destination.id,
-                            ),
-                          ),
-                        );
-                      },
-                      onPress3: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Confirm Deletion'),
-                              content: Text(
-                                  'Are you sure you want to delete this destination?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text('Cancel'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UpdateDestination(
+                                  destinationName: destinationName,
+                                  streetNo: streetNo,
+                                  streetName: streetName,
+                                  city: city,
+                                  weekstartTime: weekstartTime,
+                                  weekendTime: weekendTime,
+                                  weekendstartTime: weekendstartTime,
+                                  weekendendTime: weekendendTime,
+                                  description: description,
+                                  location: location,
+                                  destinationImage1: destinationImage1,
+                                  destinationImage2: destinationImage2,
+                                  cardNo: cardNo,
+                                  expiryDate: expiryDate,
+                                  csv: csv,
+                                  token: token,
+                                  userId: userId,
+                                  documentId: destination.id,
                                 ),
-                                TextButton(
-                                  child: Text('Delete'),
-                                  onPressed: () {
-                                    deleteDocument(destination.id);
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
+                              ),
+                            );
+                          },
+                          onPress3: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Confirm Deletion'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this destination?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Delete'),
+                                      onPressed: () {
+                                        deleteDocument(destination.id);
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
                         );
                       },
-                    );
-                  },
-                )
+                    )),
               ],
             ),
           ),
