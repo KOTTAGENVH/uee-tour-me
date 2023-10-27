@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:secure_shared_preferences/secure_shared_preferences.dart';
@@ -180,10 +179,24 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
                         _nameController.text = '';
                         _addressController.text = '';
                         _descriptionController.text = '';
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Shop added successfully!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const SouvenirHomePage()),
+                        );
+                      } else {
+                        // Show an error message if any of the fields is empty
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please fill in all fields.'),
+                            backgroundColor: Colors.red,
+                          ),
                         );
                       }
                     },

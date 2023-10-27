@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
+import 'package:flutter/services.dart';
 
 class ItemProfile extends StatefulWidget {
   final String productId;
@@ -66,11 +67,29 @@ class _ItemProfileState extends State<ItemProfile> {
 
   Future<void> saveChanges() async {
     try {
+      if (_nameController.text.isEmpty ||
+          _priceController.text.isEmpty ||
+          _descriptionController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please fill in all fields.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
       await _items.doc(widget.productId).update({
         'productName': _nameController.text,
         'description': _descriptionController.text,
         'price': _priceController.text,
       });
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Changes saved successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
     } catch (e) {
       // Handle errors during saving
       print('Error saving changes: $e');
@@ -138,6 +157,12 @@ class _ItemProfileState extends State<ItemProfile> {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _priceController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d+\.?\d{0,2}$'))
+                    ],
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
                       labelText: 'Price',
                       labelStyle: const TextStyle(color: Colors.white),
