@@ -54,7 +54,10 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
               markers: widget.locations.map((marker) {
                 return Marker(
                   point: marker.location,
-                  child: marker.icon,
+                  child: GestureDetector(
+                    onTap: marker.onTap,
+                    child: marker.icon,
+                  ),
                 );
               }).toList(),
             )
@@ -68,9 +71,11 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
 class MapMarker {
   final LatLng location;
   final Icon icon;
+  final VoidCallback? onTap;
 
   MapMarker({
     required this.location,
+    this.onTap,
     this.icon = const Icon(
       Icons.location_on_sharp,
       color: Colors.red,

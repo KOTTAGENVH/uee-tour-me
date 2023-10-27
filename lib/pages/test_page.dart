@@ -55,6 +55,7 @@ class Test extends StatelessWidget {
                                   Icons.star,
                                   color: Colors.green,
                                 ),
+                                onTap: () => print('green'),
                               ),
                               MapMarker(
                                 location: const LatLng(7.4777, 80.4050),
@@ -62,6 +63,7 @@ class Test extends StatelessWidget {
                                   Icons.star,
                                   color: Colors.red,
                                 ),
+                                onTap: ()=>print('red'),
                               ),
                               MapMarker(
                                 location: const LatLng(9.66115090, 80.02510188),
@@ -69,6 +71,7 @@ class Test extends StatelessWidget {
                                   Icons.star,
                                   color: Colors.black,
                                 ),
+                                onTap: () => print("black"),
                               )
                             ],
                           ),
