@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/souvenir/shopProfile.dart';
 import 'package:tour_me/pages/souvenir/payment/shopAddPay.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
+import 'package:secure_shared_preferences/secure_shared_pref.dart';
 
 class PaymentHistory extends StatefulWidget {
   const PaymentHistory({super.key});
@@ -16,6 +18,21 @@ class _PaymentHistoryState extends State<PaymentHistory> {
   final CollectionReference _souvenirpayment =
       FirebaseFirestore.instance.collection('SouvenirPayment');
 
+  late SecureSharedPref pref;
+  late String? userId = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initPref();
+  }
+
+  Future<void> _initPref() async {
+    pref = await SecureSharedPref.getInstance();
+    userId = await pref.getString(MyPrefTags.userId, isEncrypted: true);
+    print('uid $userId');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,21 +43,39 @@ class _PaymentHistoryState extends State<PaymentHistory> {
           ),
           Expanded(
             child: StreamBuilder(
-              stream: _souvenirpayment.snapshots(),
+              stream: _souvenirpayment
+                  .where('userId', isEqualTo: userId)
+                  .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                if (streamSnapshot.hasData) {
-                  return ListView.builder(
-                    padding: const EdgeInsets.all(4), // Reduce padding here
-                    itemCount: streamSnapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      final DocumentSnapshot documentSnapshot =
-                          streamSnapshot.data!.docs[index];
-                      return buildRow(documentSnapshot);
-                    },
+                if (streamSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
+                if (streamSnapshot.hasError) {
+                  return Text('Error: ${streamSnapshot.error}');
+                }
+                if (!streamSnapshot.hasData ||
+                    streamSnapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text('No payment history found.'),
+                  );
+                }
+                print(
+                    'Number of documents: ${streamSnapshot.data!.docs.length}');
+                for (int i = 0; i < streamSnapshot.data!.docs.length; i++) {
+                  print(
+                      'Document $i data: ${streamSnapshot.data!.docs[i].data()}');
+                }
+
+                return ListView.builder(
+                  padding: const EdgeInsets.all(4),
+                  itemCount: streamSnapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final DocumentSnapshot documentSnapshot =
+                        streamSnapshot.data!.docs[index];
+                    return buildRow(documentSnapshot);
+                  },
                 );
               },
             ),
