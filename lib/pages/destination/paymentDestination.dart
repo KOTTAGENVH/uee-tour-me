@@ -215,7 +215,7 @@ class _DestinationPaymentState extends State<DestinationPayment> {
                 TextFormField(
                   controller: _csvController,
                   decoration: InputDecoration(
-                    labelText: 'CSV',
+                    labelText: 'CVV',
                     labelStyle: TextStyle(color: Colors.white),
                     prefixIcon: Icon(
                       Icons.security,
