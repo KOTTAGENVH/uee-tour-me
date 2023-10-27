@@ -20,8 +20,8 @@ return Container(
   child: ElevatedButton(
       onPressed: onPress,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
-          MyColors.ash,
+       backgroundColor: MaterialStateProperty.all<Color>(
+          MyColors.pink,
         ),
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
       RoundedRectangleBorder(

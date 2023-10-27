@@ -74,7 +74,6 @@ class _DestinationPaymentState extends State<DestinationPayment> {
   final TextEditingController _weekendendTimeController =
       TextEditingController();
   final TextEditingController _description = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _locationImage1 = TextEditingController();
   final TextEditingController _locationImage2 = TextEditingController();
   final TextEditingController _cardNumberController = TextEditingController();
@@ -213,7 +212,7 @@ class _DestinationPaymentState extends State<DestinationPayment> {
                 TextFormField(
                   controller: _csvController,
                   decoration: InputDecoration(
-                    labelText: 'CSV',
+                    labelText: 'CVV',
                     labelStyle: TextStyle(color: Colors.white),
                     prefixIcon: Icon(
                       Icons.security,

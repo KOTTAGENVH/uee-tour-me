@@ -1,33 +1,72 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
-import 'package:tour_me/pages/destination/addDestination2.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/next_back_button.dart';
 
-class DestinationAddPage extends StatefulWidget {
-    static const String routeName = '/addDestination';
-  const DestinationAddPage({super.key});
+class UpdateDestination extends StatefulWidget {
+  final String destinationName;
+  final String streetNo;
+  final String streetName;
+  final String city;
+  final String weekstartTime;
+  final String weekendTime;
+  final String weekendstartTime;
+  final String weekendendTime;
+  final String description;
+  final String location;
+  final String destinationImage1;
+  final String destinationImage2;
+  final String cardNo;
+  final String csv;
+  final String expiryDate;
+  final String token;
+  final String userId;
+
+  const UpdateDestination({
+    super.key,
+    required this.destinationName,
+    required this.streetNo,
+    required this.streetName,
+    required this.city,
+    required this.weekstartTime,
+    required this.weekendTime,
+    required this.weekendstartTime,
+    required this.weekendendTime,
+    required this.description,
+    required this.location,
+    required this.destinationImage1,
+    required this.destinationImage2,
+    required this.cardNo,
+    required this.csv,
+    required this.expiryDate,
+    required this.token,
+    required this.userId, required String documentId,
+  });
 
   @override
-  State<DestinationAddPage> createState() => _DestinationAddPageState();
+  State<UpdateDestination> createState() => _UpdateState();
 }
 
-class _DestinationAddPageState extends State<DestinationAddPage> {
+class _UpdateState extends State<UpdateDestination> {
   final TextEditingController _locationNameController = TextEditingController();
   final TextEditingController _streetNoController = TextEditingController();
   final TextEditingController _streetNameController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _weekstartTimeController = TextEditingController();
+  final TextEditingController _weekstartTimeController =
+      TextEditingController();
   final TextEditingController _weekendTimeController = TextEditingController();
-  final TextEditingController _weekendstartTimeController = TextEditingController();
-  final TextEditingController _weekendendTimeController = TextEditingController();
+  final TextEditingController _weekendstartTimeController =
+      TextEditingController();
+  final TextEditingController _weekendendTimeController =
+      TextEditingController();
   final TextEditingController _description = TextEditingController();
 
-  final CollectionReference _destination = FirebaseFirestore.instance.collection('Destination');
+  final CollectionReference _destination =
+      FirebaseFirestore.instance.collection('Destination');
 
-  Future<void> _createDestination() async {
+ Future<void> _updateDestination() async {
     await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -82,7 +121,7 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
+         ElevatedButton(
                 child: const Text('Create'),
                 onPressed: () async {
                   final String locationName = _locationNameController.text;
@@ -390,37 +429,37 @@ class _DestinationAddPageState extends State<DestinationAddPage> {
                   maxLines: 4,
                 ),
                 const SizedBox(height: 30),
-                NextButton(
-                  onPress: () async {
-                    final String destinationName = _locationNameController.text;
-                    final String streetNo = _streetNoController.text;
-                    final String streetName = _streetNameController.text;
-                    final String city = _cityController.text;
-                    final String weekstartTime = _weekstartTimeController.text;
-                    final String weekendTime = _weekendTimeController.text;
-                    final String weekendstartTime = _weekendstartTimeController.text;
-                    final String weekendendTime = _weekendendTimeController.text;
-                    final String description = _description.text;
+                // NextButton(
+                //   onPress: () async {
+                //     final String destinationName = _locationNameController.text;
+                //     final String streetNo = _streetNoController.text;
+                //     final String streetName = _streetNameController.text;
+                //     final String city = _cityController.text;
+                //     final String weekstartTime = _weekstartTimeController.text;
+                //     final String weekendTime = _weekendTimeController.text;
+                //     final String weekendstartTime = _weekendstartTimeController.text;
+                //     final String weekendendTime = _weekendendTimeController.text;
+                //     final String description = _description.text;
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DestinationAddPage2(
-                          destinationName: destinationName,
-                          streetNo: streetNo,
-                          streetName: streetName,
-                          city: city,
-                          weekstartTime: weekstartTime,
-                          weekendTime: weekendTime,
-                          weekendstartTime: weekendstartTime,
-                          weekendendTime: weekendendTime,
-                          description: description,
-                        ),
-                      ),
-                    );
-                  },
-                  text: 'Next',
-                ),
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => DestinationAddPage2(
+                //           destinationName: destinationName,
+                //           streetNo: streetNo,
+                //           streetName: streetName,
+                //           city: city,
+                //           weekstartTime: weekstartTime,
+                //           weekendTime: weekendTime,
+                //           weekendstartTime: weekendstartTime,
+                //           weekendendTime: weekendendTime,
+                //           description: description,
+                //         ),
+                //       ),
+                //     );
+                //   },
+                //   text: 'Next',
+                // ),
               ],
             ),
           ),

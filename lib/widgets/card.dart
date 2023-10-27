@@ -28,27 +28,28 @@ class CustomCardWithImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: cardHeight,      
+      margin: EdgeInsets.only(bottom: 30),
+      height: cardHeight,
+      width: 5,
       decoration: BoxDecoration(
-        border: Border.all(color: MyColors.pink, width: 2.5),
-        borderRadius: BorderRadius.circular(20),
-        color: Color.fromARGB(255, 0, 0, 0)
-      ),
+          border: Border.all(color: MyColors.pink, width: 1.5),
+          borderRadius: BorderRadius.circular(20),
+          color: Color.fromARGB(255, 0, 0, 0)),
       child: SizedBox(
-        height: 200,
+        height: 180,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Column(
             children: [
               SizedBox(
-                height: 150,          
+                height: 180,
                 child: Row(
                   children: [
                     SizedBox(
-                      width: 100,
+                      width: 140,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
+                        child: Image.network(
                           alignment: Alignment.center,
                           imagePath,
                           width: imageWidth,
@@ -57,50 +58,62 @@ class CustomCardWithImage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 20), // Add spacing between the image and titles
-                     SizedBox(
+                    const SizedBox(
+                        width: 20), // Add spacing between the image and titles
+                    SizedBox(
                       width: 230,
-      
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Column(
-                          
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children:<Widget> [
-                            Text(
-                              heading,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              subtitle,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
-                            ),
-                            Row(
-                                  
-                                  mainAxisAlignment: MainAxisAlignment.end, // Align buttons to the right
-                                  children:
-                                   [
-                        IconButton(
-                          onPressed: onPress1,
-                          icon: const Icon(Icons.visibility, color: MyColors.pink),
-                        ),
-                        IconButton(
-                          onPressed: onPress2,
-                          icon: const Icon(Icons.edit, color: MyColors.pink),
-                        ),
-                        IconButton(
-                          onPressed:onPress3,
-                          icon: const Icon(Icons.delete, color: MyColors.pink),
-                        ),
-                                  ],
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(
+                                  top: 10, left: 40), // Adjust the top margin as needed
+                              child: Text(
+                                heading,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
                                 ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  top: 20,  left: 60), // Adjust the top margin as needed
+                              child: Text(
+                                subtitle,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                  top: 40,left: 60), // Adjust the top margin as needed
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    onPressed: onPress1,
+                                    icon: const Icon(Icons.visibility,
+                                        color: MyColors.pink),
+                                  ),
+                                  IconButton(
+                                    onPressed: onPress2,
+                                    icon: const Icon(Icons.edit,
+                                        color: MyColors.pink),
+                                  ),
+                                  IconButton(
+                                    onPressed: onPress3,
+                                    icon: const Icon(Icons.delete,
+                                        color: MyColors.pink),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -108,7 +121,6 @@ class CustomCardWithImage extends StatelessWidget {
                   ],
                 ),
               ),
-              
             ],
           ),
         ),
