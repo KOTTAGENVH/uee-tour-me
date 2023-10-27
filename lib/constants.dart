@@ -8,6 +8,8 @@ class MyImages {
   static const String traveler = 'assets/images/traveler.png';
   static const String merchant = 'assets/images/merchant.png';
   static const String location = 'assets/images/location.png';
+  static const String creditCard = 'assets/images/creditCard.png';
+  static const String itemlList = 'assets/images/itemList.png';
   static const String profile = 'assets/images/profile.png';
 }
 
@@ -41,13 +43,15 @@ class MyStrings {
 }
 
 class MyErrorCodes {
-  static const String firebaseInvalidLoginCredentials = "INVALID_LOGIN_CREDENTIALS";
+  static const String firebaseInvalidLoginCredentials =
+      "INVALID_LOGIN_CREDENTIALS";
   static const String firebaseInvalidEmail = "invalid-email";
 }
 
 class MyMap {
   static const Map<String, String> accessOptions = {
-    'accessToken': 'pk.eyJ1IjoiaXQyMTAyMTUzNCIsImEiOiJjbG56eXd4djMwd2VqMmpxaDYwOHZjdzhmIn0.e4Ec6xvIyMbxcumHe9MDzg',
+    'accessToken':
+        'pk.eyJ1IjoiaXQyMTAyMTUzNCIsImEiOiJjbG56eXd4djMwd2VqMmpxaDYwOHZjdzhmIn0.e4Ec6xvIyMbxcumHe9MDzg',
     'id': 'mapbox.mapbox-streets-v8',
   };
   static const String tileUrl =

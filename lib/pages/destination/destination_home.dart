@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
-import 'package:tour_me/widgets/message_popup.dart';
-import 'package:tour_me/widgets/pink_button.dart';
 
 class DestinationHome extends StatefulWidget {
   static const String routeName = '/destinationHome';

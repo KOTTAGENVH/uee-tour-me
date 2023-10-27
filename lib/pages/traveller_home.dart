@@ -1,22 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:secure_shared_preferences/secure_shared_pref.dart';
+import 'package:secure_shared_preferences/secure_shared_preferences.dart';
 import 'package:tour_me/constants.dart';
-import 'package:tour_me/pages/souvenir/shopProfile.dart';
-import 'package:tour_me/pages/souvenir/payment/shopAddPay.dart';
-import 'package:tour_me/widgets/bottom_nav2.dart';
-import 'package:tour_me/widgets/pink_button.dart';
+import 'package:tour_me/widgets/bottom_nav.dart';
 
-class SouvenirHomePage extends StatefulWidget {
-  static const String routeName = '/souvinirhome';
-
-  const SouvenirHomePage({super.key});
+class TouristHome extends StatefulWidget {
+  const TouristHome({Key? key}) : super(key: key);
 
   @override
-  State<SouvenirHomePage> createState() => _SouvenirHomePageState();
+  State<TouristHome> createState() => _TouristHomeState();
 }
 
-class _SouvenirHomePageState extends State<SouvenirHomePage> {
+class _TouristHomeState extends State<TouristHome> {
   late SecureSharedPref pref;
   late String? userId = '';
 
@@ -31,8 +26,8 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
     print('uid $userId');
   }
 
-  final CollectionReference _souvenir =
-      FirebaseFirestore.instance.collection('Souvenir');
+  final CollectionReference _touristHistory =
+      FirebaseFirestore.instance.collection('Route-History');
 
   @override
   Widget build(BuildContext context) {
@@ -43,53 +38,30 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
           if (userId!.isEmpty) {
             return const CircularProgressIndicator();
           }
-
           return Scaffold(
             body: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10, top: 24, right: 10, bottom: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      PinkButton(
-                        onPress: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ShopAddPay()),
-                          );
-                        },
-                        text: 'PAY',
-                        icon: const Icon(Icons.payment, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
                 Expanded(
                   child: StreamBuilder(
-                    stream: _souvenir
+                    stream: _touristHistory
                         .where('userId', isEqualTo: userId)
                         .snapshots(),
                     builder:
                         (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                       if (streamSnapshot.hasData) {
                         return ListView.builder(
-                          padding:
-                              const EdgeInsets.all(4), // Reduce padding here
+                          padding: const EdgeInsets.all(4),
                           itemCount: streamSnapshot.data!.docs.length,
                           itemBuilder: (context, index) {
                             final DocumentSnapshot documentSnapshot =
                                 streamSnapshot.data!.docs[index];
-                            String shopId = documentSnapshot.reference.id;
                             return GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ShopProfile(shopId: shopId)));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             ShopProfile(shopId: shopId)));
                               },
                               child: SizedBox(
                                 height: 100,
@@ -99,8 +71,7 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
                                     side: const BorderSide(color: Colors.white),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  margin: const EdgeInsets.all(
-                                      4), // Reduce margin here
+                                  margin: const EdgeInsets.all(4),
                                   child: ListTile(
                                     title: buildRow(documentSnapshot),
                                   ),
@@ -119,7 +90,7 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
               ],
             ),
             backgroundColor: Colors.black,
-            bottomNavigationBar: const BottomNav2(),
+            bottomNavigationBar: const BottomNav(),
           );
         } else {
           // Show loading indicator while waiting for initialization
@@ -130,26 +101,12 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
   }
 
   Widget buildRow(DocumentSnapshot documentSnapshot) {
-    DateTime prevDate = documentSnapshot['lastMonthlyPayDate'].toDate();
-    DateTime currentDate = DateTime.now();
-
-    // Calculate the difference in days
-    int daysDifference = currentDate.difference(prevDate).inDays;
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          documentSnapshot['shopName'],
+          documentSnapshot['name'],
           style: const TextStyle(color: Colors.white, fontSize: 25),
-        ),
-        Text(
-          daysDifference < 30 ? 'Active' : 'Inactive',
-          style: TextStyle(
-            color: daysDifference < 30 ? Colors.green : Colors.red,
-            fontWeight:
-                daysDifference < 30 ? FontWeight.bold : FontWeight.normal,
-          ),
         ),
       ],
     );

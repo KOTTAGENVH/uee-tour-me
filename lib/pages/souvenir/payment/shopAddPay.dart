@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:secure_shared_preferences/secure_shared_pref.dart';
+import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/souvenir/payment/creditCardPay.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
+import 'package:tour_me/widgets/labeledEmptyDivider.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 
 class ShopAddPay extends StatefulWidget {
@@ -22,11 +25,22 @@ class _ShopAddPayState extends State<ShopAddPay> {
       FirebaseFirestore.instance.collection('Souvenir');
 
   late QuerySnapshot querySnapshot;
+
+  late SecureSharedPref pref;
+  late String? uId = '';
+
   @override
   void initState() {
     super.initState();
+    _initUser();
     _loadshopDetail();
     shopNameLength = selectedShopIds.length;
+  }
+
+  Future<void> _initUser() async {
+    pref = await SecureSharedPref.getInstance();
+    uId = await pref.getString(MyPrefTags.userId, isEncrypted: true);
+    print('uid $uId');
   }
 
   Future<void> _loadshopDetail() async {
@@ -70,13 +84,13 @@ class _ShopAddPayState extends State<ShopAddPay> {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 200),
         child: Form(
           child: Column(
             children: [
               const Text(
                 'Pic shops for monthly \nPayment',
-                style: TextStyle(color: Colors.white, fontSize: 18.0),
+                style: TextStyle(color: Colors.white, fontSize: 25.0),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8.0),
@@ -86,15 +100,53 @@ class _ShopAddPayState extends State<ShopAddPay> {
                     _buildCheckboxListTile(shop['shopName']!, shop['docId']!),
                 ],
               ),
+              const LabeledEmptyDivider(leftPadding: 25.0, rightPadding: 25.0),
               const SizedBox(height: 16.0),
-              Text(
-                '$payment * ${shopNameLength ?? 0}',
-                style: const TextStyle(color: Colors.white, fontSize: 18.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 25.0),
+                      child: Text(
+                        '$payment * ${shopNameLength ?? 0}',
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: 20.0),
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                'Total Payment(Rs. ) \t\t $totalPay',
-                style: const TextStyle(color: Colors.white, fontSize: 18.0),
+              const SizedBox(height: 16.0),
+              const LabeledEmptyDivider(leftPadding: 25.0, rightPadding: 25.0),
+              const SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 25.0, right: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Total Payment(Rs. )',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                          Text(
+                            '$totalPay',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 20.0),
+                            textAlign: TextAlign.right,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 25.0),
               PinkButton(
                 onPress: () {
                   Navigator.push(
@@ -103,6 +155,7 @@ class _ShopAddPayState extends State<ShopAddPay> {
                           builder: (context) => CreditCardPay(
                                 totalPay: totalPay,
                                 selectedIds: selectedShopIds,
+                                userId: uId ?? '',
                               )));
                 },
                 text: 'PAY',
@@ -118,29 +171,32 @@ class _ShopAddPayState extends State<ShopAddPay> {
   }
 
   Widget _buildCheckboxListTile(String shopName, String docId) {
-    return ListTile(
-      title: Text(
-        shopName,
-        style: const TextStyle(color: Colors.white),
-      ),
-      leading: Checkbox(
-        value: selectedShopIds.contains(docId),
-        activeColor: Colors.pink,
-        side: MaterialStateBorderSide.resolveWith(
-          (states) => const BorderSide(width: 1.0, color: Colors.red),
+    return Padding(
+      padding: const EdgeInsets.only(left: 80),
+      child: ListTile(
+        title: Text(
+          shopName,
+          style: const TextStyle(color: Colors.white),
         ),
-        onChanged: (value) {
-          setState(() {
-            if (value != null) {
-              if (value) {
-                selectedShopIds.add(docId);
-              } else {
-                selectedShopIds.remove(docId);
+        leading: Checkbox(
+          value: selectedShopIds.contains(docId),
+          activeColor: Colors.pink,
+          side: MaterialStateBorderSide.resolveWith(
+            (states) => const BorderSide(width: 1.0, color: Colors.red),
+          ),
+          onChanged: (value) {
+            setState(() {
+              if (value != null) {
+                if (value) {
+                  selectedShopIds.add(docId);
+                } else {
+                  selectedShopIds.remove(docId);
+                }
               }
-            }
-            shopNameLength = selectedShopIds.length;
-          });
-        },
+              shopNameLength = selectedShopIds.length;
+            });
+          },
+        ),
       ),
     );
   }

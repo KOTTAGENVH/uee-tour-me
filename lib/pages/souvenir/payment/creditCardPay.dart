@@ -9,8 +9,12 @@ import 'package:tour_me/widgets/pink_button.dart';
 class CreditCardPay extends StatefulWidget {
   final double totalPay;
   final List<String> selectedIds;
+  final String userId;
   const CreditCardPay(
-      {Key? key, required this.totalPay, required this.selectedIds})
+      {Key? key,
+      required this.totalPay,
+      required this.selectedIds,
+      required this.userId})
       : super(key: key);
 
   @override
@@ -18,10 +22,14 @@ class CreditCardPay extends StatefulWidget {
 }
 
 class _CreditCardPayState extends State<CreditCardPay> {
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _totalPriceController = TextEditingController();
   DateTime? selectedDate;
 
   final CollectionReference _souvenir =
       FirebaseFirestore.instance.collection('Souvenir');
+  final CollectionReference _souvenirpayment =
+      FirebaseFirestore.instance.collection('SouvenirPayment');
 
   Future<void> updateLastMonthlyPayDate(List<String> selectedIds) async {
     try {
@@ -34,6 +42,28 @@ class _CreditCardPayState extends State<CreditCardPay> {
     } catch (e) {
       print('Error updating lastMonthlyPayDate: $e');
     }
+  }
+
+  Future<List<String>> getShopNames(List<String> shopIds) async {
+    List<String> shopNames = [];
+
+    for (String id in shopIds) {
+      DocumentSnapshot shopSnapshot = await _souvenir.doc(id).get();
+
+      if (shopSnapshot.exists) {
+        // Cast data to Map<String, dynamic>
+        Map<String, dynamic>? shopData =
+            shopSnapshot.data() as Map<String, dynamic>?;
+
+        // Assuming there's a 'name' field in your shop document
+        String shopName = shopData?['shopName'] ?? 'Unknown Shop';
+        shopNames.add(shopName);
+      } else {
+        shopNames.add('Unknown Shop');
+      }
+    }
+
+    return shopNames;
   }
 
   @override
@@ -62,6 +92,11 @@ class _CreditCardPayState extends State<CreditCardPay> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Image.asset(
+              MyImages.creditCard,
+              height: 120, // Set the desired height
+              width: 120, // Set the desired width
+            ),
             const SizedBox(height: 40),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -205,6 +240,15 @@ class _CreditCardPayState extends State<CreditCardPay> {
                       ),
                       PinkButton(
                         onPress: () async {
+                          List<String> shopNames =
+                              await getShopNames(widget.selectedIds);
+                          await _souvenirpayment.add({
+                            "userId": widget.userId,
+                            "Date": DateTime.now(),
+                            "shops": shopNames,
+                            "totalPrice": widget.totalPay,
+                          });
+                          // ignore: use_build_context_synchronously
                           Navigator.push(
                             context,
                             MaterialPageRoute(
