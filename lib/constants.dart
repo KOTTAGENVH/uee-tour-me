@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 class MyImages {
@@ -53,8 +52,9 @@ class MyMap {
   };
   static const String tileUrl =
       'https://api.mapbox.com/styles/v1/it21021534/clnzz2bdm00bk01qvfm5532ai/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaXQyMTAyMTUzNCIsImEiOiJjbG56eXd4djMwd2VqMmpxaDYwOHZjdzhmIn0.e4Ec6xvIyMbxcumHe9MDzg';
-  static LatLng initialCenter = const LatLng(7.903092, 80.670837);
-  static double initialZoom = 7.7;
+  static const LatLng initialCenter = LatLng(7.903092, 80.670837);
+  static const double initialZoom = 7.7;
+  static const String routeAuthKey = '5b3ce3597851110001cf6248211801968e064168aae20cd718432fc1';
 }
 
 class MyFirestore {
