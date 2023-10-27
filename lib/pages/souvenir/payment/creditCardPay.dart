@@ -242,10 +242,9 @@ class _CreditCardPayState extends State<CreditCardPay> {
                         onPress: () async {
                           List<String> shopNames =
                               await getShopNames(widget.selectedIds);
-
                           await _souvenirpayment.add({
                             "userId": widget.userId,
-                            "Date": DateTime,
+                            "Date": DateTime.now(),
                             "shops": shopNames,
                             "totalPrice": widget.totalPay,
                           });

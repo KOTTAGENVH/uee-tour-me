@@ -158,7 +158,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Total Price', // Your additional text after the shops
+                      'Total Price(Rs. )', // Your additional text after the shops
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     Text(
