@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:open_route_service/open_route_service.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/tourist_item_list.dart';
 import 'package:tour_me/widgets/top_nav.dart';
 
 class DisplayMapLocation extends StatefulWidget {
@@ -33,6 +34,7 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
   late List<LatLng> _locationList;
   List<LatLng> _routeData = [];
   List<MapMarker> _souvenirList = [];
+  List<MapMarker> _selectedSouList = [];
 
   @override
   void initState() {
@@ -55,6 +57,7 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
 
         // Access specific properties from the document
         String? location = data['location'];
+        String id = document.id;
         if (location == null) continue;
 
         // Split the string into latitude and longitude components
@@ -68,12 +71,26 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
           // Create a LatLng object
           LatLng latLng = LatLng(latitude, longitude);
 
-          sovenirlocationList.add(MapMarker(
+          sovenirlocationList.add(
+            MapMarker(
               location: latLng,
               icon: const Icon(
                 Icons.shopping_bag_sharp,
                 color: Color(0xFF006803),
-              )));
+              ),
+              onTap: () {
+                _selectedSouList.add(_souvenirList.firstWhere((s) => latLng == s.location));
+
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TouristItemList(
+                        shopId: id,
+                      ),
+                    ));
+              },
+            ),
+          );
         } else {
           print('Invalid latitude and longitude string format.');
         }
@@ -105,13 +122,22 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
     }
   }
 
-  void onNext() {
-    List<MapMarker> destinationsList = widget.locations;
+  List<MapMarker> _getNeededLocations() {
+    if (widget.step == PageStep.step1) {
+      return widget.locations;
+    } else if (widget.step == PageStep.step2) {
+      return [...widget.locations, ..._selectedSouList];
+    } else {
+      return List.empty();
+    }
+  }
 
+  void onNext() {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
         return DisplayMapLocation(
-          locations: destinationsList,
+          isBuildRoute: widget.step == PageStep.step2,
+          locations: _getNeededLocations(),
           showSouvenirs: true,
           step: widget.step == PageStep.step1 ? PageStep.step2 : null,
         );

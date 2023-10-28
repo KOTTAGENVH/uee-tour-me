@@ -13,8 +13,7 @@ class ItemList extends StatefulWidget {
   final String shopId;
   final String shopName;
 
-  const ItemList({Key? key, required this.shopId, required this.shopName})
-      : super(key: key);
+  const ItemList({Key? key, required this.shopId, required this.shopName}) : super(key: key);
 
   @override
   State<ItemList> createState() => _ItemListState();
@@ -23,11 +22,9 @@ class ItemList extends StatefulWidget {
 class _ItemListState extends State<ItemList> {
   late String shopId;
 
-  final CollectionReference _souvenir =
-      FirebaseFirestore.instance.collection('Souvenir');
+  final CollectionReference _souvenir = FirebaseFirestore.instance.collection('Souvenir');
 
-  final CollectionReference _items =
-      FirebaseFirestore.instance.collection('SouvenirItems');
+  final CollectionReference _items = FirebaseFirestore.instance.collection('SouvenirItems');
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +33,7 @@ class _ItemListState extends State<ItemList> {
       body: Column(
         children: [
           Padding(
-            padding:
-                const EdgeInsets.only(left: 10, top: 24, right: 10, bottom: 4),
+            padding: const EdgeInsets.only(left: 10, top: 24, right: 10, bottom: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -61,8 +57,7 @@ class _ItemListState extends State<ItemList> {
           ),
           Expanded(
             child: StreamBuilder(
-              stream:
-                  _items.where('shopId', isEqualTo: widget.shopId).snapshots(),
+              stream: _items.where('shopId', isEqualTo: widget.shopId).snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                 if (streamSnapshot.hasData) {
                   if (streamSnapshot.data!.docs.isEmpty) {
@@ -91,8 +86,7 @@ class _ItemListState extends State<ItemList> {
                       padding: const EdgeInsets.all(4),
                       itemCount: streamSnapshot.data!.docs.length,
                       itemBuilder: (context, index) {
-                        final DocumentSnapshot documentSnapshot =
-                            streamSnapshot.data!.docs[index];
+                        final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
                         String productId = documentSnapshot.reference.id;
                         return GestureDetector(
                           onTap: () {

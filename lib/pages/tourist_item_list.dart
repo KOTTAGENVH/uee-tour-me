@@ -4,18 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/souvenir/Items/ItemProfile.dart';
-import 'package:tour_me/pages/souvenir/Items/itemsAdd.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
-import 'package:tour_me/widgets/pink_button.dart';
 import 'package:tour_me/widgets/top_nav.dart';
 
 class TouristItemList extends StatefulWidget {
   final String shopId;
-  final String shopName;
+  // final String shopName;
 
-  const TouristItemList(
-      {Key? key, required this.shopId, required this.shopName})
-      : super(key: key);
+  const TouristItemList({Key? key, required this.shopId}) : super(key: key);
 
   @override
   State<TouristItemList> createState() => _TouristItemListState();
@@ -24,11 +20,9 @@ class TouristItemList extends StatefulWidget {
 class _TouristItemListState extends State<TouristItemList> {
   late String shopId;
 
-  final CollectionReference _souvenir =
-      FirebaseFirestore.instance.collection('Souvenir');
+  final CollectionReference _souvenir = FirebaseFirestore.instance.collection('Souvenir');
 
-  final CollectionReference _items =
-      FirebaseFirestore.instance.collection('SouvenirItems');
+  final CollectionReference _items = FirebaseFirestore.instance.collection('SouvenirItems');
 
   @override
   @override
@@ -39,8 +33,7 @@ class _TouristItemListState extends State<TouristItemList> {
         children: [
           Expanded(
             child: StreamBuilder(
-              stream:
-                  _items.where('shopId', isEqualTo: widget.shopId).snapshots(),
+              stream: _items.where('shopId', isEqualTo: widget.shopId).snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                 if (streamSnapshot.hasData) {
                   if (streamSnapshot.data!.docs.isEmpty) {
@@ -54,12 +47,6 @@ class _TouristItemListState extends State<TouristItemList> {
                             width: 350,
                           ),
                           const SizedBox(height: 8.0),
-                          const Text(
-                            'Showcase your products to customers',
-                            style: TextStyle(color: Colors.white, fontSize: 24),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 4.0),
                         ],
                       ),
                     );
@@ -69,10 +56,22 @@ class _TouristItemListState extends State<TouristItemList> {
                       padding: const EdgeInsets.all(4),
                       itemCount: streamSnapshot.data!.docs.length,
                       itemBuilder: (context, index) {
-                        final DocumentSnapshot documentSnapshot =
-                            streamSnapshot.data!.docs[index];
+                        final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
                         String productId = documentSnapshot.reference.id;
-                        return GestureDetector();
+                        return SizedBox(
+                          height: 100,
+                          child: Card(
+                            color: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            margin: const EdgeInsets.all(4),
+                            child: ListTile(
+                              title: buildProductCard(documentSnapshot),
+                            ),
+                          ),
+                        );
                       },
                     );
                   }
@@ -86,7 +85,6 @@ class _TouristItemListState extends State<TouristItemList> {
         ],
       ),
       backgroundColor: Colors.black,
-      bottomNavigationBar: const BottomNav2(),
     );
   }
 
