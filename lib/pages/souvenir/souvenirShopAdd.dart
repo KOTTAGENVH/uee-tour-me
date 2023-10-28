@@ -9,6 +9,7 @@ import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 import 'package:tour_me/widgets/upload_image_button2.dart';
 import 'package:tour_me/widgets/upload_single_images.dart';
 
@@ -66,26 +67,7 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
   Widget build(BuildContext context) {
     bool imageUploaded = false;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: AppBar(
-          leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white.withOpacity(0.5),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: const TopNav(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -115,7 +97,7 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
                     ),
                     style: const TextStyle(color: Colors.white),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 1),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -164,7 +146,7 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 1),
                   TextFormField(
                     controller: _addressController,
                     decoration: InputDecoration(
@@ -265,7 +247,9 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
         ),
       ),
       backgroundColor: Colors.black,
-      bottomNavigationBar: const BottomNav2(selected: Selections.add,),
+      bottomNavigationBar: const BottomNav2(
+        selected: Selections.add,
+      ),
     );
   }
 }

@@ -9,18 +9,19 @@ import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 import 'package:tour_me/widgets/top_nav.dart';
 
-class ItemList extends StatefulWidget {
+class TouristItemList extends StatefulWidget {
   final String shopId;
   final String shopName;
 
-  const ItemList({Key? key, required this.shopId, required this.shopName})
+  const TouristItemList(
+      {Key? key, required this.shopId, required this.shopName})
       : super(key: key);
 
   @override
-  State<ItemList> createState() => _ItemListState();
+  State<TouristItemList> createState() => _TouristItemListState();
 }
 
-class _ItemListState extends State<ItemList> {
+class _TouristItemListState extends State<TouristItemList> {
   late String shopId;
 
   final CollectionReference _souvenir =
@@ -30,35 +31,12 @@ class _ItemListState extends State<ItemList> {
       FirebaseFirestore.instance.collection('SouvenirItems');
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TopNav(),
       body: Column(
         children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 10, top: 24, right: 10, bottom: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                PinkButton(
-                  onPress: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ItemAdd(
-                          shopId: widget.shopId,
-                          shopName: widget.shopName,
-                        ),
-                      ),
-                    );
-                  },
-                  text: 'Add Product',
-                  icon: const Icon(Icons.payment, color: Colors.white),
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: StreamBuilder(
               stream:
@@ -94,33 +72,7 @@ class _ItemListState extends State<ItemList> {
                         final DocumentSnapshot documentSnapshot =
                             streamSnapshot.data!.docs[index];
                         String productId = documentSnapshot.reference.id;
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ItemProfile(
-                                  productId: productId,
-                                  shopId: widget.shopId,
-                                ),
-                              ),
-                            );
-                          },
-                          child: SizedBox(
-                            height: 100,
-                            child: Card(
-                              color: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              margin: const EdgeInsets.all(4),
-                              child: ListTile(
-                                title: buildProductCard(documentSnapshot),
-                              ),
-                            ),
-                          ),
-                        );
+                        return GestureDetector();
                       },
                     );
                   }

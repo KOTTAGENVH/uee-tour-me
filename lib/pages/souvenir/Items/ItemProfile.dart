@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 
 class ItemProfile extends StatefulWidget {
   final String productId;
@@ -100,26 +101,7 @@ class _ItemProfileState extends State<ItemProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: AppBar(
-          leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white.withOpacity(0.5),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: const TopNav(),
       body: SingleChildScrollView(
         child: Column(
           children: [
