@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/destination/updateDestination.dart';
+import 'package:tour_me/pages/destination/viewDestination.dart';
 import 'package:tour_me/widgets/card.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
 
@@ -145,7 +146,58 @@ class _DestinationHomeState extends State<DestinationHome> {
                           cardHeight: 200,
                           heading: heading,
                           subtitle: subtitle,
-                          onPress1: () {},
+                          onPress1: () {  
+                                final String destinationName =
+                                destination['destinationName'];
+                            final String streetNo = destination['streetNo'];
+                            final String streetName = destination['streetName'];
+                            final String city = destination['city'];
+                            final String weekstartTime =
+                                destination['weekstartTime'];
+                            final String weekendTime =
+                                destination['weekendTime'];
+                            final String weekendstartTime =
+                                destination['weekendstartTime'];
+                            final String weekendendTime =
+                                destination['weekendendTime'];
+                            final String description =
+                                destination['description'];
+                            final String location = destination['location'];
+                            final String destinationImage1 =
+                                destination['destinationImage1'];
+                            final String destinationImage2 =
+                                destination['destinationImage2'];
+                            final String cardNo = destination['cardNo'];
+                            final String expiryDate = destination['expiryDate'];
+                            final String csv = destination['csv'];
+                            final String token = destination['token'];
+                            final String userId = destination['userId'];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ViewOneDestination(
+                                  destinationName: destinationName,
+                                  streetNo: streetNo,
+                                  streetName: streetName,
+                                  city: city,
+                                  weekstartTime: weekstartTime,
+                                  weekendTime: weekendTime,
+                                  weekendstartTime: weekendstartTime,
+                                  weekendendTime: weekendendTime,
+                                  description: description,
+                                  location: location,
+                                  destinationImage1: destinationImage1,
+                                  destinationImage2: destinationImage2,
+                                  cardNo: cardNo,
+                                  expiryDate: expiryDate,
+                                  csv: csv,
+                                  token: token,
+                                  userId: userId,
+                                  documentId: destination.id,
+                                ),
+                              ),
+                            );
+                          },
                           onPress2: () {
                             final String destinationName =
                                 destination['destinationName'];
