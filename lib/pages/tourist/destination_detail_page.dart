@@ -1,7 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/destination/suggestiontime/tokenvalidation.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
+import 'package:tour_me/widgets/next_back_button.dart';
+import 'package:tour_me/widgets/pink_button.dart';
 import 'package:tour_me/widgets/top_nav.dart';
 
 class DestinationDetailPage extends StatefulWidget {
@@ -20,6 +25,7 @@ class DestinationDetailPage extends StatefulWidget {
 }
 
 class _DestinationDetailPageState extends State<DestinationDetailPage> {
+  String token = "";
   String name = "";
   String desc = "";
   String imageUrl = "";
@@ -35,7 +41,6 @@ class _DestinationDetailPageState extends State<DestinationDetailPage> {
   void _getPeakH() {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     DocumentReference docRef = firestore.collection('CalculatedPeakHours').doc(widget.destinationId);
-
     docRef.get().then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
@@ -68,6 +73,7 @@ class _DestinationDetailPageState extends State<DestinationDetailPage> {
         // Access specific properties from the document
         setState(() {
           name = data['destinationName'];
+          token = data['token'];
           desc = data['description'];
           imageUrl = data['destinationImage1'];
         });
@@ -140,6 +146,26 @@ class _DestinationDetailPageState extends State<DestinationDetailPage> {
                           color: Colors.white,
                         ),
                       ),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                        children: [
+                                  NextButton(
+                  onPress: () async {
+                    
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ValidateDestinationToken(),
+                      ),
+                    );
+                  },
+                  text: 'Suggest Peak Hours',
+                ),
+                        ],
+                      )
+                      
+                      
                     ],
                   ),
                 ),
