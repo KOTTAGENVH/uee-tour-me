@@ -4,12 +4,16 @@ import 'package:tour_me/pages/category_page.dart';
 import 'package:tour_me/pages/destination/addDestination.dart';
 import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/details_page.dart';
+import 'package:tour_me/pages/journey/view_all_destinations.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/pages/palceholder.dart';
 import 'package:tour_me/pages/preferences_page.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/pages/test_page.dart';
+import 'package:tour_me/pages/tourist/destination_detail_page.dart';
+import 'package:tour_me/pages/tourist/favourites_page.dart';
+import 'package:tour_me/pages/tourist/jorney_plan_page.dart';
 import 'package:tour_me/pages/welcome_page.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'firebase_options.dart';
@@ -49,10 +53,11 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      initialRoute: Test.routeName,
+      initialRoute: DetailDestinationPage.routeName,
       routes: {
-        Test.routeName: (context) => const Test(),
+
         WelcomePage.routeName: (context) => const WelcomePage(),
+        Test.routeName: (context) => const Test(),
         LoginPage.routeName: (context) => const LoginPage(),
         RegisterPage.routeName: (context) => const RegisterPage(),
         CategoryPage.routeName: (context) => const CategoryPage(),
@@ -61,7 +66,11 @@ class MyApp extends StatelessWidget {
         GetMapLocation.routeName: (context) => const GetMapLocation(),
         DestinationHome.routeName: (context) => const DestinationHome(),
         DestinationAddPage.routeName: (context) => const DestinationAddPage(),
-        PreferencesPage.routeName: (context) => const PreferencesPage(),
+        PreferencesPage.routeName:(context) => const PreferencesPage(),
+        TouristHome.routeName: (context) => const TouristHome(),
+        Favourites.routeName: (context) => const Favourites(),
+        ViewAll.routeName:(context) =>  const ViewAll(),
+        DetailDestinationPage.routeName:(context) => const DetailDestinationPage(),
       },
     );
   }
