@@ -74,7 +74,7 @@ class CustomCardWithImage extends StatelessWidget {
                                 heading,
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 25,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
