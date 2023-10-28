@@ -15,7 +15,6 @@ import 'package:tour_me/pages/preferences_page.dart';
 import 'package:tour_me/pages/register_page.dart';
 import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/pages/test_page.dart';
-import 'package:tour_me/pages/tourist/destination_detail_page.dart';
 import 'package:tour_me/pages/tourist/favourites_page.dart';
 import 'package:tour_me/pages/traveller_create_trip.dart';
 import 'package:tour_me/pages/traveller_home.dart';
@@ -81,7 +80,6 @@ class MyApp extends StatelessWidget {
         WishList.routeName: (context) => const WishList(),
         ViewAll.routeName: (context) => const ViewAll(),
         TravelerCreateTrip.routeName: (context) => const TravelerCreateTrip(),
-        DetailDestinationPage.routeName: (context) => const DetailDestinationPage(),
       },
     );
   }

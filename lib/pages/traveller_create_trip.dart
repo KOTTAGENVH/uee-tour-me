@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/models/location_item.dart';
 import 'package:tour_me/pages/maps/display_map_location.dart';
+import 'package:tour_me/pages/tourist/destination_detail_page.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
 import 'package:tour_me/widgets/top_nav.dart';
 
@@ -59,33 +60,58 @@ class _TravelerCreateTripState extends State<TravelerCreateTrip> {
 
   @override
   Widget build(BuildContext context) {
+    void onNext() {
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) {
+          List<String?> stringListOfLocations = selectedLocationList.map((l) => l.location).toList();
+          List<String?> listOfDestinationIds = selectedLocationList.map((l) => l.id).toList();
+          List<MapMarker> listofMapMarkers = [];
+
+          for (String? latLngString in stringListOfLocations) {
+            List<String>? components = latLngString?.split(',');
+            if (components?.length == 2) {
+              double? lat = double.tryParse(components![1]);
+              double? lng = double.tryParse(components[0]);
+
+              if (lat != null && lng != null) {
+                listofMapMarkers.add(MapMarker(
+                  location: LatLng(lat, lng),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DestinationDetailPage(
+                            destinationId: listOfDestinationIds[stringListOfLocations.indexOf(latLngString)]!,
+                          ),
+                        ));
+                  },
+                ));
+              }
+            }
+          }
+
+          return DisplayMapLocation(locations: listofMapMarkers);
+        },
+      ));
+    }
+
+    void onItemSelect(LocationItem location) {
+      setState(() {
+        if (!selectedLocationList.contains(location)) {
+          selectedLocationList.add(location);
+        } else {
+          selectedLocationList.remove(location);
+        }
+      });
+    }
+
     return Scaffold(
       appBar: const TopNav(),
       bottomNavigationBar: const BottomNav(selcted: Selections.add),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'fab',
         backgroundColor: const Color(0xFFFFDCE0),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) {
-              List<String?> stringListOfLocations = selectedLocationList.map((l) => l.location).toList();
-              List<MapMarker> listofMapMarkers = [];
-
-              for (String? latLngString in stringListOfLocations) {
-                List<String>? components = latLngString?.split(',');
-                if (components?.length == 2) {
-                  double? lat = double.tryParse(components![1]);
-                  double? lng = double.tryParse(components[0]);
-
-                  if (lat != null && lng != null) {
-                    listofMapMarkers.add(MapMarker(location: LatLng(lat, lng)));
-                  }
-                }
-              }
-
-              return DisplayMapLocation(locations: listofMapMarkers);
-            },
-          ));
-        },
+        onPressed: onNext,
         child: Text(
           selectedLocationList.length.toString(),
           style: const TextStyle(
@@ -104,15 +130,7 @@ class _TravelerCreateTripState extends State<TravelerCreateTrip> {
             return LocationListItemCard(
               item: location,
               isSelected: selectedLocationList.contains(location),
-              onTap: () {
-                setState(() {
-                  if (!selectedLocationList.contains(location)) {
-                    selectedLocationList.add(location);
-                  } else {
-                    selectedLocationList.remove(location);
-                  }
-                });
-              },
+              onTap: () => onItemSelect(location),
             );
           },
         ),
