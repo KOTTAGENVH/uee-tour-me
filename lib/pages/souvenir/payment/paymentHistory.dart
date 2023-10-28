@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tour_me/constants.dart';
-import 'package:tour_me/pages/souvenir/shopProfile.dart';
-import 'package:tour_me/pages/souvenir/payment/shopAddPay.dart';
-import 'package:tour_me/widgets/bottom_nav2.dart';
-import 'package:tour_me/widgets/pink_button.dart';
 import 'package:secure_shared_preferences/secure_shared_pref.dart';
+import 'package:tour_me/constants.dart';
+import 'package:tour_me/widgets/bottom_nav2.dart';
 
 class PaymentHistory extends StatefulWidget {
   const PaymentHistory({super.key});
@@ -15,8 +12,7 @@ class PaymentHistory extends StatefulWidget {
 }
 
 class _PaymentHistoryState extends State<PaymentHistory> {
-  final CollectionReference _souvenirpayment =
-      FirebaseFirestore.instance.collection('SouvenirPayment');
+  final CollectionReference _souvenirpayment = FirebaseFirestore.instance.collection('SouvenirPayment');
 
   late SecureSharedPref pref;
   late String? userId = '';
@@ -43,9 +39,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
           ),
           Expanded(
             child: StreamBuilder(
-              stream: _souvenirpayment
-                  .where('userId', isEqualTo: userId)
-                  .snapshots(),
+              stream: _souvenirpayment.where('userId', isEqualTo: userId).snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                 if (streamSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -55,25 +49,21 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                 if (streamSnapshot.hasError) {
                   return Text('Error: ${streamSnapshot.error}');
                 }
-                if (!streamSnapshot.hasData ||
-                    streamSnapshot.data!.docs.isEmpty) {
+                if (!streamSnapshot.hasData || streamSnapshot.data!.docs.isEmpty) {
                   return const Center(
                     child: Text('No payment history found.'),
                   );
                 }
-                print(
-                    'Number of documents: ${streamSnapshot.data!.docs.length}');
+                print('Number of documents: ${streamSnapshot.data!.docs.length}');
                 for (int i = 0; i < streamSnapshot.data!.docs.length; i++) {
-                  print(
-                      'Document $i data: ${streamSnapshot.data!.docs[i].data()}');
+                  print('Document $i data: ${streamSnapshot.data!.docs[i].data()}');
                 }
 
                 return ListView.builder(
                   padding: const EdgeInsets.all(4),
                   itemCount: streamSnapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    final DocumentSnapshot documentSnapshot =
-                        streamSnapshot.data!.docs[index];
+                    final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
                     return buildRow(documentSnapshot);
                   },
                 );
@@ -83,7 +73,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
         ],
       ),
       backgroundColor: Colors.black,
-      bottomNavigationBar: const BottomNav2(),
+      bottomNavigationBar: const BottomNav2(selected: Selections.payments),
     );
   }
 
@@ -102,37 +92,27 @@ class _PaymentHistoryState extends State<PaymentHistory> {
           ),
           margin: const EdgeInsets.all(8), // Margin for the entire card
           child: Padding(
-            padding: const EdgeInsets.all(
-                8), // Padding for the content inside the card
+            padding: const EdgeInsets.all(8), // Padding for the content inside the card
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start, // Align text to the left
+              crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      (documentSnapshot['Date'] as Timestamp)
-                          .toDate()
-                          .toString(),
+                      (documentSnapshot['Date'] as Timestamp).toDate().toString(),
                       style: const TextStyle(color: Colors.white, fontSize: 25),
                     ),
                   ],
                 ),
-                const SizedBox(
-                    height: 8), // Adjust the space between date and text
+                const SizedBox(height: 8), // Adjust the space between date and text
                 const Text(
                   'Shops', // Your heading or title
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(
-                    height: 8), // Adjust the space between text and shop list
+                const SizedBox(height: 8), // Adjust the space between text and shop list
                 Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start, // Align text to the left
+                  crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
                   children: shopNames.map((shopName) {
                     return Row(
                       children: [
@@ -146,8 +126,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                         const SizedBox(width: 15),
                         Text(
                           shopName.toString(),
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 16),
+                          style: const TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ],
                     );
@@ -163,10 +142,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                     ),
                     Text(
                       totalPrice.toString(), // Assuming totalPrice is a list
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                      style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),

@@ -4,7 +4,6 @@ import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/pages/souvenir/Items/itemList.dart';
 import 'package:tour_me/pages/souvenir/Items/itemsAdd.dart';
-import 'package:tour_me/pages/souvenir/souvenirShopAdd.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 import 'package:latlong2/latlong.dart';

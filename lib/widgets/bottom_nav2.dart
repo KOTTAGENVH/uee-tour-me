@@ -7,11 +7,21 @@ import 'package:tour_me/pages/souvenir/payment/paymentHistory.dart';
 import 'package:tour_me/pages/souvenir/souvenirShopAdd.dart';
 
 class BottomNav2 extends StatelessWidget {
-  const BottomNav2({Key? key});
+  final Selections selected;
+  static const List<Selections> _selectionList = [
+    Selections.home,
+    Selections.add,
+    Selections.payments,
+  ];
+  const BottomNav2({
+    Key? key,
+    this.selected = Selections.home,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GNav(
+      selectedIndex: _selectionList.indexOf(selected),
       rippleColor: const Color(0xFFFF5A6E),
       hoverColor: const Color(0xFFFF5A6E),
       haptic: true,
@@ -67,4 +77,10 @@ class BottomNav2 extends StatelessWidget {
       builder: (context) => PaymentHistory(),
     ));
   }
+}
+
+enum Selections {
+  home,
+  add,
+  payments,
 }

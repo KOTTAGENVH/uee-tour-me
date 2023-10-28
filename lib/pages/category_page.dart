@@ -14,9 +14,10 @@ class CategoryPage extends StatelessWidget {
   const CategoryPage({super.key});
 
   void _onSelect(BuildContext context, String userRole) async {
+    LoadingPopup().display(context, message: 'Please Wait...');
+    
     SecureSharedPref prefs = await SecureSharedPref.getInstance();
     String? id = await prefs.getString(MyPrefTags.userId, isEncrypted: true);
-    prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
 
     bool success = false;
     if (userRole == MyStrings.traveler) {
@@ -29,10 +30,9 @@ class CategoryPage extends StatelessWidget {
         );
       }
     } else if (context.mounted) {
-      LoadingPopup().display(context, message: 'Please Wait...');
-
       try {
-        success = await uploadUserDetails(context);
+        await prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
+        if (context.mounted) success = await uploadUserDetails(context);
       } catch (e, trace) {
         print("Error: $e");
         print("StackTrace: $trace");
@@ -40,44 +40,53 @@ class CategoryPage extends StatelessWidget {
       LoadingPopup().remove();
 
       if (!success) {
-        if (context.mounted) MessagePopUp.display(context);
+        if (context.mounted) {
+          MessagePopUp.display(context);
+        } else {
+          throw 'error';
+        }
       }
     }
 
-    if (success && userRole == MyStrings.host && id != null) {
-      prefs.clearAll();
-      prefs.putString(MyPrefTags.userId, id, isEncrypted: true);
-      prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
+    if (success && id != null) {
+      if (userRole == MyStrings.host) {
+        await prefs.clearAll();
+        await prefs.putString(MyPrefTags.userId, id, isEncrypted: true);
+        await prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
 
-      if (context.mounted) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          DestinationHome.routeName,
-          (route) => false,
-        );
-      }
-    } else if (userRole == MyStrings.merchant) {
-      //TODO: navigate to merchant dashboard
-      if (context.mounted) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          SouvenirHomePage.routeName,
-          (route) => false,
-        );
-      }
-    } else {
-      if (context.mounted) {
-        MessagePopUp.display(
-          context,
-          onDismiss: () {
-            prefs.clearAll();
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              DetailsPage.routeName,
-              (route) => false,
-            );
-          },
-        );
+        if (context.mounted) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            DestinationHome.routeName,
+            (route) => false,
+          );
+        }
+      } else if (userRole == MyStrings.merchant) {
+        await prefs.clearAll();
+        await prefs.putString(MyPrefTags.userId, id, isEncrypted: true);
+        await prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
+
+        if (context.mounted) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            SouvenirHomePage.routeName,
+            (route) => false,
+          );
+        }
+      } else {
+        if (context.mounted) {
+          MessagePopUp.display(
+            context,
+            onDismiss: () {
+              prefs.clearAll();
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                DetailsPage.routeName,
+                (route) => false,
+              );
+            },
+          );
+        }
       }
     }
   }

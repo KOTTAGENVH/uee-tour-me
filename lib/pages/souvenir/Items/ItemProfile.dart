@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
-import 'package:tour_me/widgets/pink_button.dart';
-import 'package:flutter/services.dart';
 
 class ItemProfile extends StatefulWidget {
   final String productId;

@@ -18,7 +18,7 @@ class SouvenirHomePage extends StatefulWidget {
 
 class _SouvenirHomePageState extends State<SouvenirHomePage> {
   late SecureSharedPref pref;
-  late String? userId = '';
+  late String? userId;
 
   @override
   void initState() {
@@ -31,8 +31,7 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
     print('uid $userId');
   }
 
-  final CollectionReference _souvenir =
-      FirebaseFirestore.instance.collection('Souvenir');
+  final CollectionReference _souvenir = FirebaseFirestore.instance.collection('Souvenir');
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +47,7 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
             body: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10, top: 24, right: 10, bottom: 4),
+                  padding: const EdgeInsets.only(left: 10, top: 24, right: 10, bottom: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -57,8 +55,7 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
                         onPress: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => const ShopAddPay()),
+                            MaterialPageRoute(builder: (context) => const ShopAddPay()),
                           );
                         },
                         text: 'PAY',
@@ -69,27 +66,19 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
                 ),
                 Expanded(
                   child: StreamBuilder(
-                    stream: _souvenir
-                        .where('userId', isEqualTo: userId)
-                        .snapshots(),
-                    builder:
-                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                    stream: _souvenir.where('userId', isEqualTo: userId).snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                       if (streamSnapshot.hasData) {
                         return ListView.builder(
-                          padding:
-                              const EdgeInsets.all(4), // Reduce padding here
+                          padding: const EdgeInsets.all(4), // Reduce padding here
                           itemCount: streamSnapshot.data!.docs.length,
                           itemBuilder: (context, index) {
-                            final DocumentSnapshot documentSnapshot =
-                                streamSnapshot.data!.docs[index];
+                            final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
                             String shopId = documentSnapshot.reference.id;
                             return GestureDetector(
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ShopProfile(shopId: shopId)));
+                                    context, MaterialPageRoute(builder: (context) => ShopProfile(shopId: shopId)));
                               },
                               child: SizedBox(
                                 height: 100,
@@ -99,8 +88,7 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
                                     side: const BorderSide(color: Colors.white),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  margin: const EdgeInsets.all(
-                                      4), // Reduce margin here
+                                  margin: const EdgeInsets.all(4), // Reduce margin here
                                   child: ListTile(
                                     title: buildRow(documentSnapshot),
                                   ),
@@ -119,7 +107,7 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
               ],
             ),
             backgroundColor: Colors.black,
-            bottomNavigationBar: const BottomNav2(),
+            bottomNavigationBar: const BottomNav2(selected: Selections.home),
           );
         } else {
           // Show loading indicator while waiting for initialization
@@ -147,8 +135,7 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
           daysDifference < 30 ? 'Active' : 'Inactive',
           style: TextStyle(
             color: daysDifference < 30 ? Colors.green : Colors.red,
-            fontWeight:
-                daysDifference < 30 ? FontWeight.bold : FontWeight.normal,
+            fontWeight: daysDifference < 30 ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ],

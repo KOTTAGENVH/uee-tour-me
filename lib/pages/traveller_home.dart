@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:secure_shared_preferences/secure_shared_preferences.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
-import 'package:tour_me/widgets/pink_button.dart';
 
 class TouristHome extends StatefulWidget {
   const TouristHome({Key? key}) : super(key: key);
