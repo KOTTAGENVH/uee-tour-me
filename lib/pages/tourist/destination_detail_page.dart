@@ -28,6 +28,14 @@ class _DestinationDetailPageState extends State<DestinationDetailPage> {
   String token = "";
   String name = "";
   String desc = "";
+  String weekstartTime = "";
+  String weekendTime = "";
+  String weekendStartTime = "";
+  String weekendEndTime = "";
+  String streetNo = "";
+  String streetName = "";
+  String city = "";
+  String location = "";
   String imageUrl = "";
   String peak = '';
 
@@ -39,11 +47,14 @@ class _DestinationDetailPageState extends State<DestinationDetailPage> {
   }
 
   void _getPeakH() {
+    
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentReference docRef = firestore.collection('CalculatedPeakHours').doc(widget.destinationId);
+    DocumentReference docRef =
+        firestore.collection('CalculatedPeakHours').doc(widget.destinationId);
     docRef.get().then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
 
         // Access the specific property you want (e.g., 'propertyName')
         String startTime = data['startTime'];
@@ -63,18 +74,27 @@ class _DestinationDetailPageState extends State<DestinationDetailPage> {
 
   void _getLocationData() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DocumentReference document = firestore.collection('Destination').doc(widget.destinationId);
+    DocumentReference document =
+        firestore.collection('Destination').doc(widget.destinationId);
 
     try {
       DocumentSnapshot documentSnapshot = await document.get();
       if (documentSnapshot.exists) {
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
 
         // Access specific properties from the document
         setState(() {
           name = data['destinationName'];
           token = data['token'];
           desc = data['description'];
+          weekstartTime = data['weekstartTime'];
+          weekendTime = data['weekendTime'];
+          weekendStartTime = data['weekendstartTime'];
+          weekendEndTime = data['weekendendTime'];
+          streetNo = data['weekendendTime'];
+          streetName = data['streetName'];
+          city = data['city'];
           imageUrl = data['destinationImage1'];
         });
       } else {
@@ -87,6 +107,9 @@ class _DestinationDetailPageState extends State<DestinationDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("week: ${weekendStartTime}");
+
+    print("Peak: ${peak}");
     return Scaffold(
       appBar: const TopNav(),
       body: Center(
@@ -138,7 +161,66 @@ class _DestinationDetailPageState extends State<DestinationDetailPage> {
                           ),
                         ),
                       ),
+                       const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          weekstartTime,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                        const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          weekendTime,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 30),
+                       Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          weekendStartTime,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                         const SizedBox(height: 30),
+                       Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          weekendEndTime,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                         const SizedBox(height: 30),
+                       Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          streetNo + streetName + city,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                       Text(
                         peak.trim().isNotEmpty ? peak : 'Not Busy',
                         style: const TextStyle(
@@ -148,24 +230,22 @@ class _DestinationDetailPageState extends State<DestinationDetailPage> {
                       ),
                       const SizedBox(height: 30),
                       Row(
-                        mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                                  NextButton(
-                  onPress: () async {
-                    
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ValidateDestinationToken(),
-                      ),
-                    );
-                  },
-                  text: 'Suggest Peak Hours',
-                ),
+                          NextButton(
+                            onPress: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ValidateDestinationToken(),
+                                ),
+                              );
+                            },
+                            text: 'Suggest Peak Hours',
+                          ),
                         ],
                       )
-                      
-                      
                     ],
                   ),
                 ),
