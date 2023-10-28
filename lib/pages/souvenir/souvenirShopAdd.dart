@@ -210,7 +210,7 @@ class _SouvenirAddPageState extends State<SouvenirAddPage> {
         ),
       ),
       backgroundColor: Colors.black,
-      bottomNavigationBar: const BottomNav2(),
+      bottomNavigationBar: const BottomNav2(selected: Selections.add,),
     );
   }
 }

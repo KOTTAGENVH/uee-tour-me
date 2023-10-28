@@ -9,6 +9,7 @@ import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/pages/palceholder.dart';
 import 'package:tour_me/pages/preferences_page.dart';
 import 'package:tour_me/pages/register_page.dart';
+import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/pages/test_page.dart';
 import 'package:tour_me/pages/welcome_page.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
         DestinationHome.routeName: (context) => const DestinationHome(),
         DestinationAddPage.routeName: (context) => const DestinationAddPage(),
         PreferencesPage.routeName: (context) => const PreferencesPage(),
+        SouvenirHomePage.routeName:(context) => const SouvenirHomePage(),
       },
     );
   }

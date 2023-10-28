@@ -74,6 +74,8 @@ class RegisterPageState extends State<RegisterPage> {
             msg = 'Invalid Login Credentials';
           } else if (e.code == MyErrorCodes.firebaseInvalidEmail) {
             msg = 'Invalid Email';
+          } else if(e.code == MyErrorCodes.firebaseEmailAlreadyInUse){
+            msg = 'Account with this email already exists!\nPlease Login';
           }
         }
 
