@@ -14,6 +14,9 @@ class MyImages {
   static const String emptyShops = 'assets/images/empty_shops.png';
   static const String items = 'assets/images/items.png';
   static const String traveller = 'assets/images/traveller.png';
+  // Web images
+  static const String noLocationImage =
+      "https://img.freepik.com/free-vector/place-icon-gold-glossy-design_343694-2633.jpg?w=740&t=st=1698466710~exp=1698467310~hmac=ee8c5adfc2085b8a5e3eed8c15031aa39f7f0d25ac4dafdd5d300eebbdaf39d1";
 }
 
 class MyColors {
@@ -37,6 +40,8 @@ class MyPrefTags {
   static const String firstName = 'firstName';
   static const String lastName = 'lastName';
   static const String profileImage = 'profileImage';
+  static const String selectedLocationList = 'locationList';
+  
 }
 
 class MyStrings {

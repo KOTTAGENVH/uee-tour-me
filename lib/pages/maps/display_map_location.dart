@@ -15,7 +15,7 @@ class DisplayMapLocation extends StatefulWidget {
     this.zoom = 10,
     this.text = "Location",
     required this.locations,
-    required this.isBuildRoute,
+    this.isBuildRoute = false,
   });
 
   @override
