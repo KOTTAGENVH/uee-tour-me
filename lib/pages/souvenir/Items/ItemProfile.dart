@@ -23,6 +23,7 @@ class _ItemProfileState extends State<ItemProfile> {
   String productPrice = '';
   String productDescription = '';
   bool isSaveEnabled = false;
+  String productImageUrl = '';
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -50,6 +51,7 @@ class _ItemProfileState extends State<ItemProfile> {
           productName = shopSnapshot['productName'];
           productDescription = shopSnapshot['description'];
           productPrice = shopSnapshot['price'];
+          productImageUrl = shopSnapshot['image'];
 
           // Set the initial values for the text controllers
           _nameController.text = productName;
@@ -127,6 +129,19 @@ class _ItemProfileState extends State<ItemProfile> {
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 children: [
+                  const SizedBox(height: 10),
+                  if (productImageUrl.isNotEmpty)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Image.network(
+                        productImageUrl,
+                        width: 100, // Set the width of the image
+                        height: 100, // Set the height of the image
+                        fit: BoxFit
+                            .cover, // Adjust this based on your requirements
+                      ),
+                    ),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -215,7 +230,7 @@ class _ItemProfileState extends State<ItemProfile> {
                       });
                     },
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: isSaveEnabled
                         ? () async {
