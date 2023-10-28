@@ -7,6 +7,7 @@ import 'package:tour_me/pages/souvenir/Items/itemsAdd.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 
 class ShopProfile extends StatefulWidget {
   final String shopId;
@@ -131,26 +132,7 @@ class _ShopProfileState extends State<ShopProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: AppBar(
-          leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white.withOpacity(0.5),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: const TopNav(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -315,8 +297,8 @@ class _ShopProfileState extends State<ShopProfile> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ItemList(shopId: widget.shopId),
+                              builder: (context) => ItemList(
+                                  shopId: widget.shopId, shopName: shopName),
                             ),
                           );
                         },
@@ -329,8 +311,10 @@ class _ShopProfileState extends State<ShopProfile> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      ItemAdd(shopId: widget.shopId)));
+                                  builder: (context) => ItemAdd(
+                                        shopId: widget.shopId,
+                                        shopName: shopName,
+                                      )));
                         },
                         text: 'Add Product',
                         icon: const Icon(Icons.production_quantity_limits,

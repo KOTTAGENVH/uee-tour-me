@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:secure_shared_preferences/secure_shared_preferences.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 
 class TouristHome extends StatefulWidget {
+  static const String routeName = '/tourist';
   const TouristHome({Key? key}) : super(key: key);
 
   @override
@@ -14,20 +16,33 @@ class TouristHome extends StatefulWidget {
 class _TouristHomeState extends State<TouristHome> {
   late SecureSharedPref pref;
   late String? userId = '';
+  late String userName = '';
 
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<void> _initPref() async {
-    pref = await SecureSharedPref.getInstance();
-    userId = await pref.getString(MyPrefTags.userId, isEncrypted: true);
-    print('uid $userId');
+    _initPref();
   }
 
   final CollectionReference _touristHistory =
       FirebaseFirestore.instance.collection('Route-History');
+
+  final CollectionReference _tourist =
+      FirebaseFirestore.instance.collection('user');
+
+  Future<void> _initPref() async {
+    try {
+      pref = await SecureSharedPref.getInstance();
+      userId = await pref.getString(MyPrefTags.userId, isEncrypted: true);
+      print('uid $userId');
+      DocumentSnapshot userSnapshot = await _tourist.doc(userId).get();
+      userName = userSnapshot['first_name'];
+      print(userName);
+    } catch (e) {
+      // Handle the error, log it, or show an error message
+      print('Error initializing preferences: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +54,20 @@ class _TouristHomeState extends State<TouristHome> {
             return const CircularProgressIndicator();
           }
           return Scaffold(
+            appBar: const TopNav(),
             body: Column(
               children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'Welcome, $userName',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: StreamBuilder(
                     stream: _touristHistory
@@ -49,6 +76,27 @@ class _TouristHomeState extends State<TouristHome> {
                     builder:
                         (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                       if (streamSnapshot.hasData) {
+                        if (streamSnapshot.data!.docs.isEmpty) {
+                          // Display image and text when there is no route history
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  MyImages.traveller,
+                                  width: 350,
+                                ), // Replace with your image asset
+                                const SizedBox(height: 15),
+                                const Text(
+                                  'Start your first trip now',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+
                         return ListView.builder(
                           padding: const EdgeInsets.all(4),
                           itemCount: streamSnapshot.data!.docs.length,
@@ -81,6 +129,8 @@ class _TouristHomeState extends State<TouristHome> {
                           },
                         );
                       }
+
+                      // Display loading indicator while fetching data
                       return const Center(
                         child: CircularProgressIndicator(),
                       );

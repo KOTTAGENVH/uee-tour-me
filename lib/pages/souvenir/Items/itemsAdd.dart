@@ -6,14 +6,17 @@ import 'package:tour_me/pages/souvenir/Items/itemList.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 import 'package:flutter/services.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 import 'package:tour_me/widgets/upload_image_button.dart';
 import 'package:tour_me/widgets/upload_image_button2.dart';
 import 'package:tour_me/widgets/upload_single_images.dart';
 
 class ItemAdd extends StatefulWidget {
   final String? shopId;
+  final String? shopName;
 
-  const ItemAdd({Key? key, required this.shopId}) : super(key: key);
+  const ItemAdd({Key? key, required this.shopId, this.shopName})
+      : super(key: key);
 
   @override
   State<ItemAdd> createState() => _ItemAddState();
@@ -58,30 +61,17 @@ class _ItemAddState extends State<ItemAdd> {
   Widget build(BuildContext context) {
     bool imageUploaded = false;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: AppBar(
-          leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white.withOpacity(0.5),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: const TopNav(),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
+            // Display the shop name above the product form
+            Text(
+              '${widget.shopName}',
+              style: const TextStyle(color: Colors.white, fontSize: 25),
+            ),
+            const SizedBox(height: 50),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
@@ -107,7 +97,6 @@ class _ItemAddState extends State<ItemAdd> {
                     ),
                     style: const TextStyle(color: Colors.white),
                   ),
-                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -135,13 +124,11 @@ class _ItemAddState extends State<ItemAdd> {
                         },
                         text: imageUploaded
                             // ignore: dead_code
-                            ? 'Shop Image! uploaded \u2713'
-                            : '📷 Shop Image',
+                            ? 'Product Image! uploaded \u2713'
+                            : '📷 Product Image',
                       ),
-                      const SizedBox(width: 10),
                     ],
                   ),
-                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _priceController,
                     inputFormatters: [
@@ -226,8 +213,10 @@ class _ItemAddState extends State<ItemAdd> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ItemList(shopId: widget.shopId ?? ''),
+                              builder: (context) => ItemList(
+                                shopId: widget.shopId ?? '',
+                                shopName: '',
+                              ),
                             ),
                           );
                         } catch (e) {

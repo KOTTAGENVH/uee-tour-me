@@ -6,6 +6,7 @@ import 'package:tour_me/pages/souvenir/shopProfile.dart';
 import 'package:tour_me/pages/souvenir/payment/shopAddPay.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 
 class SouvenirHomePage extends StatefulWidget {
   static const String routeName = '/souvinirhome';
@@ -31,7 +32,8 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
     print('uid $userId');
   }
 
-  final CollectionReference _souvenir = FirebaseFirestore.instance.collection('Souvenir');
+  final CollectionReference _souvenir =
+      FirebaseFirestore.instance.collection('Souvenir');
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +44,13 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
           if (userId!.isEmpty) {
             return const CircularProgressIndicator();
           }
-
           return Scaffold(
+            appBar: const TopNav(),
             body: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 24, right: 10, bottom: 4),
+                  padding: const EdgeInsets.only(
+                      left: 10, top: 24, right: 10, bottom: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -55,52 +58,101 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
                         onPress: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const ShopAddPay()),
+                            MaterialPageRoute(
+                              builder: (context) => const ShopAddPay(),
+                            ),
                           );
                         },
                         text: 'PAY',
                         icon: const Icon(Icons.payment, color: Colors.white),
-                      ),
+                      )
                     ],
                   ),
                 ),
                 Expanded(
                   child: StreamBuilder(
-                    stream: _souvenir.where('userId', isEqualTo: userId).snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                      if (streamSnapshot.hasData) {
-                        return ListView.builder(
-                          padding: const EdgeInsets.all(4), // Reduce padding here
-                          itemCount: streamSnapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
-                            String shopId = documentSnapshot.reference.id;
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context, MaterialPageRoute(builder: (context) => ShopProfile(shopId: shopId)));
-                              },
-                              child: SizedBox(
-                                height: 100,
-                                child: Card(
-                                  color: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                    side: const BorderSide(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  margin: const EdgeInsets.all(4), // Reduce margin here
-                                  child: ListTile(
-                                    title: buildRow(documentSnapshot),
+                    stream: _souvenir
+                        .where('userId', isEqualTo: userId)
+                        .snapshots(),
+                    builder:
+                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                      if (streamSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (streamSnapshot.hasError) {
+                        return const Center(
+                          child: Text('Error loading shops'),
+                        );
+                      } else if (streamSnapshot.data!.docs.isEmpty) {
+                        // Display image and text when there are no shops
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(MyImages.emptyShops),
+                              const SizedBox(
+                                height:
+                                    8.0, // Provide a double value for height
+                              ),
+                              const Text(
+                                'Get Started.',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 24),
+                              ),
+                              const SizedBox(
+                                height:
+                                    4.0, // Provide a double value for height
+                              ),
+                              const Text(
+                                'Add your first shop here',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        // Continue with the existing logic when there are shops
+                        return Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(4),
+                            itemCount: streamSnapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              final DocumentSnapshot documentSnapshot =
+                                  streamSnapshot.data!.docs[index];
+                              String shopId = documentSnapshot.reference.id;
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ShopProfile(shopId: shopId)),
+                                  );
+                                },
+                                child: SizedBox(
+                                  height: 100,
+                                  child: Card(
+                                    color: Colors.black,
+                                    shape: RoundedRectangleBorder(
+                                      side:
+                                          const BorderSide(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    margin: const EdgeInsets.all(4),
+                                    child: ListTile(
+                                      title: buildRow(documentSnapshot),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         );
                       }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
                     },
                   ),
                 ),
@@ -135,7 +187,8 @@ class _SouvenirHomePageState extends State<SouvenirHomePage> {
           daysDifference < 30 ? 'Active' : 'Inactive',
           style: TextStyle(
             color: daysDifference < 30 ? Colors.green : Colors.red,
-            fontWeight: daysDifference < 30 ? FontWeight.bold : FontWeight.normal,
+            fontWeight:
+                daysDifference < 30 ? FontWeight.bold : FontWeight.normal,
           ),
         ),
       ],

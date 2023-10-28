@@ -5,6 +5,7 @@ import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/details_page.dart';
 import 'package:tour_me/pages/palceholder.dart';
 import 'package:tour_me/pages/souvenir/homePage.dart';
+import 'package:tour_me/pages/traveller_home.dart';
 import 'package:tour_me/utils/upload_user_details.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
 import 'package:tour_me/widgets/message_popup.dart';
@@ -15,7 +16,7 @@ class CategoryPage extends StatelessWidget {
 
   void _onSelect(BuildContext context, String userRole) async {
     LoadingPopup().display(context, message: 'Please Wait...');
-    
+
     SecureSharedPref prefs = await SecureSharedPref.getInstance();
     String? id = await prefs.getString(MyPrefTags.userId, isEncrypted: true);
 
@@ -25,7 +26,7 @@ class CategoryPage extends StatelessWidget {
       if (context.mounted) {
         Navigator.pushNamedAndRemoveUntil(
           context,
-          PlaceholderPage.routeName,
+          TouristHome.routeName,
           (route) => false,
         );
       }
