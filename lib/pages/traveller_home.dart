@@ -3,85 +3,145 @@ import 'package:flutter/material.dart';
 import 'package:secure_shared_preferences/secure_shared_preferences.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
-import 'package:tour_me/widgets/card.dart';
 import 'package:tour_me/widgets/top_nav.dart';
 
-class TravellerHome extends StatefulWidget {
-  static const String routeName = '/travelerHome';
-  const TravellerHome({Key? key}) : super(key: key);
+class TouristHome extends StatefulWidget {
+  static const String routeName = '/tourist';
+  const TouristHome({Key? key}) : super(key: key);
 
   @override
-  State<TravellerHome> createState() => _TravellerHomeState();
+  State<TouristHome> createState() => _TravellerHomeState();
 }
 
-class _TravellerHomeState extends State<TravellerHome> {
+class _TravellerHomeState extends State<TouristHome> {
   final CollectionReference _touristHistory = FirebaseFirestore.instance.collection('Route-History');
   late SecureSharedPref pref;
-  late String userId;
+  late String? userId = '';
+  late String userName = '';
 
   @override
   void initState() {
     super.initState();
-    _postInit();
+    _initPref();
   }
 
-  Future<void> _postInit() async {
-    pref = await SecureSharedPref.getInstance();
+  final CollectionReference _tourist = FirebaseFirestore.instance.collection('user');
 
-    // Fetch the user's ID from SharedPreferences
-    String? id = await pref.getString(MyPrefTags.userId, isEncrypted: true);
-
-    // Fetch user data from Firestore based on the user's ID
-    if (id != null) {
-      var query = _touristHistory.where('userId', isEqualTo: id);
-      QuerySnapshot querySnapshot = await query.get();
-      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
-
-      // You can now work with the documents to display user data
-      for (var document in documents) {
-        print(document['name']);
-      }
+  Future<void> _initPref() async {
+    try {
+      pref = await SecureSharedPref.getInstance();
+      userId = await pref.getString(MyPrefTags.userId, isEncrypted: true);
+      print('uid $userId');
+      DocumentSnapshot userSnapshot = await _tourist.doc(userId).get();
+      userName = userSnapshot['first_name'];
+      print(userName);
+    } catch (e) {
+      // Handle the error, log it, or show an error message
+      print('Error initializing preferences: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    try {
-      return Scaffold(
-        appBar: const TopNav(),
-        bottomNavigationBar: const BottomNav(selcted: Selections.home),
-        body: Container(
-          decoration: const BoxDecoration(gradient: MyColors.backgrounGradient),
-          padding: const EdgeInsets.all(10),
-          child: const Center(
-            child: Text(
-              'Lets create our first Trip',
-              style: TextStyle(color: Colors.white),
+    return FutureBuilder(
+      future: _initPref(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (userId!.isEmpty) {
+            return const CircularProgressIndicator();
+          }
+          return Scaffold(
+            appBar: const TopNav(),
+            body: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'Welcome, $userName',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: StreamBuilder(
+                    stream: _touristHistory.where('userId', isEqualTo: userId).snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                      if (streamSnapshot.hasData) {
+                        if (streamSnapshot.data!.docs.isEmpty) {
+                          // Display image and text when there is no route history
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  MyImages.traveller,
+                                  width: 350,
+                                ), // Replace with your image asset
+                                const SizedBox(height: 15),
+                                const Text(
+                                  'Start your first trip now',
+                                  style: TextStyle(color: Colors.white, fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
+                          padding: const EdgeInsets.all(4),
+                          itemCount: streamSnapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
+                            return GestureDetector(
+                              onTap: () {
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             ShopProfile(shopId: shopId)));
+                              },
+                              child: SizedBox(
+                                height: 100,
+                                child: Card(
+                                  color: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  margin: const EdgeInsets.all(4),
+                                  child: ListTile(
+                                    title: buildRow(documentSnapshot),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+
+                      // Display loading indicator while fetching data
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-          // child: ListView.builder(
-          //   itemCount: 3,
-          //   itemBuilder: (context, index) {
-          //     return CustomCardWithImage(
-          //       heading: 'Head',
-          //       subtitle: 'sub',
-          //       imagePath: 'https://i.redd.it/apy63yumihw81.jpg',
-          //       onPress1: () {},
-          //       onPress2: () {},
-          //       onPress3: () {},
-          //     );
-          //   },
-          // ),
-        ),
-      );
-    } catch (e, t) {
-      print("Error: $e");
-      print("StackTrace: $t");
-      return const SizedBox.shrink();
-    }
+            backgroundColor: Colors.black,
+            bottomNavigationBar: const BottomNav(),
+          );
+        } else {
+          // Show loading indicator while waiting for initialization
+          return const CircularProgressIndicator();
+        }
+      },
+    );
   }
 
-  // Example function to build a row from a DocumentSnapshot
   Widget buildRow(DocumentSnapshot documentSnapshot) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

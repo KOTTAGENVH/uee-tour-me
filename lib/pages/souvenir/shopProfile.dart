@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/constants.dart';
+import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/pages/souvenir/Items/itemList.dart';
 import 'package:tour_me/pages/souvenir/Items/itemsAdd.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 
 class ShopProfile extends StatefulWidget {
   final String shopId;
@@ -15,6 +18,7 @@ class ShopProfile extends StatefulWidget {
   State<ShopProfile> createState() => _ShopProfileState();
 }
 
+String retirevedlocation = '';
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _addressController = TextEditingController();
 final TextEditingController _descriptionController = TextEditingController();
@@ -26,8 +30,9 @@ class _ShopProfileState extends State<ShopProfile> {
   String shopName = '';
   String shopDescription = '';
   String shopAddress = '';
+  String existingLocation = '';
   bool isSaveEnabled = false;
-
+  String shopImageUrl = '';
   @override
   void initState() {
     super.initState();
@@ -45,6 +50,8 @@ class _ShopProfileState extends State<ShopProfile> {
           shopName = shopSnapshot['shopName'];
           shopDescription = shopSnapshot['description'];
           shopAddress = shopSnapshot['address'];
+          existingLocation = shopSnapshot['location'];
+          shopImageUrl = shopSnapshot['image'];
 
           // Set the initial values for the text controllers
           _nameController.text = shopName;
@@ -77,6 +84,7 @@ class _ShopProfileState extends State<ShopProfile> {
         'shopName': _nameController.text,
         'description': _descriptionController.text,
         'address': _addressController.text,
+        "location": retirevedlocation
       });
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
@@ -91,33 +99,55 @@ class _ShopProfileState extends State<ShopProfile> {
     }
   }
 
+  void saveLocation() async {
+    try {
+      // Check if the retrieved location is not empty
+      if (retirevedlocation.isNotEmpty) {
+        // Update the location in Firestore
+        await _souvenir.doc(widget.shopId).update({
+          'location': retirevedlocation,
+        });
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Location saved successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select a location on the map.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle errors during location saving
+      print('Error saving location: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: AppBar(
-          leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white.withOpacity(0.5),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: const TopNav(),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
+            if (shopImageUrl.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: Image.network(
+                  shopImageUrl,
+                  width: 100, // Set the width of the image
+                  height: 100, // Set the height of the image
+                  fit: BoxFit.cover, // Adjust this based on your requirements
+                ),
+              ),
+            const SizedBox(height: 20),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
@@ -155,8 +185,17 @@ class _ShopProfileState extends State<ShopProfile> {
                       Container(
                         padding: const EdgeInsets.only(left: 5),
                         child: PinkButton(
-                          onPress: () {
-                            // Handle Add Image
+                          onPress: () async {
+                            LatLng? location =
+                                await GetMapLocation.getLocation(context);
+
+                            if (location != null) {
+                              retirevedlocation =
+                                  "${location.longitude},${location.latitude}";
+                              print('location: $retirevedlocation');
+                              // Call the saveLocation method when the user updates the location
+                              saveLocation();
+                            }
                           },
                           text: 'Change Location on map',
                           icon: const Icon(Icons.location_pin,
@@ -221,7 +260,7 @@ class _ShopProfileState extends State<ShopProfile> {
                       });
                     },
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: isSaveEnabled
                         ? () async {
@@ -258,8 +297,8 @@ class _ShopProfileState extends State<ShopProfile> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ItemList(shopId: widget.shopId),
+                              builder: (context) => ItemList(
+                                  shopId: widget.shopId, shopName: shopName),
                             ),
                           );
                         },
@@ -272,8 +311,10 @@ class _ShopProfileState extends State<ShopProfile> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      ItemAdd(shopId: widget.shopId)));
+                                  builder: (context) => ItemAdd(
+                                        shopId: widget.shopId,
+                                        shopName: shopName,
+                                      )));
                         },
                         text: 'Add Product',
                         icon: const Icon(Icons.production_quantity_limits,

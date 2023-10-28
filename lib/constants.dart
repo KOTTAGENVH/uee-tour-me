@@ -11,6 +11,9 @@ class MyImages {
   static const String creditCard = 'assets/images/creditCard.png';
   static const String itemlList = 'assets/images/itemList.png';
   static const String profile = 'assets/images/profile.png';
+  static const String emptyShops = 'assets/images/empty_shops.png';
+  static const String items = 'assets/images/items.png';
+  static const String traveller = 'assets/images/traveller.png';
 }
 
 class MyColors {

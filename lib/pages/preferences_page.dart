@@ -38,7 +38,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   }
 
   void goNext(){
-    Navigator.pushReplacementNamed(context, TravellerHome.routeName);
+    Navigator.pushReplacementNamed(context, TouristHome.routeName);
   }
 
   @override

@@ -27,11 +27,9 @@ class _WishListState extends State<WishList> {
     print('uid $userId');
   }
 
-  final CollectionReference _wishList =
-      FirebaseFirestore.instance.collection('wishlist');
+  final CollectionReference _wishList = FirebaseFirestore.instance.collection('wishlist');
 
-  final CollectionReference _souvenir =
-      FirebaseFirestore.instance.collection('Souvenir');
+  final CollectionReference _souvenir = FirebaseFirestore.instance.collection('Souvenir');
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +45,14 @@ class _WishListState extends State<WishList> {
               children: [
                 Expanded(
                   child: StreamBuilder(
-                    stream: _wishList
-                        .where('userId', isEqualTo: userId)
-                        .snapshots(),
-                    builder:
-                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                    stream: _wishList.where('userId', isEqualTo: userId).snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                       if (streamSnapshot.hasData) {
                         return ListView.builder(
                           padding: const EdgeInsets.all(4),
                           itemCount: streamSnapshot.data!.docs.length,
                           itemBuilder: (context, index) {
-                            final DocumentSnapshot documentSnapshot =
-                                streamSnapshot.data!.docs[index];
+                            final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
                             return GestureDetector(
                               onTap: () {
                                 // Navigator.push(

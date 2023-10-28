@@ -1,15 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/souvenir/Items/itemList.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
 import 'package:flutter/services.dart';
+import 'package:tour_me/widgets/top_nav.dart';
+import 'package:tour_me/widgets/upload_image_button.dart';
+import 'package:tour_me/widgets/upload_image_button2.dart';
+import 'package:tour_me/widgets/upload_single_images.dart';
 
 class ItemAdd extends StatefulWidget {
   final String? shopId;
+  final String? shopName;
 
-  const ItemAdd({Key? key, required this.shopId}) : super(key: key);
+  const ItemAdd({Key? key, required this.shopId, this.shopName})
+      : super(key: key);
 
   @override
   State<ItemAdd> createState() => _ItemAddState();
@@ -21,6 +28,7 @@ class _ItemAddState extends State<ItemAdd> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _locationImage1 = TextEditingController();
 
   @override
   void initState() {
@@ -31,34 +39,39 @@ class _ItemAddState extends State<ItemAdd> {
 
   final CollectionReference _items =
       FirebaseFirestore.instance.collection('SouvenirItems');
+  void showImageUploadToast(String? imageUrl, bool success) {
+    if (imageUrl != null) {
+      Fluttertoast.showToast(
+        msg: 'Successfully uploaded image: $imageUrl',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: 'Sorry, upload failed.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    bool imageUploaded = false;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: AppBar(
-          leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white.withOpacity(0.5),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: const TopNav(),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
+            // Display the shop name above the product form
+            Text(
+              '${widget.shopName}',
+              style: const TextStyle(color: Colors.white, fontSize: 25),
+            ),
+            const SizedBox(height: 50),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
@@ -84,22 +97,38 @@ class _ItemAddState extends State<ItemAdd> {
                     ),
                     style: const TextStyle(color: Colors.white),
                   ),
-                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      PinkButton(
-                        onPress: () {
-                          // Handle Add Image
+                      UploadImageButton2(
+                        onPress: () async {
+                          String? imageUrl = await ImageUpload.save(context);
+                          print("url $imageUrl");
+                          if (imageUrl!.isNotEmpty) {
+                            setState(() {
+                              imageUploaded = true;
+                              _locationImage1.text = imageUrl;
+                            });
+                            print('urls: $imageUrl');
+                            print('Image1: ${_locationImage1.text}');
+                            print('imageUploaded = $imageUploaded');
+                            showImageUploadToast(
+                                'Successfully Uploaded Images', true);
+                          }
+                          if (imageUrl.isNotEmpty) {
+                          } else {
+                            // Handle the case where no URLs were returned (e.g., upload failure)
+                            showImageUploadToast(
+                                'Failed to Upload Image1s', false);
+                          }
                         },
-                        text: 'Add Image',
-                        icon:
-                            const Icon(Icons.add_a_photo, color: Colors.white),
+                        text: imageUploaded
+                            // ignore: dead_code
+                            ? 'Product Image! uploaded \u2713'
+                            : '📷 Product Image',
                       ),
-                      const SizedBox(width: 10),
                     ],
                   ),
-                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _priceController,
                     inputFormatters: [
@@ -166,6 +195,7 @@ class _ItemAddState extends State<ItemAdd> {
                             'productName': name,
                             'price': price,
                             'description': description,
+                            'image': _locationImage1.text
                           });
 
                           _nameController.text = '';
@@ -183,8 +213,10 @@ class _ItemAddState extends State<ItemAdd> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ItemList(shopId: widget.shopId ?? ''),
+                              builder: (context) => ItemList(
+                                shopId: widget.shopId ?? '',
+                                shopName: '',
+                              ),
                             ),
                           );
                         } catch (e) {

@@ -80,7 +80,7 @@ class LoginPageState extends State<LoginPage> {
         } else if (userRole == MyStrings.merchant) {
           nextPageRoute = SouvenirHomePage.routeName;
         } else if (userRole == MyStrings.traveler) {
-          nextPageRoute = TravellerHome.routeName;
+          nextPageRoute = TouristHome.routeName;
         }
 
         if (context.mounted) {

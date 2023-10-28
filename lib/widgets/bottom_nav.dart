@@ -44,7 +44,7 @@ class BottomNav extends StatelessWidget {
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(10),
             text: 'Home',
-            onPressed: () => Navigator.pushNamed(context, TravellerHome.routeName),
+            onPressed: () => Navigator.pushNamed(context, TouristHome.routeName),
           ),
           GButton(
             icon: Icons.favorite,

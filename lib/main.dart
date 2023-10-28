@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:tour_me/pages/category_page.dart';
 import 'package:tour_me/pages/destination/addDestination.dart';
 import 'package:tour_me/pages/destination/destination_home.dart';
@@ -14,8 +15,8 @@ import 'package:tour_me/pages/test_page.dart';
 import 'package:tour_me/pages/traveller_create_trip.dart';
 import 'package:tour_me/pages/traveller_home.dart';
 import 'package:tour_me/pages/welcome_page.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:tour_me/pages/wishlist.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -67,9 +68,9 @@ class MyApp extends StatelessWidget {
         DestinationAddPage.routeName: (context) => const DestinationAddPage(),
         PreferencesPage.routeName: (context) => const PreferencesPage(),
         SouvenirHomePage.routeName: (context) => const SouvenirHomePage(),
-        TravellerHome.routeName: (context) => const TravellerHome(),
+        TouristHome.routeName: (context) => const TouristHome(),
         WishList.routeName: (context) => const WishList(),
-        TravelerCreateTrip.routeName:(context) => const TravelerCreateTrip(),
+        TravelerCreateTrip.routeName: (context) => const TravelerCreateTrip(),
       },
     );
   }
