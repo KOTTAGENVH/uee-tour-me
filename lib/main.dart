@@ -1,18 +1,27 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:tour_me/pages/category_page.dart';
 import 'package:tour_me/pages/destination/suggestiontime/tokenvalidation.dart';
 import 'package:tour_me/pages/maps/create_trip_1.dart';
 import 'package:tour_me/pages/destination/addDestination.dart';
 import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/details_page.dart';
+import 'package:tour_me/pages/journey/view_all_destinations.dart';
 import 'package:tour_me/pages/login_page.dart';
 import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/pages/palceholder.dart';
+import 'package:tour_me/pages/preferences_page.dart';
 import 'package:tour_me/pages/register_page.dart';
+import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/pages/test_page.dart';
+import 'package:tour_me/pages/tourist/destination_detail_page.dart';
+import 'package:tour_me/pages/tourist/favourites_page.dart';
+import 'package:tour_me/pages/traveller_create_trip.dart';
+import 'package:tour_me/pages/traveller_home.dart';
 import 'package:tour_me/pages/welcome_page.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:tour_me/pages/wishlist.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -56,15 +65,23 @@ class MyApp extends StatelessWidget {
         ValidateDestinationToken.routeName: (context) =>
             const ValidateDestinationToken(),
         WelcomePage.routeName: (context) => const WelcomePage(),
+        Test.routeName: (context) => const Test(),
         LoginPage.routeName: (context) => const LoginPage(),
         RegisterPage.routeName: (context) => const RegisterPage(),
         CategoryPage.routeName: (context) => const CategoryPage(),
         DetailsPage.routeName: (context) => const DetailsPage(),
         PlaceholderPage.routeName: (context) => const PlaceholderPage(),
-        CreateTrip1.routeName: (context) => const CreateTrip1(),
         GetMapLocation.routeName: (context) => const GetMapLocation(),
         DestinationHome.routeName: (context) => const DestinationHome(),
         DestinationAddPage.routeName: (context) => const DestinationAddPage(),
+        PreferencesPage.routeName: (context) => const PreferencesPage(),
+        SouvenirHomePage.routeName: (context) => const SouvenirHomePage(),
+        TouristHome.routeName: (context) => const TouristHome(),
+        Favourites.routeName: (context) => const Favourites(),
+        WishList.routeName: (context) => const WishList(),
+        ViewAll.routeName: (context) => const ViewAll(),
+        TravelerCreateTrip.routeName: (context) => const TravelerCreateTrip(),
+        DetailDestinationPage.routeName: (context) => const DetailDestinationPage(),
       },
     );
   }

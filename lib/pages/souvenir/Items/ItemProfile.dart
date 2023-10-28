@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
-import 'package:tour_me/widgets/pink_button.dart';
 
 class ItemProfile extends StatefulWidget {
-  final String productIndex;
+  final String productId;
   final String shopId;
-  const ItemProfile(
-      {super.key, required this.productIndex, required this.shopId});
+  const ItemProfile({super.key, required this.productId, required this.shopId});
 
   @override
   State<ItemProfile> createState() => _ItemProfileState();
@@ -23,108 +22,75 @@ class _ItemProfileState extends State<ItemProfile> {
   String productPrice = '';
   String productDescription = '';
   bool isSaveEnabled = false;
+  String productImageUrl = '';
 
-  late String productId = widget.productIndex;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
-  late CollectionReference _souvenir;
+  late String productId = widget.productId;
+
+  final CollectionReference _items =
+      FirebaseFirestore.instance.collection('SouvenirItems');
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
-    _priceController = TextEditingController();
-    _descriptionController = TextEditingController();
-
-    // Initialize _souvenir with the specific collection reference based on shopId
-    _souvenir = FirebaseFirestore.instance.collection('Souvenir');
-
     // Fetch product details when the widget is initialized
     fetchProductDetails();
   }
 
   Future<void> fetchProductDetails() async {
     try {
-      DocumentSnapshot shopSnapshot = await _souvenir.doc(widget.shopId).get();
+      DocumentSnapshot shopSnapshot = await _items.doc(widget.productId).get();
 
-      // Check if the document exists and has data
       if (shopSnapshot.exists) {
-        // Access the data as a Map
-        Map<String, dynamic>? data =
-            shopSnapshot.data() as Map<String, dynamic>?;
+        setState(() {
+          // Update the state with the shop details
+          productName = shopSnapshot['productName'];
+          productDescription = shopSnapshot['description'];
+          productPrice = shopSnapshot['price'];
+          productImageUrl = shopSnapshot['image'];
 
-        // Check if data is not null and if the array field exists
-        if (data != null && data.containsKey('products')) {
-          // Access the products data
-          dynamic productsData = data['products'];
-
-          if (productsData is List<dynamic>) {
-            // Handle it as a List
-            if (productsData.isNotEmpty) {
-              // You might want to handle the case when the list is not empty
-              // For now, let's take the first item
-              var desiredObject = productsData[int.parse(productId)];
-              setState(() {
-                // Update the state with the product details
-                productName = desiredObject['productName'];
-                productDescription = desiredObject['description'];
-                productPrice = desiredObject['price'];
-
-                // Set the initial values for the text controllers
-                _nameController.text = productName;
-                _priceController.text = productPrice;
-                _descriptionController.text = productDescription;
-              });
-            } else {
-              print('Products list is empty');
-            }
-          } else if (productsData is Map<String, dynamic>) {
-            // Handle it as a Map
-            Map<String, dynamic> productsMap = productsData;
-            if (productsMap.isNotEmpty) {
-              var desiredObject = productsMap[productId];
-              print('asfdas $productId');
-              print(productId);
-              setState(() {
-                // Update the state with the product details
-                productName = desiredObject['productName'];
-                productDescription = desiredObject['description'];
-                productPrice = desiredObject['price'];
-
-                // Set the initial values for the text controllers
-                _nameController.text = productName;
-                _priceController.text = productPrice;
-                _descriptionController.text = productDescription;
-              });
-            } else {
-              print('Products map is empty');
-            }
-          }
-        } else {
-          print('Products field not found in document or data is null');
-        }
+          // Set the initial values for the text controllers
+          _nameController.text = productName;
+          _priceController.text = productPrice;
+          _descriptionController.text = productDescription;
+        });
       } else {
-        print('Document does not exist');
+        // Handle the case where the shop document doesn't exist
       }
     } catch (e) {
       // Handle any errors that might occur during fetching
-      print('Error fetching product details: $e');
+      print('Error fetching shop details: $e');
     }
   }
 
   Future<void> saveChanges() async {
     try {
-      var updatedProduct = {
+      if (_nameController.text.isEmpty ||
+          _priceController.text.isEmpty ||
+          _descriptionController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please fill in all fields.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+      await _items.doc(widget.productId).update({
         'productName': _nameController.text,
         'description': _descriptionController.text,
         'price': _priceController.text,
-      };
-
-      // Construct the update using FieldValue
-      var update = {
-        'products.$productId': updatedProduct,
-      };
-
-      await _souvenir.doc(widget.shopId).update(update);
+      });
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Changes saved successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
     } catch (e) {
       // Handle errors during saving
       print('Error saving changes: $e');
@@ -162,6 +128,19 @@ class _ItemProfileState extends State<ItemProfile> {
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 children: [
+                  const SizedBox(height: 10),
+                  if (productImageUrl.isNotEmpty)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: Image.network(
+                        productImageUrl,
+                        width: 100, // Set the width of the image
+                        height: 100, // Set the height of the image
+                        fit: BoxFit
+                            .cover, // Adjust this based on your requirements
+                      ),
+                    ),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -192,6 +171,12 @@ class _ItemProfileState extends State<ItemProfile> {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _priceController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d+\.?\d{0,2}$'))
+                    ],
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
                       labelText: 'Price',
                       labelStyle: const TextStyle(color: Colors.white),
@@ -244,7 +229,7 @@ class _ItemProfileState extends State<ItemProfile> {
                       });
                     },
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: isSaveEnabled
                         ? () async {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:tour_me/pages/destination/addDestination.dart';
-import 'package:tour_me/pages/destination/addDestination2.dart';
 import 'package:tour_me/pages/destination/destination_home.dart';
 
 class DestinationBottomNav extends StatelessWidget {

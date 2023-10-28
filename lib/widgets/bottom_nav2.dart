@@ -3,14 +3,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:tour_me/pages/souvenir/homePage.dart';
+import 'package:tour_me/pages/souvenir/payment/paymentHistory.dart';
 import 'package:tour_me/pages/souvenir/souvenirShopAdd.dart';
 
 class BottomNav2 extends StatelessWidget {
-  const BottomNav2({Key? key});
+  final Selections selected;
+  static const List<Selections> _selectionList = [
+    Selections.home,
+    Selections.add,
+    Selections.payments,
+  ];
+  const BottomNav2({
+    Key? key,
+    this.selected = Selections.home,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GNav(
+      selectedIndex: _selectionList.indexOf(selected),
       rippleColor: const Color(0xFFFF5A6E),
       hoverColor: const Color(0xFFFF5A6E),
       haptic: true,
@@ -38,11 +49,12 @@ class BottomNav2 extends StatelessWidget {
           text: 'Add',
           onPressed: () => _navigateToAddPage(context),
         ),
-        const GButton(
+        GButton(
           icon: Icons.payment,
           margin: EdgeInsets.all(20),
           padding: EdgeInsets.all(10),
           text: 'Payment',
+          onPressed: () => _navigateToPaymentHistory(context),
         ),
       ],
     );
@@ -59,4 +71,16 @@ class BottomNav2 extends StatelessWidget {
       builder: (context) => SouvenirHomePage(),
     ));
   }
+
+  void _navigateToPaymentHistory(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => PaymentHistory(),
+    ));
+  }
+}
+
+enum Selections {
+  home,
+  add,
+  payments,
 }

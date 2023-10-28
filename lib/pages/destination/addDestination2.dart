@@ -1,18 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/destination/addDestination.dart';
 import 'package:tour_me/pages/destination/paymentDestination.dart';
 import 'package:tour_me/pages/maps/get_map_location.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
-import 'package:tour_me/widgets/message_popup.dart';
 import 'package:tour_me/widgets/next_back_button.dart';
 import 'package:tour_me/widgets/pink_button.dart';
-import 'package:tour_me/widgets/upload_multiple_images.dart';
-import 'package:tour_me/widgets/upload_single_images.dart';
 import 'package:tour_me/widgets/upload_image_button.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tour_me/widgets/upload_multiple_images.dart';
 
 class DestinationAddPage2 extends StatefulWidget {
   final String destinationName;

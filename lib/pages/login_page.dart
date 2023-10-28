@@ -6,6 +6,8 @@ import 'package:tour_me/constants.dart';
 import 'package:tour_me/models/app_user.dart';
 import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/register_page.dart';
+import 'package:tour_me/pages/souvenir/homePage.dart';
+import 'package:tour_me/pages/traveller_home.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
 import 'package:tour_me/widgets/message_popup.dart';
@@ -70,18 +72,24 @@ class LoginPageState extends State<LoginPage> {
 
         LoadingPopup().remove();
 
+        String nextPageRoute = '';
+
         //Navigate to respective dashboards
         if (userRole == MyStrings.host) {
-          if (context.mounted) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              DestinationHome.routeName,
-              (route) => false,
-            );
-          }
+          nextPageRoute = DestinationHome.routeName;
+        } else if (userRole == MyStrings.merchant) {
+          nextPageRoute = SouvenirHomePage.routeName;
+        } else if (userRole == MyStrings.traveler) {
+          nextPageRoute = TouristHome.routeName;
         }
 
-        // TODO: move to next page
+        if (context.mounted) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            nextPageRoute,
+            (route) => false,
+          );
+        }
       } catch (e) {
         String msg = e.toString();
 
