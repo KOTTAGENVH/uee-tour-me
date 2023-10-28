@@ -6,6 +6,7 @@ import 'package:tour_me/constants.dart';
 import 'package:tour_me/models/app_user.dart';
 import 'package:tour_me/pages/destination/destination_home.dart';
 import 'package:tour_me/pages/register_page.dart';
+import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
 import 'package:tour_me/widgets/message_popup.dart';
@@ -76,6 +77,14 @@ class LoginPageState extends State<LoginPage> {
             Navigator.pushNamedAndRemoveUntil(
               context,
               DestinationHome.routeName,
+              (route) => false,
+            );
+          }
+        }else if(userRole == MyStrings.merchant){
+          if (context.mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              SouvenirHomePage.routeName,
               (route) => false,
             );
           }
