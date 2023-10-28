@@ -377,7 +377,7 @@ class _AddDestinationPeakState extends State<AddDestinationPeak> {
         ),
       ),
       backgroundColor: Colors.black,
-      bottomNavigationBar: const DestinationBottomNav(),
+      // bottomNavigationBar: const DestinationBottomNav(),
     );
   }
 }

@@ -180,7 +180,7 @@ class _ValidateDestinationToken extends State<ValidateDestinationToken> {
         ],
       )),
       backgroundColor: Colors.black,
-      bottomNavigationBar: const DestinationBottomNav(),
+      // bottomNavigationBar: const DestinationBottomNav(),
     );
   }
 }
