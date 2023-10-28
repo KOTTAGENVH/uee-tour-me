@@ -30,7 +30,6 @@ class _ItemListState extends State<ItemList> {
       FirebaseFirestore.instance.collection('SouvenirItems');
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TopNav(),
