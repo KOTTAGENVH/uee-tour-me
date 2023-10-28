@@ -1,21 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/pages/souvenir/payment/shopAddPay.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/pink_button.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 
 class CreditCardPay extends StatefulWidget {
   final double totalPay;
   final List<String> selectedIds;
   final String userId;
-  const CreditCardPay(
-      {Key? key,
-      required this.totalPay,
-      required this.selectedIds,
-      required this.userId})
-      : super(key: key);
+
+  const CreditCardPay({
+    Key? key,
+    required this.totalPay,
+    required this.selectedIds,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   _CreditCardPayState createState() => _CreditCardPayState();
@@ -24,6 +27,10 @@ class CreditCardPay extends StatefulWidget {
 class _CreditCardPayState extends State<CreditCardPay> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _totalPriceController = TextEditingController();
+  final TextEditingController _cardHolderNameController =
+      TextEditingController();
+  final TextEditingController _cardNumberController = TextEditingController();
+  final TextEditingController _cvcController = TextEditingController();
   DateTime? selectedDate;
 
   final CollectionReference _souvenir =
@@ -69,26 +76,7 @@ class _CreditCardPayState extends State<CreditCardPay> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: AppBar(
-          leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Form', style: TextStyle(fontSize: 25)),
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 10),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white.withOpacity(0.5),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: const TopNav(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -109,6 +97,7 @@ class _CreditCardPayState extends State<CreditCardPay> {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
+                    controller: _cardHolderNameController,
                     decoration: InputDecoration(
                       labelText: "Card Holder's name",
                       labelStyle: const TextStyle(color: Colors.white),
@@ -130,6 +119,11 @@ class _CreditCardPayState extends State<CreditCardPay> {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
+                    controller: _cardNumberController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                     decoration: InputDecoration(
                       labelText: 'Card No',
                       labelStyle: const TextStyle(color: Colors.white),
@@ -198,6 +192,7 @@ class _CreditCardPayState extends State<CreditCardPay> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
+                          controller: _cvcController,
                           decoration: InputDecoration(
                             labelText: 'CVC',
                             labelStyle: const TextStyle(color: Colors.white),
@@ -222,8 +217,7 @@ class _CreditCardPayState extends State<CreditCardPay> {
                   ),
                   const SizedBox(height: 30),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, // Align buttons to the start and end of the row
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       PinkButton(
                         onPress: () async {
@@ -235,28 +229,32 @@ class _CreditCardPayState extends State<CreditCardPay> {
                           );
                         },
                         text: '',
-                        icon: const Icon(Icons.arrow_circle_left_sharp,
-                            color: Colors.white),
+                        icon: const Icon(
+                          Icons.arrow_circle_left_sharp,
+                          color: Colors.white,
+                        ),
                       ),
                       PinkButton(
                         onPress: () async {
-                          List<String> shopNames =
-                              await getShopNames(widget.selectedIds);
-                          await _souvenirpayment.add({
-                            "userId": widget.userId,
-                            "Date": DateTime.now(),
-                            "shops": shopNames,
-                            "totalPrice": widget.totalPay,
-                          });
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SouvenirHomePage(),
-                            ),
-                          );
+                          if (validateFields()) {
+                            List<String> shopNames =
+                                await getShopNames(widget.selectedIds);
+                            await _souvenirpayment.add({
+                              "userId": widget.userId,
+                              "Date": DateTime.now(),
+                              "shops": shopNames,
+                              "totalPrice": widget.totalPay,
+                            });
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SouvenirHomePage(),
+                              ),
+                            );
 
-                          await updateLastMonthlyPayDate(widget.selectedIds);
+                            await updateLastMonthlyPayDate(widget.selectedIds);
+                          }
                         },
                         text: 'PAY',
                         icon: const Icon(Icons.payment, color: Colors.white),
@@ -272,5 +270,32 @@ class _CreditCardPayState extends State<CreditCardPay> {
       backgroundColor: Colors.black,
       bottomNavigationBar: const BottomNav2(),
     );
+  }
+
+  bool validateFields() {
+    if (_cardHolderNameController.text.isEmpty ||
+        _cardNumberController.text.isEmpty ||
+        _cvcController.text.isEmpty ||
+        selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all the required fields.'),
+        ),
+      );
+      return false;
+    }
+
+    if (_cardNumberController.text.length != 16) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Card number must be 16 digits.'),
+        ),
+      );
+      return false;
+    }
+
+    // Additional validation logic if needed.
+
+    return true;
   }
 }

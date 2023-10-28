@@ -48,6 +48,7 @@ class Test extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => DisplayMapLocation(
+                            step: PageStep.step1,
                             isBuildRoute: true,
                             locations: [
                               MapMarker(

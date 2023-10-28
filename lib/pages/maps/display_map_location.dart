@@ -4,7 +4,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:open_route_service/open_route_service.dart';
 import 'package:tour_me/constants.dart';
-import 'package:tour_me/models/location_item.dart';
 import 'package:tour_me/widgets/top_nav.dart';
 
 class DisplayMapLocation extends StatefulWidget {
@@ -13,6 +12,7 @@ class DisplayMapLocation extends StatefulWidget {
   final List<MapMarker> locations;
   final bool isBuildRoute;
   final bool showSouvenirs;
+  final PageStep? step;
 
   const DisplayMapLocation({
     super.key,
@@ -21,6 +21,7 @@ class DisplayMapLocation extends StatefulWidget {
     required this.locations,
     this.isBuildRoute = false,
     this.showSouvenirs = false,
+    required this.step,
   });
 
   @override
@@ -31,6 +32,7 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
   final MapController _controller = MapController();
   late List<LatLng> _locationList;
   List<LatLng> _routeData = [];
+  List<MapMarker> _souvenirList = [];
 
   @override
   void initState() {
@@ -60,8 +62,8 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
 
         if (latLngComponents.length == 2) {
           // Convert the string components into double values
-          double latitude = double.tryParse(latLngComponents[0]) ?? 0.0;
-          double longitude = double.tryParse(latLngComponents[1]) ?? 0.0;
+          double latitude = double.tryParse(latLngComponents[1]) ?? 0.0;
+          double longitude = double.tryParse(latLngComponents[0]) ?? 0.0;
 
           // Create a LatLng object
           LatLng latLng = LatLng(latitude, longitude);
@@ -77,7 +79,9 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
         }
       }
 
-      
+      setState(() {
+        _souvenirList = sovenirlocationList;
+      });
     } catch (e) {
       print('Error reading data: $e');
     }
@@ -106,7 +110,11 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
 
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
-        return DisplayMapLocation(locations: [...widget.locations]);
+        return DisplayMapLocation(
+          locations: destinationsList,
+          showSouvenirs: true,
+          step: widget.step == PageStep.step1 ? PageStep.step2 : null,
+        );
       },
     ));
   }
@@ -151,7 +159,7 @@ class _DisplayMapLocationState extends State<DisplayMapLocation> {
                   )
                 : const SizedBox.shrink(),
             MarkerLayer(
-              markers: widget.locations.map((marker) {
+              markers: [...widget.locations, ..._souvenirList].map((marker) {
                 return Marker(
                   point: marker.location,
                   child: GestureDetector(
@@ -181,4 +189,9 @@ class MapMarker {
       color: Colors.red,
     ),
   });
+}
+
+enum PageStep {
+  step1,
+  step2,
 }

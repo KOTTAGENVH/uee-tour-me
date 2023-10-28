@@ -90,7 +90,10 @@ class _TravelerCreateTripState extends State<TravelerCreateTrip> {
             }
           }
 
-          return DisplayMapLocation(locations: listofMapMarkers);
+          return DisplayMapLocation(
+            locations: listofMapMarkers,
+            step: PageStep.step1,
+          );
         },
       ));
     }
