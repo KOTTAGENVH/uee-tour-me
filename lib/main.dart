@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tour_me/pages/category_page.dart';
+import 'package:tour_me/pages/destination/suggestiontime/tokenvalidation.dart';
 import 'package:tour_me/pages/maps/create_trip_1.dart';
 import 'package:tour_me/pages/destination/addDestination.dart';
 import 'package:tour_me/pages/destination/destination_home.dart';
@@ -52,6 +53,8 @@ class MyApp extends StatelessWidget {
       initialRoute: WelcomePage.routeName,
       routes: {
         Test.routeName: (context) => const Test(),
+        ValidateDestinationToken.routeName: (context) =>
+            const ValidateDestinationToken(),
         WelcomePage.routeName: (context) => const WelcomePage(),
         LoginPage.routeName: (context) => const LoginPage(),
         RegisterPage.routeName: (context) => const RegisterPage(),

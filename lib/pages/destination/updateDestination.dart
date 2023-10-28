@@ -1,9 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/destination_owner_bottom_nav.dart';
 import 'package:tour_me/widgets/labeled_divider.dart';
+import 'package:tour_me/widgets/message_popup.dart';
 import 'package:tour_me/widgets/next_back_button.dart';
+import 'package:tour_me/widgets/upload_image_button.dart';
+import 'package:tour_me/widgets/upload_multiple_images.dart';
 
 class UpdateDestination extends StatefulWidget {
   final String destinationName;
@@ -42,7 +48,8 @@ class UpdateDestination extends StatefulWidget {
     required this.csv,
     required this.expiryDate,
     required this.token,
-    required this.userId, required String documentId,
+    required this.userId,
+    required String documentId,
   });
 
   @override
@@ -50,138 +57,66 @@ class UpdateDestination extends StatefulWidget {
 }
 
 class _UpdateState extends State<UpdateDestination> {
-  final TextEditingController _locationNameController = TextEditingController();
-  final TextEditingController _streetNoController = TextEditingController();
-  final TextEditingController _streetNameController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _weekstartTimeController =
-      TextEditingController();
-  final TextEditingController _weekendTimeController = TextEditingController();
-  final TextEditingController _weekendstartTimeController =
-      TextEditingController();
-  final TextEditingController _weekendendTimeController =
-      TextEditingController();
-  final TextEditingController _description = TextEditingController();
+  late TextEditingController _weekstartTimeController;
+  late TextEditingController _weekendTimeController;
+  late TextEditingController _weekendstartTimeController;
+  late TextEditingController _weekendendTimeController;
+  late TextEditingController _description;
+  final TextEditingController _locationImage1 = TextEditingController();
+  final TextEditingController _locationImage2 = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _weekstartTimeController =
+        TextEditingController(text: widget.weekstartTime);
+    _weekendTimeController = TextEditingController(text: widget.weekendTime);
+    _weekendstartTimeController =
+        TextEditingController(text: widget.weekendstartTime);
+    _weekendendTimeController =
+        TextEditingController(text: widget.weekendendTime);
+    _description = TextEditingController(text: widget.description);
+  }
+
+  @override
+  void dispose() {
+    _weekstartTimeController.dispose();
+    // Dispose of other controllers...
+    super.dispose();
+  }
 
   final CollectionReference _destination =
       FirebaseFirestore.instance.collection('Destination');
 
- Future<void> _updateDestination() async {
-    await showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (BuildContext ctx) {
-        return Padding(
-          padding: EdgeInsets.only(
-            top: 20,
-            left: 20,
-            right: 20,
-            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextField(
-                controller: _locationNameController,
-                decoration: const InputDecoration(labelText: 'Destination Name'),
-              ),
-              TextField(
-                controller: _streetNoController,
-                decoration: const InputDecoration(labelText: 'Street No'),
-              ),
-              TextField(
-                controller: _streetNameController,
-                decoration: const InputDecoration(labelText: 'Street Name'),
-              ),
-              TextField(
-                controller: _cityController,
-                decoration: const InputDecoration(labelText: 'City'),
-              ),
-              TextField(
-                controller: _weekstartTimeController,
-                decoration: const InputDecoration(labelText: 'Week Start Time'),
-              ),
-              TextField(
-                controller: _weekendTimeController,
-                decoration: const InputDecoration(labelText: 'Week End Time'),
-              ),
-              TextField(
-                controller: _weekendstartTimeController,
-                decoration: const InputDecoration(labelText: 'Weekend Start Time'),
-              ),
-              TextField(
-                controller: _weekendendTimeController,
-                decoration: const InputDecoration(labelText: 'Weekend End Time'),
-              ),
-              TextField(
-                controller: _description,
-                decoration: const InputDecoration(labelText: 'Description'),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-         ElevatedButton(
-                child: const Text('Create'),
-                onPressed: () async {
-                  final String locationName = _locationNameController.text;
-                  final String streetNo = _streetNoController.text;
-                  final String streetName = _streetNameController.text;
-                  final String city = _cityController.text;
-                  final String weekstartTime = _weekstartTimeController.text;
-                  final String weekendTime = _weekendTimeController.text;
-                  final String weekendstartTime = _weekendstartTimeController.text;
-                  final String weekendendTime = _weekendendTimeController.text;
-                  final String description = _description.text;
-                  if (locationName.isNotEmpty &&
-                      streetNo.isNotEmpty &&
-                      streetName.isNotEmpty &&
-                      city.isNotEmpty &&
-                      weekstartTime.isNotEmpty &&
-                      weekendTime.isNotEmpty &&
-                      weekendstartTime.isNotEmpty &&
-                      weekendendTime.isNotEmpty &&
-                      description.isNotEmpty) {
-                    await _destination.add({
-                      "destinationName": locationName,
-                      "streetNo": streetNo,
-                      "streetName": streetName,
-                      "city": city,
-                      "weekstartTime": weekstartTime,
-                      "weekendTime": weekendTime,
-                      "weekendstartTime": weekendstartTime,
-                      "weekendendTime": weekendendTime,
-                      "description": description,
-                    });
-
-                    _locationNameController.text = '';
-                    _streetNoController.text = '';
-                    _streetNameController.text = '';
-                    _cityController.text = '';
-                    _weekstartTimeController.text = '';
-                    _weekendTimeController.text = '';
-                    _weekendstartTimeController.text = '';
-                    _weekendendTimeController.text = '';
-                    _description.text = '';
-                    Navigator.of(context).pop();
-                  }
-                },
-              )
-            ],
-          ),
-        );
-      },
-    );
+  void showImageUploadToast(String? imageUrl, bool success) {
+    if (imageUrl != null) {
+      Fluttertoast.showToast(
+        msg: 'Successfully uploaded image: $imageUrl',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: 'Sorry, upload failed.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    bool imageUploaded = false;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
           leading: Image.asset(MyImages.iconLogo),
-          title: const Text('Add Destination', style: TextStyle(fontSize: 25)),
+          title:
+              const Text('Update Destination', style: TextStyle(fontSize: 25)),
           centerTitle: true,
           backgroundColor: Colors.black,
           actions: [
@@ -204,104 +139,37 @@ class _UpdateState extends State<UpdateDestination> {
             margin: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                TextFormField(
-                  controller: _locationNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Destination Name',
-                    labelStyle: const TextStyle(color: Colors.white),
-                    prefixIcon: const Icon(
-                      Icons.add_location_rounded,
-                      color: Colors.white,
-                    ),
-                    filled: true,
-                    fillColor: const Color(0xFF454452),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                  ),
-                  style: const TextStyle(color: Colors.white),
+                const LabeledDivider(label: 'Image Upload'),
+                UploadImageButton(
+                  onPress: () async {
+                    List<String> urls = await MultipleImageUpload.save(context);
+
+                    if (urls.isNotEmpty) {
+                      _locationImage1.text = urls[0];
+                      _locationImage2.text = urls[1];
+                      setState(() {
+                        imageUploaded = true;
+                      });
+                      print('urls: ${urls}');
+                      print('Image1: ${_locationImage1.text}');
+                      print('Image2: ${_locationImage2.text}');
+                      print('imageUploaded = $imageUploaded');
+                      showImageUploadToast(
+                          'Successfully Uploaded Images', true);
+                    } else {
+                      // Handle the case where no URLs were returned (e.g., upload failure)
+                      showImageUploadToast('Failed to Upload Image1s', false);
+                    }
+                  },
+                  text: imageUploaded
+                      ? 'Destination Image! uploaded \u2713'
+                      : 'Upload Destination Image',
                 ),
-                const SizedBox(height: 20),
-                const LabeledDivider(label: 'Address'),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _streetNoController,
-                        decoration: InputDecoration(
-                          labelText: 'Street No',
-                          labelStyle: const TextStyle(color: Colors.white),
-                          prefixIcon: const Icon(
-                            Icons.location_on,
-                            color: Colors.white,
-                          ),
-                          filled: true,
-                          fillColor: const Color(0xFF454452),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(50.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50.0),
-                          ),
-                        ),
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _streetNameController,
-                        decoration: InputDecoration(
-                          labelText: 'Street Name',
-                          labelStyle: const TextStyle(color: Colors.white),
-                          prefixIcon: const Icon(
-                            Icons.location_on,
-                            color: Colors.white,
-                          ),
-                          filled: true,
-                          fillColor: const Color(0xFF454452),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(50.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50.0),
-                          ),
-                        ),
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
+                Container(
+                  margin: EdgeInsets.only(
+                      bottom: 20), // Adjust the margin as needed
+                  child: const LabeledDivider(label: 'Weekday Time'),
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _cityController,
-                  decoration: InputDecoration(
-                    labelText: 'City & Province',
-                    labelStyle: const TextStyle(color: Colors.white),
-                    prefixIcon: const Icon(
-                      Icons.location_on,
-                      color: Colors.white,
-                    ),
-                    filled: true,
-                    fillColor: const Color(0xFF454452),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                  ),
-                  style: const TextStyle(color: Colors.white),
-                ),
-                const SizedBox(height: 20),
-                const LabeledDivider(label: 'Weekday Time'),
                 Row(
                   children: [
                     Expanded(
@@ -353,7 +221,11 @@ class _UpdateState extends State<UpdateDestination> {
                     ),
                   ],
                 ),
-                const LabeledDivider(label: 'Weekend Time'),
+                Container(
+                  margin: EdgeInsets.only(
+                      bottom: 20, top: 20), // Adjust the margin as needed
+                  child: const LabeledDivider(label: 'Weekend Time'),
+                ),
                 Row(
                   children: [
                     Expanded(
@@ -406,6 +278,11 @@ class _UpdateState extends State<UpdateDestination> {
                   ],
                 ),
                 const SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.only(
+                      bottom: 20, top: 20), // Adjust the margin as needed
+                  child: const LabeledDivider(label: 'Description'),
+                ),
                 TextFormField(
                   controller: _description,
                   decoration: InputDecoration(
@@ -429,37 +306,56 @@ class _UpdateState extends State<UpdateDestination> {
                   maxLines: 4,
                 ),
                 const SizedBox(height: 30),
-                // NextButton(
-                //   onPress: () async {
-                //     final String destinationName = _locationNameController.text;
-                //     final String streetNo = _streetNoController.text;
-                //     final String streetName = _streetNameController.text;
-                //     final String city = _cityController.text;
-                //     final String weekstartTime = _weekstartTimeController.text;
-                //     final String weekendTime = _weekendTimeController.text;
-                //     final String weekendstartTime = _weekendstartTimeController.text;
-                //     final String weekendendTime = _weekendendTimeController.text;
-                //     final String description = _description.text;
+                NextButton(
+                  onPress: () async {
+                    print('Update Destination button pressed ${widget.token}');
+                    final String token = widget.token;
 
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) => DestinationAddPage2(
-                //           destinationName: destinationName,
-                //           streetNo: streetNo,
-                //           streetName: streetName,
-                //           city: city,
-                //           weekstartTime: weekstartTime,
-                //           weekendTime: weekendTime,
-                //           weekendstartTime: weekendstartTime,
-                //           weekendendTime: weekendendTime,
-                //           description: description,
-                //         ),
-                //       ),
-                //     );
-                //   },
-                //   text: 'Next',
-                // ),
+                    // Query the destination by token
+                    final QuerySnapshot querySnapshot = await _destination
+                        .where("token", isEqualTo: token)
+                        .limit(1)
+                        .get();
+        
+                    if (querySnapshot.docs.isNotEmpty) {
+                      final destinationId = querySnapshot.docs[0].id;
+                          print('Update Destination button pressed ${destinationId}');
+                      await _destination.doc(destinationId).update({
+                        "description": _description.text,
+                        "weekstartTime": _weekstartTimeController.text,
+                        "weekendTime": _weekendTimeController.text,
+                        "weekendstartTime": _weekendstartTimeController.text,
+                        "weekendendTime": _weekendendTimeController.text,
+                        // Check if _locationImage1 and _locationImage2 are not null before updating
+                        if (_locationImage1.text.isNotEmpty)
+                          "destinationImage1": _locationImage1.text,
+                        if (_locationImage2.text.isNotEmpty)
+                          "destinationImage2": _locationImage2.text,
+                      });
+
+                      MessagePopUp.display(
+                        context,
+                        title: "Success",
+                        icon: const Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.green,
+                        ),
+                        message: 'Destination details updated',
+                      );
+                    } else {
+                      MessagePopUp.display(
+                        context,
+                        title: "Error",
+                        icon: const Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                        ),
+                        message: 'Destination not found for the given token',
+                      );
+                    }
+                  },
+                  text: 'Update Destination',
+                ),
               ],
             ),
           ),
