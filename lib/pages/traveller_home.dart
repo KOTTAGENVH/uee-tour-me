@@ -10,11 +10,10 @@ class TouristHome extends StatefulWidget {
   const TouristHome({Key? key}) : super(key: key);
 
   @override
-  State<TouristHome> createState() => _TravellerHomeState();
+  State<TouristHome> createState() => _TouristHomeState();
 }
 
-class _TravellerHomeState extends State<TouristHome> {
-  final CollectionReference _touristHistory = FirebaseFirestore.instance.collection('Route-History');
+class _TouristHomeState extends State<TouristHome> {
   late SecureSharedPref pref;
   late String? userId = '';
   late String userName = '';
@@ -25,7 +24,11 @@ class _TravellerHomeState extends State<TouristHome> {
     _initPref();
   }
 
-  final CollectionReference _tourist = FirebaseFirestore.instance.collection('user');
+  final CollectionReference _touristHistory =
+      FirebaseFirestore.instance.collection('Route-History');
+
+  final CollectionReference _tourist =
+      FirebaseFirestore.instance.collection('user');
 
   Future<void> _initPref() async {
     try {

@@ -6,6 +6,7 @@ import 'package:tour_me/pages/souvenir/payment/creditCardPay.dart';
 import 'package:tour_me/widgets/bottom_nav2.dart';
 import 'package:tour_me/widgets/labeledEmptyDivider.dart';
 import 'package:tour_me/widgets/pink_button.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 
 class ShopAddPay extends StatefulWidget {
   const ShopAddPay({Key? key}) : super(key: key);
@@ -83,8 +84,9 @@ class _ShopAddPayState extends State<ShopAddPay> {
     double totalPay = shopNameLength * payment;
 
     return Scaffold(
+      appBar: const TopNav(),
       body: Padding(
-        padding: const EdgeInsets.only(top: 200),
+        padding: const EdgeInsets.only(top: 100),
         child: Form(
           child: Column(
             children: [
