@@ -5,6 +5,7 @@ import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
 
 class WishList extends StatefulWidget {
+  static const String routeName = '/travelerWishList';
   const WishList({Key? key}) : super(key: key);
 
   @override

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:secure_shared_preferences/secure_shared_pref.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/pages/destination/destination_home.dart';
-import 'package:tour_me/pages/details_page.dart';
-import 'package:tour_me/pages/palceholder.dart';
+import 'package:tour_me/pages/preferences_page.dart';
 import 'package:tour_me/pages/souvenir/homePage.dart';
 import 'package:tour_me/utils/upload_user_details.dart';
 import 'package:tour_me/widgets/loading_popup.dart';
@@ -15,78 +14,48 @@ class CategoryPage extends StatelessWidget {
 
   void _onSelect(BuildContext context, String userRole) async {
     LoadingPopup().display(context, message: 'Please Wait...');
-    
+
     SecureSharedPref prefs = await SecureSharedPref.getInstance();
     String? id = await prefs.getString(MyPrefTags.userId, isEncrypted: true);
 
     bool success = false;
-    if (userRole == MyStrings.traveler) {
-      //TODO: navigate to traveller preferecnes page
-      if (context.mounted) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          PlaceholderPage.routeName,
-          (route) => false,
-        );
-      }
-    } else if (context.mounted) {
-      try {
-        await prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
-        if (context.mounted) success = await uploadUserDetails(context);
-      } catch (e, trace) {
-        print("Error: $e");
-        print("StackTrace: $trace");
-      }
-      LoadingPopup().remove();
+    try {
+      await prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
+      if (context.mounted) success = await uploadUserDetails(context);
+    } catch (e, trace) {
+      print("Error: $e");
+      print("StackTrace: $trace");
+    }
+    LoadingPopup().remove();
 
-      if (!success) {
-        if (context.mounted) {
-          MessagePopUp.display(context);
-        } else {
-          throw 'error';
-        }
+    if (!success) {
+      if (context.mounted) {
+        MessagePopUp.display(context);
+      } else {
+        throw 'error';
       }
     }
 
     if (success && id != null) {
-      if (userRole == MyStrings.host) {
-        await prefs.clearAll();
-        await prefs.putString(MyPrefTags.userId, id, isEncrypted: true);
-        await prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
+      await prefs.clearAll();
+      await prefs.putString(MyPrefTags.userId, id, isEncrypted: true);
+      await prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
 
-        if (context.mounted) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            DestinationHome.routeName,
-            (route) => false,
-          );
-        }
+      String nextPageRoute = '';
+      if (userRole == MyStrings.traveler) {
+        nextPageRoute = PreferencesPage.routeName;
+      } else if (userRole == MyStrings.host) {
+        nextPageRoute = DestinationHome.routeName;
       } else if (userRole == MyStrings.merchant) {
-        await prefs.clearAll();
-        await prefs.putString(MyPrefTags.userId, id, isEncrypted: true);
-        await prefs.putString(MyPrefTags.userRole, userRole, isEncrypted: true);
+        nextPageRoute = SouvenirHomePage.routeName;
+      }
 
-        if (context.mounted) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            SouvenirHomePage.routeName,
-            (route) => false,
-          );
-        }
-      } else {
-        if (context.mounted) {
-          MessagePopUp.display(
-            context,
-            onDismiss: () {
-              prefs.clearAll();
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                DetailsPage.routeName,
-                (route) => false,
-              );
-            },
-          );
-        }
+      if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          nextPageRoute,
+          (route) => false,
+        );
       }
     }
   }

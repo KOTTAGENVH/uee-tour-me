@@ -3,103 +3,85 @@ import 'package:flutter/material.dart';
 import 'package:secure_shared_preferences/secure_shared_preferences.dart';
 import 'package:tour_me/constants.dart';
 import 'package:tour_me/widgets/bottom_nav.dart';
+import 'package:tour_me/widgets/card.dart';
+import 'package:tour_me/widgets/top_nav.dart';
 
-class TouristHome extends StatefulWidget {
-  const TouristHome({Key? key}) : super(key: key);
+class TravellerHome extends StatefulWidget {
+  static const String routeName = '/travelerHome';
+  const TravellerHome({Key? key}) : super(key: key);
 
   @override
-  State<TouristHome> createState() => _TouristHomeState();
+  State<TravellerHome> createState() => _TravellerHomeState();
 }
 
-class _TouristHomeState extends State<TouristHome> {
+class _TravellerHomeState extends State<TravellerHome> {
+  final CollectionReference _touristHistory = FirebaseFirestore.instance.collection('Route-History');
   late SecureSharedPref pref;
-  late String? userId = '';
+  late String userId;
 
   @override
   void initState() {
     super.initState();
+    _postInit();
   }
 
-  Future<void> _initPref() async {
+  Future<void> _postInit() async {
     pref = await SecureSharedPref.getInstance();
-    userId = await pref.getString(MyPrefTags.userId, isEncrypted: true);
-    print('uid $userId');
-  }
 
-  final CollectionReference _touristHistory =
-      FirebaseFirestore.instance.collection('Route-History');
+    // Fetch the user's ID from SharedPreferences
+    String? id = await pref.getString(MyPrefTags.userId, isEncrypted: true);
+
+    // Fetch user data from Firestore based on the user's ID
+    if (id != null) {
+      var query = _touristHistory.where('userId', isEqualTo: id);
+      QuerySnapshot querySnapshot = await query.get();
+      List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+
+      // You can now work with the documents to display user data
+      for (var document in documents) {
+        print(document['name']);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initPref(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (userId!.isEmpty) {
-            return const CircularProgressIndicator();
-          }
-          return Scaffold(
-            body: Column(
-              children: [
-                Expanded(
-                  child: StreamBuilder(
-                    stream: _touristHistory
-                        .where('userId', isEqualTo: userId)
-                        .snapshots(),
-                    builder:
-                        (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                      if (streamSnapshot.hasData) {
-                        return ListView.builder(
-                          padding: const EdgeInsets.all(4),
-                          itemCount: streamSnapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            final DocumentSnapshot documentSnapshot =
-                                streamSnapshot.data!.docs[index];
-                            return GestureDetector(
-                              onTap: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) =>
-                                //             ShopProfile(shopId: shopId)));
-                              },
-                              child: SizedBox(
-                                height: 100,
-                                child: Card(
-                                  color: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                    side: const BorderSide(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  margin: const EdgeInsets.all(4),
-                                  child: ListTile(
-                                    title: buildRow(documentSnapshot),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  ),
-                ),
-              ],
+    try {
+      return Scaffold(
+        appBar: const TopNav(),
+        bottomNavigationBar: const BottomNav(selcted: Selections.home),
+        body: Container(
+          decoration: const BoxDecoration(gradient: MyColors.backgrounGradient),
+          padding: const EdgeInsets.all(10),
+          child: const Center(
+            child: Text(
+              'Lets create our first Trip',
+              style: TextStyle(color: Colors.white),
             ),
-            backgroundColor: Colors.black,
-            bottomNavigationBar: const BottomNav(),
-          );
-        } else {
-          // Show loading indicator while waiting for initialization
-          return const CircularProgressIndicator();
-        }
-      },
-    );
+          ),
+          // child: ListView.builder(
+          //   itemCount: 3,
+          //   itemBuilder: (context, index) {
+          //     return CustomCardWithImage(
+          //       heading: 'Head',
+          //       subtitle: 'sub',
+          //       imagePath: 'https://i.redd.it/apy63yumihw81.jpg',
+          //       onPress1: () {},
+          //       onPress2: () {},
+          //       onPress3: () {},
+          //     );
+          //   },
+          // ),
+        ),
+      );
+    } catch (e, t) {
+      print("Error: $e");
+      print("StackTrace: $t");
+      return const SizedBox.shrink();
+    }
   }
 
+  // Example function to build a row from a DocumentSnapshot
   Widget buildRow(DocumentSnapshot documentSnapshot) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
