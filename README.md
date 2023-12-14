@@ -1,2 +1,6 @@
 # uee-tour-me
-3rd year 2 nd semester project - Technology - Flutter
+>Flutter Tour Me App
+>>Technologies used – Flutter, Fire base
+>>>To install all dependecies us Pub Get
+
+![TourMeMobileApp](https://github.com/KOTTAGENVH/uee-tour-me/assets/87430226/7c028d2a-04bb-478c-9a98-da348ccb23fb)
